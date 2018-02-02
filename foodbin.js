@@ -11,13 +11,17 @@ var perImageContainers = document.getElementsByClassName("per-image-container");
 //append constant close container and middle & third columns to each modal window that pops up
 for(let i = 0; i < perImageContainers.length; i++){
     perImageContainers[i].addEventListener("click", function(){
-        $(".close-btn-container").css("display", "block");
-        modalWindows[i].appendChild(closeContainer);
-        modalWindows[i].style.display = "block";
-        $(".middle-column").add(".last-column").css("display", "block");
-        row[i].appendChild(middleColumn);
-        row[i].appendChild(lastColumn);
+        openFoodModal(i);
     })
+}
+
+function openFoodModal(index){
+    $(".close-btn-container").css("display", "block");
+    modalWindows[index].appendChild(closeContainer);
+    modalWindows[index].style.display = "block";
+    $(".middle-column").add(".last-column").css("display", "block");
+    row[index].appendChild(middleColumn);
+    row[index].appendChild(lastColumn);
 }
 
 //click on close container in modal window to close the modal window
@@ -31,7 +35,7 @@ for(let i = 0; i < closeBtnContainers.length; i++){
 
 //event listener for all modal windows to enable modal window click to close the modal window
 for(let i = 0; i < modalWindows.length; i++){
-    modalWindows[i].addEventListener("click", function(e){
+    modalWindows[i].addEventListener("click", function(e){ 
         if(e.target.matches(".modal-window")){
             this.style.display = "none";
         } 
@@ -41,19 +45,22 @@ for(let i = 0; i < modalWindows.length; i++){
 
 
 /*--- Start of Cart Modal ---*/
-var cartContainer = document.getElementById("cart-container");
-var cartIconBox = document.getElementById("cart-icon-box"),
+var cartContainer = document.getElementById("cart-container"),
+    cartIconBox = document.getElementById("cart-icon-box"),
     cartModalWindow = document.getElementById("cart-modal-window"),
-    cartCloseContainer = document.getElementById("cart-close-container");
+    cartCloseContainer = document.getElementById("cart-close-container"),
+    cartBadge = document.getElementById("cart-badge");
 
 //display cart modal window when cart icon box is clicked
-cartContainer.addEventListener("click", function(e){
+cartContainer.addEventListener("click", openCartModal);
+cartBadge.addEventListener("click", openCartModal);
+
+function openCartModal(e){
     if(e.target.matches("#cart")){
-        console.log("container clicked");
         cartModalWindow.style.display = "block";
     }
     cartModalWindow.style.display = "block";
-})
+}
 
 cartModalWindow.addEventListener("click", function(e){
     if(e.target.matches("#cart-modal-window")){
@@ -245,8 +252,6 @@ $("#search-case-list a").on("click", function(e){
 var addToCartBtns = document.getElementsByClassName("add-to-cart-btn");
 var priorityNumForm = document.getElementById("priority-num-form");
 var selectorForm = document.getElementById("selector-form");
-var $cartBadgeNum = $("#cart:after");
-$cartBadgeNum.css("background-color", "green");
 var modalInnerImageHeadings = document.getElementsByClassName("modal-inner-image-heading");
 var modalImages = document.getElementsByClassName("modal-image");
 var gotHeading;
@@ -256,8 +261,12 @@ var noGroceriesAdded = document.getElementById("no-groceries-added");
 
 for(let i = 0; i < addToCartBtns.length; i++){
     addToCartBtns[i].addEventListener("click", function(){
-        var modalWindow = this.parentElement.parentElement.parentElement;
-        var $modalContainer = $(this).parents(".modal-inner-container"),
+        addFoodItem(i);
+    });
+}
+function addFoodItem(index){
+        var modalWindow = addToCartBtns[index].parentElement.parentElement.parentElement;
+        var $modalContainer = $(".add-to-cart-btn").eq(index).parents(".modal-inner-container"),
             $modalContent = $modalContainer.find(".modal-inner-content"),
             $modalFoodHeading = $modalContent.find(".modal-inner-image-heading").text();
 
@@ -280,77 +289,85 @@ for(let i = 0; i < addToCartBtns.length; i++){
                 $costNumVal == $specialtyNumVal ||
                 $costNumVal == $qualityNumVal ||
                 $specialtyNumVal == $qualityNumVal){
-                var $currModalFooter = modalInnerFooter[i];
+                var $currModalFooter = modalInnerFooter[index];
                 $currModalFooter.prepend(samePriorityError);
                 samePriorityError.style.display = "block";
                 return false;
             }
 
 
-            itemImageSrc = modalImages[i].getAttribute("src");
-            gotHeading = modalInnerImageHeadings[i].textContent;
+            itemImageSrc = modalImages[index].getAttribute("src");
+            gotHeading = modalInnerImageHeadings[index].textContent;
             createCartItem(
-                gotHeading, itemImageSrc, $weightSelectorValue, $weightNumVal, $costSelectorValue, $costNumVal, $specialtySelectorValue, $specialtyNumVal, $qualitySelectorValue, $qualityNumVal
+                gotHeading, itemImageSrc, $weightSelectorValue, 
+                $weightNumVal, $costSelectorValue, $costNumVal, 
+                $specialtySelectorValue, $specialtyNumVal, 
+                $qualitySelectorValue, $qualityNumVal
             );
             cartItems++;
-            $cartBadgeNum.css("background-color", "green");
+            cartBadge.textContent = cartItems;
+            cartBadge.style.display = "block";
             priorityNumForm.reset();
             selectorForm.reset();
             modalWindow.style.display = "none";            
-    })
 }
+
 /*--- End of Add Btn to Cart ---*/
 
 function createCartItem(heading, imageSrc, weight, weightP, cost, costP, specialty, specialtyP, quality, qualityP){
+    
+    //create new cart row, cart columns, and add to cart-modal-content div
     var cartContent = document.getElementById("cart-modal-content");
     var newCartRow = document.createElement("div");
     newCartRow.classList.add("cart-row");
-    var pictureColumn = document.createElement("div");
-    pictureColumn.classList.add("cart-col-4");
-    pictureColumn.classList.add("picture-column");
+    var leftCartCol = document.createElement("div");
+    leftCartCol.classList.add("left-cart-col");
+    var leftColHeading = document.createElement("h4");
+    leftColHeading.classList.add("left-col-heading");
+    leftColHeading.textContent = heading;
+    var imageContainer = document.createElement("div");
+    imageContainer.classList.add("col-image-container")
     var newImage = document.createElement("input");
     newImage.setAttribute("type", "image");
     newImage.setAttribute("src", imageSrc);
-    pictureColumn.appendChild(newImage);
-    
+    imageContainer.appendChild(newImage);
+    var rightCartCol = document.createElement("div");
+    rightCartCol.classList.add("right-cart-col");
+    var rightColHeading = document.createElement("h4");
+    rightColHeading.classList.add("right-col-heading");
+    rightColHeading.textContent = "Details";
 
-    var newMidCol = document.createElement("div");
-    newMidCol.classList.add("cart-col-4");
-    newMidCol.classList.add("heading-and-details");
-    var newHead = document.createElement("h4");
-    newHead.classList.add("cart-modal-food-heading");
-    newHead.textContent = heading;
-    newMidCol.appendChild(newHead);
-
-    var newListGroup = document.createElement("ul");
-    newListGroup.classList.add("food-item-details");
-
+    //create list and list items with text from select options checked
+    var detailsList = document.createElement("ul");
+    detailsList.classList.add("details-list");
     var listItem1 = document.createElement("li");
     var listText1 = document.createTextNode("Weight: " + weight + ", Priority: " + weightP);
     listItem1.appendChild(listText1);
-    newListGroup.appendChild(listItem1);
-
+    detailsList.appendChild(listItem1);
     var listItem2 = document.createElement("li");
     var listText2 = document.createTextNode("Cost: " + cost + ", Priority: " + costP);
     listItem2.appendChild(listText2);
-    newListGroup.appendChild(listItem2);
-
+    detailsList.appendChild(listItem2);
     var listItem3 = document.createElement("li");
     var listText3 = document.createTextNode("Specialty: " + specialty + ", Priority: " + specialtyP);
     listItem3.appendChild(listText3);
-    newListGroup.appendChild(listItem3);
-
+    detailsList.appendChild(listItem3);
     var listItem4 = document.createElement("li");
     var listText4 = document.createTextNode("Quality: " + quality + ", Priority: " + qualityP);
     listItem4.appendChild(listText4);
-    newListGroup.appendChild(listItem4);
+    detailsList.appendChild(listItem4);
+    
+    //append created columns to the create cart row
+    leftCartCol.appendChild(leftColHeading);
+    leftCartCol.appendChild(imageContainer);
+    rightCartCol.appendChild(rightColHeading);
+    rightCartCol.appendChild(detailsList);
+    newCartRow.appendChild(leftCartCol);
+    newCartRow.appendChild(rightCartCol);
 
-    newMidCol.appendChild(newListGroup);
-
-    var newLastCol = document.createElement("div");
-    newLastCol.classList.add("cart-col-4");
+    // create btn container and btn elements
     var btnContainer = document.createElement("div");
-    btnContainer.classList.add("cart-item-btn-container");
+    btnContainer.classList.add("item-btns-container");
     var btn1 = document.createElement("button");
     btn1.classList.add("make-changes-btn");
     btn1.textContent = "Make Changes";
@@ -359,30 +376,49 @@ function createCartItem(heading, imageSrc, weight, weightP, cost, costP, special
     btn2.textContent = "Remove Item";
     btnContainer.appendChild(btn1);
     btnContainer.appendChild(btn2);
-    newLastCol.appendChild(btnContainer);
+    rightCartCol.appendChild(btnContainer);
 
+    //create line divider between food items in cart
     var lineDivider = document.createElement("div");
     lineDivider.classList.add("line-divider")
 
-    newCartRow.appendChild(pictureColumn);
-    newCartRow.appendChild(newMidCol);
-    newCartRow.appendChild(newLastCol);
     cartContent.appendChild(newCartRow);
     cartContent.appendChild(lineDivider);
     placeOrderBtn.style.display = "block";
     noGroceriesAdded.style.display = "none";
 
+    makeChangesFunc();
 }
+
+function makeChangesFunc(){
+    var makeChangesBtns = document.getElementsByClassName("make-changes-btn");
+    for(let i = 0; i < makeChangesBtns.length; i++){
+        makeChangesBtns[i].addEventListener("click", function(){
+            cartModalWindow.style.display = "none";
+            let currFoodRow = this.parentElement.parentElement.parentElement;
+            currFoodRow.style.display = ""
+            openFoodModal(i);
+        });
+    }
+}
+
+
+
+
+
+
+
+
 
 $(".banner-btn").click(function(){
     $("html, body").animate({
-        scrollTop: $("#user-location-section").offset().top - 19
+        scrollTop: $("#user-location-section").offset().top - 60
     }, "slow");
 })
 
 $("#ca-locations a").click(function(e){
     e.preventDefault();
     $("html, body").animate({
-        scrollTop: $("#user-location-section").offset().top - 20
+        scrollTop: $("#user-location-section").offset().top - 60
     });
 })

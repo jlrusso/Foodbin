@@ -8,7 +8,7 @@ body {
 }
 * {
     box-sizing: border-box;
-    font-family: Helvetica, sans-serif, Arial;
+    font-family: Verdana, sans-serif, Arial;
 }
 
 a {
@@ -23,12 +23,12 @@ ul {
 }
 
 nav {
-    position: relative;
+    position: fixed;
     width: 100%;
     height: 50px;
     background-color: #E5E7E9;
     box-shadow: 0 5px 5px rgba(0,0,0,0.3);
-    z-index: 1;
+    z-index: 2;
 }
 
 #nav-logo {
@@ -68,21 +68,21 @@ nav {
     color: white;
 }
 
-#cart::after {
-    display: block;
-    content: "0";
+#cart-badge {
+    display: none;
     position: absolute;
-    left: 230px;
-    top: 3px;
-    padding: 0px 4px 2px;
-    border: 1px solid red;
-    border-radius: 5px;
-    color: white;
+    top: 2px;
+    left: 240px;
     background-color: red;
-    font-size: 0.8rem;
-    z-index: 1;
-
+    border-radius: 4px;
+    padding: 2px;
+    color: white;
+    font-size: 0.75rem;
+    cursor: pointer;
+    -webkit-user-select: none;
 }
+
+
 
 
 
@@ -90,11 +90,11 @@ nav {
 #banner-area {
     position: relative;
     width: 100%;
-    height: 400px;
+    height: 450px;
     background: url("../img/fresh-produce.jpeg");
     background-size: cover;
     background-repeat: no-repeat;
-    background-position: center;
+    background-position: center top;
     background-attachment: fixed;
 }
 
@@ -110,7 +110,7 @@ nav {
 
 #banner-inner {
     position: absolute;
-    top: 35%;
+    top: 58%;
     left: 50%;
     transform: translate(-50%,-50%);
     text-align: center;
@@ -125,7 +125,7 @@ nav {
     border: 2px solid green;
     border-radius: 4px;
     padding: 10px 27px;
-    background-color: green;
+    background-color: rgba(34, 153, 84, 0.7);
     font-size: 0.9rem;
     font-weight: bold;
     color: #F2F3F4;
@@ -133,8 +133,8 @@ nav {
     transition: 0.3s;
 }
 #banner-inner button:hover {
-    background-color: rgba(255,255,255,0.6);
-    color: green;   
+    background-color: rgb(34, 153, 84);
+    color: #fff;   
 }
 /*--- End of Banner area ---*/
 
@@ -143,61 +143,86 @@ nav {
 #how-it-works-area {
     position: relative;
     width: 100%;
-    height: 292px;
+    height: auto;
     padding: 0;
     text-align: center;
-    z-index: 2;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-column-gap: 0;
+    z-index: 1;
 }
 
-.hiw-column {
+.hiw-row {
+    width: 100%;
+    height: 300px;
+    background-color: #E5E7E9;
     position: relative;
-    height: 100%;
-    padding-top: 45px;
 }
 
-.hiw-column:first-child {
-    background: url("../img/map.jpeg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-blend-mode: 
-}
-.hiw-column:nth-child(2) {
-    background: url("../img/grocery-aisle.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-.hiw-column:last-child {
-    background: url("../img/view-groceries.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-
-.image-caption p {
+.hiw-row-inner {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
-    width: 240px;
-    margin: 0 auto;
+    width: 60%;
+    height: 80%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: 5px;
+}
+.image-caption {
+    position: relative;
+}
+
+.right-caption p::after {
+    position: absolute;
+    top: 35%;
+    right: 96.%;
+    content: "";
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border-left: 1px solid rgb(34, 153, 84);
+    border-bottom: 1px solid rgb(34, 153, 84);
+    border-radius: 3px;
+    transform: rotate(45deg);
+}
+
+.left-caption p::after {
+    position: absolute;
+    top: 35%;
+    left: 96.5%;
+    content: "";
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border-top: 1px solid rgb(34, 153, 84);
+    border-right: 1px solid rgb(34, 153, 84);
+    border-radius: 3px;
+    transform: rotate(45deg);
+}
+
+.image-caption p {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 255px;
     text-align: center;
     background-color: #fff;
     padding: 5px;
+    border: 1px solid rgb(34, 153, 84);
     border-radius: 4px; 
+}
+
+.hiw-row-inner input[type="image"] {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
 }
 /*--- End of How It Works area ---*/
 
 
 /*-- start of google maps area ---*/
 #user-map-area {
-    padding: 20px 10px 10px;
+    padding: 10px 10px;
     background-color: #555;
 }
 
@@ -251,7 +276,7 @@ nav {
     left: 50%;
     transform: translateX(-50%);
     width: 65%;
-    height: 215px;
+    height: 220px;
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -299,14 +324,15 @@ nav {
 }
 
 .food-type-heading {
-    width: 135px;
+    width: 271px;
     padding: 5px 15px;
-    border: 2px solid green;
+    border: 2px solid rgb(34, 153, 84);
     border-radius: 3px;
-    background-color: rgba(36, 113, 163, 0.1);
+    background-color: rgb(34, 153, 84);
     margin-bottom: 10px;
     text-align: center;
     font-size: 1.3rem;
+    color: #fff;
 }
 
 .slide-btns-container {
@@ -324,8 +350,23 @@ nav {
     left: 0;
     width: 45%;
     height: 100%;
+    padding-bottom: 3px;
+    border: 2px solid rgb(34, 153, 84);
+    border-radius: 20px;
+    background-color: rgba(34, 153, 84, 0.5);
     text-align: center;
     cursor: pointer;
+    transition: 0.2s;
+}
+
+.fa-arrow-left,
+.fa-arrow-right {
+    color: #333;
+}
+
+.slide-right-btn:focus,
+.slide-left-btn:focus {
+    outline: none;
 }
 
 .slide-right-btn {
@@ -334,9 +375,20 @@ nav {
     right: 0;
     width: 45%;
     height: 100%;
+    padding-bottom: 3px;
+    border: 2px solid rgb(34, 153, 84);
+    border-radius: 20px;
+    background-color: rgba(34, 153, 84, 0.5);
     text-align: center;
     cursor: pointer;
+    transition: 0.2s;
 }
+
+.slide-left-btn:hover,
+.slide-right-btn:hover {
+    background-color: rgb(34, 153, 84);
+}
+
 .outer-images-container {
     position: relative;
     width: 100%;
@@ -390,9 +442,9 @@ nav {
     left: 50%;
     width: 195px;
     transform: translate(-50%,-50%);
-    border: 0;
+    border: 2px solid rgb(34, 153, 84);
     border-radius: 5px;
-    background-color: green;
+    background-color: rgba(34, 153, 84, 0.8);
     padding: 5px;
     color: #F2F3F4;
     font-size: 1.2rem;
@@ -405,6 +457,17 @@ nav {
 
 .per-image-container:hover .image-btn {
     top: 80%;
+}
+
+.image-btn:hover {
+    background-color: rgb(34, 153, 84);
+}
+.food-line-divider {
+    width: 80%;
+    height: 2px;
+    border-radius: 20px;
+    background-color: rgba(0,0,0,0.3);
+    margin: 15px auto 25px;
 }
 /*--- End of food area ---*/
 
@@ -612,6 +675,8 @@ nav {
 /*--- End of Added Columns ---*/
 
 
+
+
 /*--- Start of Cart Modals ---*/
 #cart-modal-window {
     display: none;
@@ -631,9 +696,10 @@ nav {
     left: 50%;
     transform: translate(-50%,-50%);
     width: 650px;
-    height: auto;
+    max-height: 90%;
     padding-bottom: 25px;
     background-color: white;
+    border-radius: 4px;
     overflow-y: auto;
     overflow-x: hidden;
     z-index: 2;
@@ -653,17 +719,57 @@ nav {
     background-color: green;
 }
 
-.cart-row {
-    width: 100%;
-    height: 200px;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-column-gap: 5px;
+#cart-modal-content {
+    padding: 10px;
 }
 
-.cart-col-4 {
+.cart-row {
+    width: 100%;
+    height: 270px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: 10px;
+}
+
+.left-cart-col,
+.right-cart-col {
     position: relative;
     height: 100%;
+}
+
+.left-col-heading {
+    border: 2px solid green;
+    border-radius: 5px;
+    text-align: center;
+    background-color: rgba(0, 128, 0, 0.4);
+    margin: 0 0 10px;
+    line-height: 50px;
+    font-size: 1.2rem;
+}
+
+.right-col-heading {
+    border: 2px solid rgb(93, 109, 126);
+    border-radius: 5px;
+    text-align: center;
+    background-color: rgba(93, 109, 126, 0.4);
+    margin: 0 0 5px;
+    line-height: 50px;
+    font-size: 1.2rem;
+}
+
+.col-image-container input[type="image"] {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.details-list {
+    width: 85%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    font-size: 0.85rem;
 }
 
 #cart-modal-heading {
@@ -674,60 +780,52 @@ nav {
     padding: 10px 25px;
     border-radius: 1px;
     font-size: 0.9rem;
+    color: white;
 }
 
 #no-groceries-added {
+    display: block;
     text-align: center;
     margin-bottom: 0;
 }
 
-.cart-modal-food-heading {
-    width: 70%;
-    margin: 10px auto 5px;
-    padding: 5px;
-    background-color: green;
-    border-radius: 5px;
-}
-.cart-item-btn-container {
+.item-btns-container {
+    width: 100%;
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    text-align: center;
-}
-
-.picture-column input {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    width: 95%;
-    height: 135px;
-    border-radius: 5px;
-}
-
-.food-item-details {
-    margin-top: 20px;
-    text-align: left;
-}
-.make-changes-btn,
-.remove-item-btn {
-    width: 95%;
-    cursor: pointer;
+    left: 0;
+    bottom: 5px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: 5px;
 }
 
 .make-changes-btn {
-    margin-bottom: 30px;
     padding: 10px;
-    background-color: rgba(23,105,255, 0.4);
+    background-color: rgba(23,105,255, 0.7);
     border: 1.5px solid rgb(23,105,255);
     border-radius: 5px;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.make-changes-btn:hover {
+    background-color: rgba(23,105,255, 1);
 }
 
 .remove-item-btn {
     padding: 10px;
-    background-color: rgba(203, 32, 39, 0.4);
+    background-color: rgba(203, 32, 39, 0.7);
     border: 1.5px solid rgb(203, 32, 39);
     border-radius: 5px;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    transition: 0.2s;
+}
+.remove-item-btn:hover {
+    background-color: rgba(203, 32, 39, 1);
 }
 
 #modal-footer {
@@ -736,14 +834,13 @@ nav {
 
 #place-order-btn {
     display: none;
-    position: absolute;
+    position: relative;
     left: 50%;
     top: 0;
     transform: translateX(-50%);
-    margin-bottom: 30px;
     padding: 10px 35px;
-    background-color: rgba(23,105,255, 0.4);
-    border: 1.5px solid rgb(23,105,255);
+    background-color: rgba(0,105,0, 0.4);
+    border: 1.5px solid rgb(0,105,0);
     border-radius: 5px;
     font-size: 1rem;
     cursor: pointer;
@@ -752,9 +849,10 @@ nav {
 .line-divider {
     display: block;
     width: 90%;
-    height: 1px;
-    background-color: #333;
+    height: 2px;
+    background-color: rgba(0,0,0,0.3);
     margin: 20px auto;
+    border-radius: 10px;
 }
 
 .cart-modal-food-heading {

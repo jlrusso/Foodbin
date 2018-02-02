@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Foodie Bin</title>
+	<title>Foodbin</title>
 </head>
 <body>
 	<!DOCTYPE html>
@@ -19,12 +19,13 @@
     <div id="container">
 
         <nav>
-            <div id="nav-logo"><a href="#"><b>Foodie Bin</b></a></div>
+            <div id="nav-logo"><a href="#"><b>Foodbin</b></a></div>
              <div id="horizontal-nav">
                 <ul>
                     <li><a href="#">Login</a></li>
                     <li><a href="#">Sign Up</a></li>
-                    <li><a href="#" id="cart-container"><i class="fa fa-shopping-cart" id="cart" aria-hidden="true"></i></a></li>
+                    <li><a href="#" id="cart-container"><i class="fa fa-shopping-cart" id="shopping-cart" aria-hidden="true"></i><span id="cart-badge"></span></a></li>
+
                 </ul>
             </div>
         </nav>
@@ -32,7 +33,7 @@
         <div id="banner-area">
         	<div id="banner-overlay"></div>
             <div id="banner-inner">
-                <p id="banner-heading">Groceries. Just a click away.</p>
+                <p id="banner-heading">Groceries. Just clicks away.</p>
                 <p>No need to drive, wait in a long line, or hope that your items are available</p>
                 <button type="button" class="banner-btn" id="request-btn">Request Food</button>
                 <button type="button" class="banner-btn" id="deliver-btn">Deliver Food</button>
@@ -40,21 +41,30 @@
         </div>
 
         <div id="how-it-works-area">
-            <div class="hiw-column">             
-                <div class="image-caption">
-                	<p>Choose a location below to see available grocery stores and available deliverers</p>
-                </div>
+          <div class="hiw-row">
+            <div class="hiw-row-inner">
+              <input type="image" src="../img/map.jpeg" alt="Maps"/>
+              <div class="image-caption right-caption">
+                <p>Choose a location below to see available grocery stores and available deliverers</p>
+              </div>
             </div>
-            <div class="hiw-column">            
-                <div class="image-caption">
-                	<p>Choose food items and get as specific as you want, then add the items to your cart</p>
-                </div>
-            </div>            
-            <div class="hiw-column">      
-                <div class="image-caption">
-                	<p>Make any last minute changes to your food bin before paying, then place an order</p>
-                </div>
+          </div>
+          <div class="hiw-row">             
+            <div class="hiw-row-inner">
+              <div class="image-caption left-caption">
+                <p>Select food items and get as specific as you want, then add the items to your cart</p>
+              </div>
+              <input type="image" src="../img/grocery-aisle.jpg" alt="Grocery Aisle"/>
             </div>
+          </div>
+          <div class="hiw-row">
+            <div class="hiw-row-inner">
+              <input type="image" src="../img/view-groceries.jpg" alt="Groceries"/>
+              <div class="image-caption right-caption">
+                <p>Make last minute changes to your food bin before paying, then place an order</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div id="user-map-area">
@@ -150,6 +160,59 @@
                     </div>
                 </div>
             </section>
+            <div class="food-line-divider"></div>
+
+            <section class="food-type-section">
+                <div class="food-type-heading">Vegetables</div>
+                <div class="slide-btns-container">
+                  <button class="slide-left-btn"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                  <button class="slide-right-btn"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                </div>
+                <div class="outer-images-container">
+                    <div class="inner-images-container">
+                      <div class="per-image-container">
+                        <input type="image" src="../img/broccoli.jpeg" alt="Broccoli"/>
+                        <div class="image-btn">Get Broccoli</div>
+                      </div>
+                      <div class="per-image-container">
+                        <input type="image" src="../img/squash.jpeg" alt="Squash"/>
+                        <div class="image-btn">Get Squash</div>
+                      </div>
+                      <div class="per-image-container">
+                        <input type="image" src="../img/cauliflower.jpeg" alt="Cauliflower"/>
+                        <div class="image-btn">Get Cauliflower</div>
+                      </div>
+                      <div class="per-image-container">
+                        <input type="image" src="../img/carrots.jpeg" alt="Carrots"/>
+                        <div class="image-btn">Get Carrots</div>
+                      </div>
+                      <div class="per-image-container">
+                        <input type="image" src="../img/celery.jpg" alt="Celery"/>
+                        <div class="image-btn">Get Celery</div>
+                      </div>
+                      <div class="per-image-container">
+                        <input type="image" src="../img/lettuce.jpg" alt="Lettuce"/>
+                        <div class="image-btn">Get Lettuce</div>
+                      </div>
+                      <div class="per-image-container">
+                        <input type="image" src="../img/potatoes.jpeg" alt="White potatoes"/>
+                        <div class="image-btn">Get White Potatoes</div>
+                      </div>
+                      <div class="per-image-container">
+                        <input type="image" src="../img/spinach.jpg" alt="Spinach"/>
+                        <div class="image-btn">Get Spinach</div>
+                      </div>
+                      <div class="per-image-container">
+                        <input type="image" src="../img/kale.jpeg" alt="Kale"/>
+                        <div class="image-btn">Get Kale</div>
+                      </div>
+                        <div class="per-image-container">
+                          <input type="image" src="../img/whiteonions.jpg" alt="White Onions"/>
+                          <div class="image-btn">Get White Onions</div>
+                      </div>
+                    </div>
+                </div>
+            </section>
             
             
            
@@ -186,7 +249,7 @@
 	                        <div class="image-btn">Get Pineapples</div>
 	                    </div>
 	                    <div class="per-image-container">
-	                        <input type="image" src="../img/kiwis.jpg" alt="Kiwis"/>
+	                        <input type="image" src="../img/kiwi.png" alt="Kiwi"/>
 	                        <div class="image-btn">Get Kiwis</div>
 	                    </div>
                         <div class="per-image-container">
@@ -204,6 +267,8 @@
                     </div>
                 </div>
             </section>
+            <div class="food-line-divider"></div>
+
             <section class="food-type-section">
                 <div class="food-type-heading">Nuts</div>
                 <div class="slide-btns-container">
@@ -255,58 +320,9 @@
                     </div>
                 </div>
             </section>
+            <div class="food-line-divider"></div>
 
-            <section class="food-type-section">
-                <div class="food-type-heading">Vegetables</div>
-                <div class="slide-btns-container">
-                  <button class="slide-left-btn"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
-                  <button class="slide-right-btn"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
-                </div>
-                <div class="outer-images-container">
-                    <div class="inner-images-container">
-                      <div class="per-image-container">
-                        <input type="image" src="../img/broccoli.jpeg" alt="Broccoli"/>
-                        <div class="image-btn">Get Broccoli</div>
-                      </div>
-                      <div class="per-image-container">
-                        <input type="image" src="../img/squash.jpeg" alt="Squash"/>
-                        <div class="image-btn">Get Squash</div>
-                      </div>
-                      <div class="per-image-container">
-                        <input type="image" src="../img/cauliflower.jpeg" alt="Cauliflower"/>
-                        <div class="image-btn">Get Cauliflower</div>
-                      </div>
-                      <div class="per-image-container">
-                        <input type="image" src="../img/carrots.jpeg" alt="Carrots"/>
-                        <div class="image-btn">Get Carrots</div>
-                      </div>
-                      <div class="per-image-container">
-                        <input type="image" src="../img/celery.jpg" alt="Celery"/>
-                        <div class="image-btn">Get Celery</div>
-                      </div>
-                      <div class="per-image-container" id="red-potatoes-image">
-                        <input type="image" src="../img/redpotatoes.jpg" alt="Red Potatoes"/>
-                        <div class="image-btn">Get Red Potatoes</div>
-                      </div>
-                      <div class="per-image-container">
-                        <input type="image" src="../img/potatoes.jpeg" alt="White potatoes"/>
-                        <div class="image-btn">Get White Potatoes</div>
-                      </div>
-                      <div class="per-image-container">
-                        <input type="image" src="../img/spinach.jpg" alt="Spinach"/>
-                        <div class="image-btn">Get Spinach</div>
-                      </div>
-                      <div class="per-image-container">
-                        <input type="image" src="../img/redonions.jpg" alt="Red Onions"/>
-                        <div class="image-btn">Get Red Onions</div>
-                      </div>
-                        <div class="per-image-container">
-                          <input type="image" src="../img/whiteonions.jpg" alt="White Onions"/>
-                          <div class="image-btn">Get White Onions</div>
-                      </div>
-                    </div>
-                </div>
-            </section>
+            
         </div>
 
         <div id="testimonial-area">
@@ -367,7 +383,7 @@
               </ul>
             </section>
           </div>
-          <span id="copyright">&copy; 2018 Foodiebin</span>
+          <span id="copyright">&copy; 2018 Foodbin</span>
         </footer>
         
      </div>
@@ -383,20 +399,6 @@
     		<div id="cart-modal-content">
     			<h3 id="cart-modal-heading">Shopping Cart</h3>
           <div class="line-divider"></div>
-          <div class="cart-row">
-            <div class="cart-left-col">
-              <h4 class="left-col-heading">Broccoli</h4>
-              <div class="col-image-container">
-                <input type="image" src="../img/broccoli.jpeg" alt="Broccoli"/>
-              </div>
-            </div>
-            <div class="cart-right-col">
-              <h4 class="right-col-heading">Details</h4>
-              <ul class="details-list">
-                
-              </ul>
-            </div>
-          </div>
           <p id="no-groceries-added">No groceries have been added to your cart yet</p>
     		</div>
         <div id="modal-footer">
@@ -405,6 +407,8 @@
     	</div>
     </div>
     <!-- End of Cart Modal -->
+
+
     <!-- Candy Food Section -->
     <div class="modal-window">        
       <div class="modal-inner-container">
@@ -651,8 +655,8 @@
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Red Potatoes</h3>
-						<input type="image" src="../img/redpotatoes.jpg" alt="Red Potatoes" class="modal-image"/>
+						<h3 class="modal-inner-image-heading">Lettuce</h3>
+						<input type="image" src="../img/lettuce.jpg" alt="Lettuce" class="modal-image"/>
   					</div>
   				</div>
   			</div>
@@ -699,8 +703,8 @@
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Red Onions</h3>
-						<input type="image" src="../img/redonions.jpeg" alt="Red Onions" class="modal-image"/>
+						<h3 class="modal-inner-image-heading">Kale</h3>
+						<input type="image" src="../img/kale.jpeg" alt="Kale" class="modal-image"/>
   					</div>
   				</div>
   			</div>
@@ -828,7 +832,7 @@
   				<div class="row">
   					<div class="col-4">
 						<h3 class="modal-inner-image-heading">Kiwis</h3>
-						<input type="image" src="../img/kiwis.jpg" alt="Kiwis" class="modal-image"/>
+						<input type="image" src="../img/kiwi.png" alt="Kiwis" class="modal-image"/>
   					</div>
   				</div>
   			</div>
