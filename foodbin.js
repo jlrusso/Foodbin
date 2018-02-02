@@ -24,6 +24,14 @@ function openFoodModal(index){
     row[index].appendChild(lastColumn);
 }
 
+function openFoodModal2(attribute){
+    var $row = $("#" + attribute).find(".row");
+    $(".close-btn-container").css("display", "block");
+    $(".middle-column").add(".last-column").css("display", "block");
+    $row.append(middleColumn);
+    $row.append(lastColumn);
+}
+
 //click on close container in modal window to close the modal window
 var closeBtnContainers = document.getElementsByClassName("close-btn-container");
 for(let i = 0; i < closeBtnContainers.length; i++){
@@ -188,6 +196,193 @@ var sacramentoStores = [
 
 var mapElement = document.getElementById("map");
 
+
+/*--- Add Item to Cart with Add Btn ---*/
+var addToCartBtns = document.getElementsByClassName("add-to-cart-btn");
+var priorityNumForm = document.getElementById("priority-num-form");
+var selectorForm = document.getElementById("selector-form");
+var modalInnerImageHeadings = document.getElementsByClassName("modal-inner-image-heading");
+var modalImages = document.getElementsByClassName("modal-image");
+var gotHeading;
+var cartItems = 0;
+var placeOrderBtn = document.getElementById("place-order-btn");
+var noGroceriesAdded = document.getElementById("no-groceries-added");
+
+for(let i = 0; i < addToCartBtns.length; i++){
+    addToCartBtns[i].addEventListener("click", function(){
+        addFoodItem(i);
+    });
+}
+function addFoodItem(index){
+    var modalWindow = addToCartBtns[index].parentElement.parentElement.parentElement,
+        modalWindowId = modalWindow.id;
+        $modalContainer = $(".add-to-cart-btn").eq(index).parents(".modal-inner-container"),
+        $modalContent = $modalContainer.find(".modal-inner-content"),
+        $modalFoodHeading = $modalContent.find(".modal-inner-image-heading").text();
+
+        $weightSelectorValue = $modalContent.find(".weight-selector option:checked").text(),
+        $weightNumVal = $modalContent.find(".weight-priority option:checked").text(),
+
+        $costSelectorValue = $modalContent.find(".cost-selector option:checked").text(),
+        $costNumVal = $modalContent.find(".cost-priority option:checked").text(),
+
+        $specialtySelectorValue = $modalContent.find(".specialty-selector option:checked").text(),
+        $specialtyNumVal = $modalContent.find(".specialty-priority option:checked").text(),
+
+        $qualitySelectorValue = $modalContent.find(".quality-selector option:checked").text(); 
+        $qualityNumVal = $modalContent.find(".quality-priority option:checked").text();
+
+        //check to see if any two priority values are the same
+        if($weightNumVal == $costNumVal || 
+            $weightNumVal == $specialtyNumVal || 
+            $weightNumVal == $qualityNumVal || 
+            $costNumVal == $specialtyNumVal ||
+            $costNumVal == $qualityNumVal ||
+            $specialtyNumVal == $qualityNumVal){
+            var $currModalFooter = modalInnerFooter[index];
+            $currModalFooter.prepend(samePriorityError);
+            samePriorityError.style.display = "block";
+            return false;
+        }
+
+
+        itemImageSrc = modalImages[index].getAttribute("src");
+        gotHeading = modalInnerImageHeadings[index].textContent;
+        createCartItem(
+            modalWindowId, gotHeading, itemImageSrc, $weightSelectorValue, 
+            $weightNumVal, $costSelectorValue, $costNumVal, 
+            $specialtySelectorValue, $specialtyNumVal, 
+            $qualitySelectorValue, $qualityNumVal
+        );
+        cartItems++;
+        cartBadge.textContent = cartItems;
+        cartBadge.style.display = "block";
+        priorityNumForm.reset();
+        selectorForm.reset();
+        modalWindow.style.display = "none";            
+}
+
+/*--- End of Add Btn to Cart ---*/
+
+function createCartItem(windowId, heading, imageSrc, weight, weightP, cost, costP, specialty, specialtyP, quality, qualityP){
+    
+    //create new cart row, cart columns, and add to cart-modal-content div
+    var cartContent = document.getElementById("cart-modal-content");
+    var newCartRow = document.createElement("div");
+    newCartRow.classList.add("cart-row");
+    var leftCartCol = document.createElement("div");
+    leftCartCol.classList.add("left-cart-col");
+    var leftColHeading = document.createElement("h4");
+    leftColHeading.classList.add("left-col-heading");
+    leftColHeading.textContent = heading;
+    var imageContainer = document.createElement("div");
+    imageContainer.classList.add("col-image-container")
+    var newImage = document.createElement("input");
+    newImage.setAttribute("type", "image");
+    newImage.setAttribute("src", imageSrc);
+    imageContainer.appendChild(newImage);
+    var rightCartCol = document.createElement("div");
+    rightCartCol.classList.add("right-cart-col");
+    var rightColHeading = document.createElement("h4");
+    rightColHeading.classList.add("right-col-heading");
+    rightColHeading.textContent = "Details";
+
+    //create list and list items with text from select options checked
+    var detailsList = document.createElement("ul");
+    detailsList.classList.add("details-list");
+    var listItem1 = document.createElement("li");
+    var listText1 = document.createTextNode("Weight: " + weight + ", Priority: " + weightP);
+    listItem1.appendChild(listText1);
+    detailsList.appendChild(listItem1);
+    var listItem2 = document.createElement("li");
+    var listText2 = document.createTextNode("Cost: " + cost + ", Priority: " + costP);
+    listItem2.appendChild(listText2);
+    detailsList.appendChild(listItem2);
+    var listItem3 = document.createElement("li");
+    var listText3 = document.createTextNode("Specialty: " + specialty + ", Priority: " + specialtyP);
+    listItem3.appendChild(listText3);
+    detailsList.appendChild(listItem3);
+    var listItem4 = document.createElement("li");
+    var listText4 = document.createTextNode("Quality: " + quality + ", Priority: " + qualityP);
+    listItem4.appendChild(listText4);
+    detailsList.appendChild(listItem4);
+    
+    //append created columns to the create cart row
+    leftCartCol.appendChild(leftColHeading);
+    leftCartCol.appendChild(imageContainer);
+    rightCartCol.appendChild(rightColHeading);
+    rightCartCol.appendChild(detailsList);
+    newCartRow.appendChild(leftCartCol);
+    newCartRow.appendChild(rightCartCol);
+
+    // create btn container and btn elements
+    var btnContainer = document.createElement("div");
+    btnContainer.classList.add("item-btns-container");
+    var btn1 = document.createElement("button");
+    btn1.classList.add("make-changes-btn");
+    btn1.setAttribute("for", "");
+    btn1.setAttribute("for", windowId);
+    btn1.textContent = "Make Changes";
+    var btn2 = document.createElement("button");
+    btn2.classList.add("remove-item-btn");
+    btn2.textContent = "Remove Item";
+    btnContainer.appendChild(btn1);
+    btnContainer.appendChild(btn2);
+    rightCartCol.appendChild(btnContainer);
+
+    //create line divider between food items in cart
+    var lineDivider = document.createElement("div");
+    lineDivider.classList.add("line-divider")
+
+    cartContent.appendChild(newCartRow);
+    cartContent.appendChild(lineDivider);
+    placeOrderBtn.style.display = "block";
+    noGroceriesAdded.style.display = "none";   
+}
+
+// function makeChangesFunc(){
+//     var makeChangesBtns = document.getElementsByClassName("make-changes-btn");
+//     for(let i = 0; i < makeChangesBtns.length; i++){
+//         makeChangesBtns[i].addEventListener("click", function(){
+//             let foodAtt = this.getAttribute("for");
+//             cartModalWindow.style.display = "none";
+//             let currFoodRow = this.parentElement.parentElement.parentElement;
+//             let $nextLineDivider = $(this).parents(".cart-row").next(".line-divider");
+//             $nextLineDivider.css("display", "none");
+//             currFoodRow.style.display = "none";
+//             cartItems--;
+//             cartBadge.textContent = cartItems;
+//             $("#" + foodAtt).css("display", "block");
+//         });
+//     }
+// }
+
+$("body").click(function(event){
+    if(event.target.matches(".make-changes-btn")){
+        let foodAtt = $(event.target).attr("for");
+        cartModalWindow.style.display = "none";
+        let currFoodRow = event.target.parentElement.parentElement.parentElement;
+        let $nextLineDivider = $(event.target).parents(".cart-row").next(".line-divider");
+        $nextLineDivider.css("display", "none");
+        currFoodRow.style.display = "none";
+        cartItems--;
+        cartBadge.textContent = cartItems;
+        $("#" + foodAtt).css("display", "block");
+        openFoodModal2(foodAtt);
+    }
+    if(event.target.matches(".remove-item-btn")){
+        var $thisBtn = event.target;
+        let thisFoodRow = $thisBtn.parentElement.parentElement.parentElement;
+        let $nextLineDivider = $(event.target).parents(".cart-row").next(".line-divider");
+        $nextLineDivider.css("display", "none");
+        thisFoodRow.style.display = "none";
+        cartItems--;
+        cartBadge.textContent = cartItems;
+    }   
+});
+
+
+
 function initMap(){
     for (let i = 0; i < searchListItem.length; i++){
         searchListItem[i].addEventListener("click", function(){
@@ -276,6 +471,12 @@ function initMap(){
 }; //end of initMap function
 /*--- End of Google Maps API ---*/
 
+
+
+
+
+
+
 $(window).on('beforeunload', function() {
    $(window).scrollTop(0);
 });
@@ -284,188 +485,6 @@ $(window).on('beforeunload', function() {
 $("#search-case-list a").on("click", function(e){
     e.preventDefault();
 });
-
-
-
-
-/*--- Add Item to Cart with Add Btn ---*/
-var addToCartBtns = document.getElementsByClassName("add-to-cart-btn");
-var priorityNumForm = document.getElementById("priority-num-form");
-var selectorForm = document.getElementById("selector-form");
-var modalInnerImageHeadings = document.getElementsByClassName("modal-inner-image-heading");
-var modalImages = document.getElementsByClassName("modal-image");
-var gotHeading;
-var cartItems = 0;
-var placeOrderBtn = document.getElementById("place-order-btn");
-var noGroceriesAdded = document.getElementById("no-groceries-added");
-
-for(let i = 0; i < addToCartBtns.length; i++){
-    addToCartBtns[i].addEventListener("click", function(){
-        addFoodItem(i);
-    });
-}
-function addFoodItem(index){
-        var modalWindow = addToCartBtns[index].parentElement.parentElement.parentElement;
-        var $modalContainer = $(".add-to-cart-btn").eq(index).parents(".modal-inner-container"),
-            $modalContent = $modalContainer.find(".modal-inner-content"),
-            $modalFoodHeading = $modalContent.find(".modal-inner-image-heading").text();
-
-            $weightSelectorValue = $modalContent.find(".weight-selector option:checked").text(),
-            $weightNumVal = $modalContent.find(".weight-priority option:checked").text(),
-
-            $costSelectorValue = $modalContent.find(".cost-selector option:checked").text(),
-            $costNumVal = $modalContent.find(".cost-priority option:checked").text(),
-
-            $specialtySelectorValue = $modalContent.find(".specialty-selector option:checked").text(),
-            $specialtyNumVal = $modalContent.find(".specialty-priority option:checked").text(),
-
-            $qualitySelectorValue = $modalContent.find(".quality-selector option:checked").text(); 
-            $qualityNumVal = $modalContent.find(".quality-priority option:checked").text();
-
-            //check to see if any two priority values are the same
-            if($weightNumVal == $costNumVal || 
-                $weightNumVal == $specialtyNumVal || 
-                $weightNumVal == $qualityNumVal || 
-                $costNumVal == $specialtyNumVal ||
-                $costNumVal == $qualityNumVal ||
-                $specialtyNumVal == $qualityNumVal){
-                var $currModalFooter = modalInnerFooter[index];
-                $currModalFooter.prepend(samePriorityError);
-                samePriorityError.style.display = "block";
-                return false;
-            }
-
-
-            itemImageSrc = modalImages[index].getAttribute("src");
-            gotHeading = modalInnerImageHeadings[index].textContent;
-            createCartItem(
-                gotHeading, itemImageSrc, $weightSelectorValue, 
-                $weightNumVal, $costSelectorValue, $costNumVal, 
-                $specialtySelectorValue, $specialtyNumVal, 
-                $qualitySelectorValue, $qualityNumVal
-            );
-            cartItems++;
-            cartBadge.textContent = cartItems;
-            cartBadge.style.display = "block";
-            priorityNumForm.reset();
-            selectorForm.reset();
-            modalWindow.style.display = "none";            
-}
-
-/*--- End of Add Btn to Cart ---*/
-
-function createCartItem(heading, imageSrc, weight, weightP, cost, costP, specialty, specialtyP, quality, qualityP){
-    
-    //create new cart row, cart columns, and add to cart-modal-content div
-    var cartContent = document.getElementById("cart-modal-content");
-    var newCartRow = document.createElement("div");
-    newCartRow.classList.add("cart-row");
-    var leftCartCol = document.createElement("div");
-    leftCartCol.classList.add("left-cart-col");
-    var leftColHeading = document.createElement("h4");
-    leftColHeading.classList.add("left-col-heading");
-    leftColHeading.textContent = heading;
-    var imageContainer = document.createElement("div");
-    imageContainer.classList.add("col-image-container")
-    var newImage = document.createElement("input");
-    newImage.setAttribute("type", "image");
-    newImage.setAttribute("src", imageSrc);
-    imageContainer.appendChild(newImage);
-    var rightCartCol = document.createElement("div");
-    rightCartCol.classList.add("right-cart-col");
-    var rightColHeading = document.createElement("h4");
-    rightColHeading.classList.add("right-col-heading");
-    rightColHeading.textContent = "Details";
-
-    //create list and list items with text from select options checked
-    var detailsList = document.createElement("ul");
-    detailsList.classList.add("details-list");
-    var listItem1 = document.createElement("li");
-    var listText1 = document.createTextNode("Weight: " + weight + ", Priority: " + weightP);
-    listItem1.appendChild(listText1);
-    detailsList.appendChild(listItem1);
-    var listItem2 = document.createElement("li");
-    var listText2 = document.createTextNode("Cost: " + cost + ", Priority: " + costP);
-    listItem2.appendChild(listText2);
-    detailsList.appendChild(listItem2);
-    var listItem3 = document.createElement("li");
-    var listText3 = document.createTextNode("Specialty: " + specialty + ", Priority: " + specialtyP);
-    listItem3.appendChild(listText3);
-    detailsList.appendChild(listItem3);
-    var listItem4 = document.createElement("li");
-    var listText4 = document.createTextNode("Quality: " + quality + ", Priority: " + qualityP);
-    listItem4.appendChild(listText4);
-    detailsList.appendChild(listItem4);
-    
-    //append created columns to the create cart row
-    leftCartCol.appendChild(leftColHeading);
-    leftCartCol.appendChild(imageContainer);
-    rightCartCol.appendChild(rightColHeading);
-    rightCartCol.appendChild(detailsList);
-    newCartRow.appendChild(leftCartCol);
-    newCartRow.appendChild(rightCartCol);
-
-    // create btn container and btn elements
-    var btnContainer = document.createElement("div");
-    btnContainer.classList.add("item-btns-container");
-    var btn1 = document.createElement("button");
-    btn1.classList.add("make-changes-btn");
-    btn1.textContent = "Make Changes";
-    var btn2 = document.createElement("button");
-    btn2.classList.add("remove-item-btn");
-    btn2.textContent = "Remove Item";
-    btnContainer.appendChild(btn1);
-    btnContainer.appendChild(btn2);
-    rightCartCol.appendChild(btnContainer);
-
-    //create line divider between food items in cart
-    var lineDivider = document.createElement("div");
-    lineDivider.classList.add("line-divider")
-
-    cartContent.appendChild(newCartRow);
-    cartContent.appendChild(lineDivider);
-    placeOrderBtn.style.display = "block";
-    noGroceriesAdded.style.display = "none";
-
-    var removeItemBtns = document.getElementsByClassName("remove-item-btn");
-    makeChangesFunc();
-}
-
-function makeChangesFunc(){
-    var makeChangesBtns = document.getElementsByClassName("make-changes-btn");
-    for(let i = 0; i < makeChangesBtns.length; i++){
-        makeChangesBtns[i].addEventListener("click", function(){
-            cartModalWindow.style.display = "none";
-            let currFoodRow = this.parentElement.parentElement.parentElement;
-            currFoodRow.style.display = "none";
-            openFoodModal(i);
-        });
-    }
-}
-
-$("body").click(function(event){
-    if(event.target.matches(".remove-item-btn")){
-        var $thisBtn = event.target;
-        let thisFoodRow = $thisBtn.parentElement.parentElement.parentElement;
-        let $nextLineDivider = $(event.target).parents(".cart-row").next(".line-divider");
-        $nextLineDivider.css("display", "none");
-        thisFoodRow.style.display = "none";
-        cartItems--;
-        cartBadge.textContent = cartItems;
-    }   
-});
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 $(".banner-btn").click(function(){
