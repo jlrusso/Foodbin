@@ -169,6 +169,12 @@ var storedLocations = [
     {location: "Riverside, CA", coords: {lat: 33.9533, lng: -117.3962}}
 ];
 
+var sacramentoStores = [
+    {storeName: "Safeway", address: "1025 Alhambra Blvd, Sacramento, CA 95816", coords: {lat: 38.5716084, lng: -121.464628699999}},
+    {storeName: "Safeway", address: "1814 19th St, Sacramento, CA 95811", coords: {lat: 38.567982, lng: -121.48602800000003}},
+    {storeName: "Sacramento Natural Foods Co-op", address: "2820 R St, Sacramento, CA 95816", coords: {lat: 38.564632, lng: -121.472913}},
+];
+
 var mapElement = document.getElementById("map");
 
 function initMap(){
@@ -183,7 +189,7 @@ function initMap(){
                     locationInputField.value = thisItem;
                     userLocation = storedLocation.location;
                     userCoords = storedLocation.coords;
-                    createMapObject(10, userLocation, userCoords);
+                    createMapObject(12, userLocation, userCoords);
                 }
             });
             $("#search-list-group").animate({
@@ -200,6 +206,7 @@ function initMap(){
             center: {lat: 39.0997, lng: -94.5786}
         }
     }
+
     //zoom and center values used when user chooses a location
     function options2(z, coords){
         return {
@@ -207,17 +214,23 @@ function initMap(){
             center: coords
         }
     }
+
     //initilize map instance after calling function that incorporates zoom level, location name, and coordinates
     var mapInstance1 = new google.maps.Map(mapElement, options1());
     var mapInstance2;
     function createMapObject(z, userLocation, coords){
         mapInstance2 = new google.maps.Map(mapElement, options2(z, coords));
-        addMarker(userLocation, coords);   
-        //addMarker(userLocation, coords); 
+        addMark(userLocation, coords);
+        if(userLocation === "Sacramento, CA"){
+            for(let i = 0; i < sacramentoStores.length; i++){
+                addStoreMarkers(sacramentoStores[i].storeName, sacramentoStores[i].coords);
+            }
+        }   
+        //addMark(userLocation, coords); 
     }
 
     //adds marker based on user location input and the coordinates for the city name
-    function addMarker(userLocation, userCoordinates){
+    function addMark(userLocation, userCoordinates){
         var marker = new google.maps.Marker({
             map: mapInstance2,
             label: userLocation[0],
@@ -233,6 +246,22 @@ function initMap(){
             infoWindow.open(map, marker);
         });
     };
+    function addStoreMarkers(storeName, storeCoords){
+        var marker = new google.maps.Marker({
+            map: mapInstance2,
+            icon: "../img/shopping-cart.png",
+            animation: google.maps.Animation.DROP,
+            position: storeCoords
+        });
+
+        var infoWindow = new google.maps.InfoWindow({
+            content: "<h4 style='text-align: center'>" + storeName + "</h4>"
+        })
+
+        marker.addListener("click", function(){
+            infoWindow.open(map, marker);
+        })
+    }
 }; //end of initMap function
 /*--- End of Google Maps API ---*/
 
@@ -387,6 +416,7 @@ function createCartItem(heading, imageSrc, weight, weightP, cost, costP, special
     placeOrderBtn.style.display = "block";
     noGroceriesAdded.style.display = "none";
 
+    var removeItemBtns = document.getElementsByClassName("remove-item-btn");
     makeChangesFunc();
 }
 
@@ -396,11 +426,25 @@ function makeChangesFunc(){
         makeChangesBtns[i].addEventListener("click", function(){
             cartModalWindow.style.display = "none";
             let currFoodRow = this.parentElement.parentElement.parentElement;
-            currFoodRow.style.display = ""
+            currFoodRow.style.display = "none";
             openFoodModal(i);
         });
     }
 }
+
+$(".remove-item-btn").click(function(){
+    let thisFoodRow = this.parentElement.parentElement.parentElement;
+    let $nextLineDivider = $(this).parents(".cart-row").next(".line-divider");
+    $nextLineDivider.css("display", "none");
+    thisFoodRow.style.display = "none";
+    cartItems--;
+    cartBadge.textContent = cartItems;
+})
+
+
+
+
+
 
 
 

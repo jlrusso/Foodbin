@@ -174,7 +174,7 @@ nav {
 .right-caption p::after {
     position: absolute;
     top: 35%;
-    right: 96.%;
+    right: 96%;
     content: "";
     width: 20px;
     height: 20px;
@@ -188,7 +188,7 @@ nav {
 .left-caption p::after {
     position: absolute;
     top: 35%;
-    left: 96.5%;
+    left: 96%;
     content: "";
     width: 20px;
     height: 20px;
