@@ -371,6 +371,22 @@ var sacramentoStores = [
     {storeName: "Foodsco", address: "5021 Fruitridge Rd, Sacramento, CA 95820", coords: {lat: 38.5269495, lng: -121.44444900000002}},
 ];
 
+// var sandiegoStores = [
+//     {storeName: "", address: "", coords: {lat: , lng: }},
+//     {storeName: "", address: "", coords: {lat: , lng: }},
+//     {storeName: "", address: "", coords: {lat: , lng: }},
+//     {storeName: "", address: "", coords: {lat: , lng: }},
+//     {storeName: "", address: "", coords: {lat: , lng: }},
+//     {storeName: "", address: "", coords: {lat: , lng: }},
+//     {storeName: "", address: "", coords: {lat: , lng: }},
+//     {storeName: "", address: "", coords: {lat: , lng: }},
+//     {storeName: "", address: "", coords: {lat: , lng: }},
+//     {storeName: "", address: "", coords: {lat: , lng: }},
+//     {storeName: "", address: "", coords: {lat: , lng: }},
+//     {storeName: "", address: "", coords: {lat: , lng: }},
+//     {storeName: "", address: "", coords: {lat: , lng: }}
+// ];
+
 var mapElement = document.getElementById("map");
 
 
@@ -393,7 +409,6 @@ function initMap(){
             $("#search-list-group").animate({
                 scrollTop: $("li:contains(" + thisItem + ")").offset().top - $("#search-list-group").offset().top + $("#search-list-group").scrollTop()
             }, "500");
-            console.log($("#search-list-group").scrollTop());
         });
     };
 
@@ -431,7 +446,7 @@ function initMap(){
     function addLocationMarker(userLocation, userCoordinates){
         var marker = new google.maps.Marker({
             map: mapInstance2,
-            label: userLocation[0],
+            //label: userLocation[0],
             animation: google.maps.Animation.DROP,
             position: userCoordinates
         });
@@ -439,28 +454,29 @@ function initMap(){
         var infoWindow = new google.maps.InfoWindow({
             content: "<h4>" + userLocation + "</h4>"
         });
-
         marker.addListener("click", function(){
             infoWindow.open(map, marker);
         });
     };
 
-
-    $("#store-list option").on("click", function(){
-        var $storeOptionText = $(this).text();
-        console.log("hello");
-        // for(let i = 0; sacramentoStores.length; i++){
-        //     if (sacramentoStores[i].address.indexOf($storeOptionText > -1)){
-        //         let storeName = sacramentoStores[i].storeName;
-        //         let storeCoords = sacramentoStores[i].coords;
-        //         addStoreMarkers(storeName, storeCoords);
-        //     } else {
-        //         return false;
-        //     }
-        // }
+    $("#store-list").on("change", function(){
+        var $storeOptionText = $("#store-list option:selected").text();
+        var firstP = $storeOptionText.indexOf("(");
+        var lastP = $storeOptionText.indexOf(")");
+        var $finalOptionText = $storeOptionText.substring(firstP + 1, lastP).toUpperCase();
+        sacramentoStores.forEach(function(store){
+            var add = store.address;
+            if(add.toUpperCase().lastIndexOf($finalOptionText) > -1){
+                let storeName = store.storeName;
+                let storeCoords = store.coords;
+                let storeAddress = store.address;
+                addStoreMarkers(storeName, storeCoords, storeAddress);
+            }
+        });
     });
+
     //add store to map when that store option is selected
-    function addStoreMarkers(storeName, storeCoords){
+    function addStoreMarkers(storeName, storeCoords, storeAddress){
         var marker = new google.maps.Marker({
             map: mapInstance2,
             icon: "../img/shopping-cart.png",
@@ -469,10 +485,12 @@ function initMap(){
         });
 
         var infoWindow = new google.maps.InfoWindow({
-            content: "<span>" + storeName + "</span><br/>" +
-                     "<span>" + storeName + "</span>"
+            content: "<p style='font-weight: bold'>" + storeName + "</p><br/>" +
+                     "<span>" + storeAddress + "</span><br/>" +
+                     "<a href='https://maps.google.com/?q=" + storeName + " " + storeAddress + "' target='_blank' style='color: #427fed'>View on Google Maps</a>"
         })
-
+      
+        infoWindow.open(map, marker);
         marker.addListener("click", function(){
             infoWindow.open(map, marker);
         })
@@ -481,19 +499,7 @@ function initMap(){
 /*--- End of Google Maps API ---*/
 
 
-    $("#store-list option").on("click", function(){
-        var $storeOptionText = $(this).val();
-        console.log($storeOptionText);
-        // for(let i = 0; sacramentoStores.length; i++){
-        //     if (sacramentoStores[i].address.indexOf($storeOptionText > -1)){
-        //         let storeName = sacramentoStores[i].storeName;
-        //         let storeCoords = sacramentoStores[i].coords;
-        //         addStoreMarkers(storeName, storeCoords);
-        //     } else {
-        //         return false;
-        //     }
-        // }
-    });
+    
 
 
 
