@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Foodie Bin</title>
+	<title>Foodbin</title>
 </head>
 <body>
 	<!DOCTYPE html>
@@ -19,12 +19,13 @@
     <div id="container">
 
         <nav>
-            <div id="nav-logo"><a href="#"><b>Foodie Bin</b></a></div>
+            <div id="nav-logo"><a href="#"><b>Foodbin</b></a></div>
              <div id="horizontal-nav">
                 <ul>
                     <li><a href="#">Login</a></li>
                     <li><a href="#">Sign Up</a></li>
-                    <li><a href="#" id="cart-container"><i class="fa fa-shopping-cart" id="cart" aria-hidden="true"></i></a></li>
+                    <li><a href="#" id="cart-container"><i class="fa fa-shopping-cart" id="shopping-cart" aria-hidden="true"></i><span id="cart-badge"></span></a></li>
+
                 </ul>
             </div>
         </nav>
@@ -32,29 +33,38 @@
         <div id="banner-area">
         	<div id="banner-overlay"></div>
             <div id="banner-inner">
-                <p id="banner-heading">Groceries. Just a click away.</p>
+                <p id="banner-heading">Groceries. Just clicks away.</p>
                 <p>No need to drive, wait in a long line, or hope that your items are available</p>
                 <button type="button" class="banner-btn" id="request-btn">Request Food</button>
                 <button type="button" class="banner-btn" id="deliver-btn">Deliver Food</button>
-            </div>
+            </div> 
         </div>
 
         <div id="how-it-works-area">
-            <div class="hiw-column">             
-                <div class="image-caption">
-                	<p>Choose a location below to see available grocery stores and available deliverers</p>
-                </div>
+          <div class="hiw-row">
+            <div class="hiw-row-inner">
+              <input type="image" src="../img/map.jpeg" alt="Maps"/>
+              <div class="image-caption right-caption">
+                <p>Choose a location below to see available grocery stores and available deliverers</p>
+              </div>
             </div>
-            <div class="hiw-column">            
-                <div class="image-caption">
-                	<p>Choose food items and get as specific as you want, then add the items to your cart</p>
-                </div>
-            </div>            
-            <div class="hiw-column">      
-                <div class="image-caption">
-                	<p>Make any last minute changes to your food bin before paying, then place an order</p>
-                </div>
+          </div>
+          <div class="hiw-row">             
+            <div class="hiw-row-inner">
+              <div class="image-caption left-caption">
+                <p>Select food items and get as specific as you want, then add the items to your cart</p>
+              </div>
+              <input type="image" src="../img/grocery-aisle.jpg" alt="Grocery Aisle"/>
             </div>
+          </div>
+          <div class="hiw-row">
+            <div class="hiw-row-inner">
+              <input type="image" src="../img/view-groceries.jpg" alt="Groceries"/>
+              <div class="image-caption right-caption">
+                <p>Make last minute changes to your food bin before paying, then place an order</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div id="user-map-area">
@@ -62,40 +72,59 @@
         		<h3>Choose your Location</h3>
         		<form action="">
 		            <div id="input-container">
-		                <input type="text" id="location-input-field" placeholder="city, state" autocomplete="off" />
-		            </div>
-		            <div id="search-case-list">
-		                <ul id="search-list-group">
-		                    <li><a href="#">Sacramento, CA</a></li>
-		                    <li><a href="#">Los Angeles, CA</a></li>
-		                    <li><a href="#">San Francisco, CA</a></li>
-		                    <li><a href="#">Las Vegas, NV</a></li>
-		                    <li><a href="#">Chicago, IL</a></li>
-		                    <li><a href="#">Dallas, TX</a></li>
-		                    <li><a href="#">Seattle, WA</a></li>
-		                    <li><a href="#">Houston, TX</a></li>
-		                    <li><a href="#">Washington, D.C.</a></li>
-		                    <li><a href="#">San Antonio, TX</a></li>
-		                    <li><a href="#">Phoenix, AZ</a></li>
-		                    <li><a href="#">Philadelphia, PN</a></li>
-		                    <li><a href="#">Austin, TX</a></li>
-		                    <li><a href="#">Denver, CO</a></li>
-		                    <li><a href="#">Nashville, TN</a></li>
-		                    <li><a href="#">Indianapolis, IN</a></li>
-		                    <li><a href="#">Minneapolis, MN</a></li>
-		                    <li><a href="#">San Jose, CA</a></li>
-		                    <li><a href="#">Baltimore, MD</a></li>
-		                    <li><a href="#">Charlotte, NC</a></li>
-		                    <li><a href="#">Detroit, MI</a></li>
-		                    <li><a href="#">New York, CA</a></li>
-		                    <li><a href="#">Riverside, CA</a></li>
-		                    <li><a href="#">San Diego, CA</a></li>
-		                    <li><a href="#">Boston, MS</a></li>
-		                </ul>
+                    <div id="marker-input-container">
+                      <span><i class="fa fa-map-marker"></i></span>
+                      <input type="text" id="location-input-field" placeholder="city, state" autocomplete="off"/>
+                    </div>
+                    <div id="search-case-list">
+                      <ul id="search-list-group">
+                          <li><a href="#">Sacramento, CA</a></li>
+                          <li><a href="#">Los Angeles, CA</a></li>
+                          <li><a href="#">San Francisco, CA</a></li>
+                          <li><a href="#">Las Vegas, NV</a></li>
+                          <li><a href="#">Chicago, IL</a></li>
+                          <li><a href="#">Dallas, TX</a></li>
+                          <li><a href="#">Seattle, WA</a></li>
+                          <li><a href="#">Houston, TX</a></li>
+                          <li><a href="#">Washington, D.C.</a></li>
+                          <li><a href="#">San Antonio, TX</a></li>
+                          <li><a href="#">Phoenix, AZ</a></li>
+                          <li><a href="#">Philadelphia, PN</a></li>
+                          <li><a href="#">Austin, TX</a></li>
+                          <li><a href="#">Denver, CO</a></li>
+                          <li><a href="#">Nashville, TN</a></li>
+                          <li><a href="#">Indianapolis, IN</a></li>
+                          <li><a href="#">Minneapolis, MN</a></li>
+                          <li><a href="#">San Jose, CA</a></li>
+                          <li><a href="#">Baltimore, MD</a></li>
+                          <li><a href="#">Charlotte, NC</a></li>
+                          <li><a href="#">Detroit, MI</a></li>
+                          <li><a href="#">New York, CA</a></li>
+                          <li><a href="#">Riverside, CA</a></li>
+                          <li><a href="#">San Diego, CA</a></li>
+                          <li><a href="#">Boston, MS</a></li>
+                      </ul>
+                  </div>
+                  <select name="grocery-store-list" id="store-list">
+                    <option value="1025-Safeway">Safeway (1025 Alhambra Blvd)</option>
+                    <option value="1814-Safeway">Safeway (1814 19th St)</option>
+                    <option value="2820-Nat-Coop">Sac. Natural Foods Co-op (2820 R St)</option>
+                    <option value="5000-Trader-Joes">Trader Joe's (5000 Folsom Blvd)</option>
+                    <option value="5810-Corti-Brothers">Corti Brothers (5810 Folsom Blvd)</option>
+                    <option value="3547-Food-Source">Food Source (3547 Bradshaw Rd)</option>
+                    <option value="2900-Taylors-Market">Taylor's Market (2900 Freeport Blvd)</option>
+                    <option value="4990-Otos-Market">Oto's Market (4990 Freeport Blvd)</option>
+                    <option value="2355-Mi-Rancho">Mi Rancho (2355 Florin Rd)</option>
+                    <option value="7205-Smart-Final">Smart &amp; Final Extra (7205 Freeport Blvd)</option>
+                    <option value="1040-Nugget-Markets">Nugget Market's (1040 Florin Rd)</option>
+                    <option value="5021-Foodsco">Foodsco (5021 Fruitridge Rd)</option>
+                  </select>
 		            </div>
 		        </form>
         	</div>
-        	<div id="map"></div>
+          <div id="map-container">
+            <div id="map"></div>
+          </div>
         </div>
 
         <div id="food-area">
@@ -150,6 +179,60 @@
                     </div>
                 </div>
             </section>
+            <div class="food-line-divider"></div>
+
+            <section class="food-type-section">
+                <div class="food-type-heading">Vegetables</div>
+                <div class="slide-btns-container">
+                  <button class="slide-left-btn"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                  <button class="slide-right-btn"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                </div>
+                <div class="outer-images-container">
+                    <div class="inner-images-container">
+                      <div class="per-image-container">
+                        <input type="image" src="../img/broccoli.jpeg" alt="Broccoli"/>
+                        <div class="image-btn">Get Broccoli</div>
+                      </div>
+                      <div class="per-image-container">
+                        <input type="image" src="../img/squash.jpeg" alt="Squash"/>
+                        <div class="image-btn">Get Squash</div>
+                      </div>
+                      <div class="per-image-container">
+                        <input type="image" src="../img/cauliflower.jpeg" alt="Cauliflower"/>
+                        <div class="image-btn">Get Cauliflower</div>
+                      </div>
+                      <div class="per-image-container">
+                        <input type="image" src="../img/carrots.jpeg" alt="Carrots"/>
+                        <div class="image-btn">Get Carrots</div>
+                      </div>
+                      <div class="per-image-container">
+                        <input type="image" src="../img/celery.jpg" alt="Celery"/>
+                        <div class="image-btn">Get Celery</div>
+                      </div>
+                      <div class="per-image-container">
+                        <input type="image" src="../img/lettuce.jpg" alt="Lettuce"/>
+                        <div class="image-btn">Get Lettuce</div>
+                      </div>
+                      <div class="per-image-container">
+                        <input type="image" src="../img/potatoes.jpeg" alt="White potatoes"/>
+                        <div class="image-btn">Get White Potatoes</div>
+                      </div>
+                      <div class="per-image-container">
+                        <input type="image" src="../img/spinach.jpg" alt="Spinach"/>
+                        <div class="image-btn">Get Spinach</div>
+                      </div>
+                      <div class="per-image-container">
+                        <input type="image" src="../img/kale.jpeg" alt="Kale"/>
+                        <div class="image-btn">Get Kale</div>
+                      </div>
+                        <div class="per-image-container">
+                          <input type="image" src="../img/whiteonions.jpg" alt="White Onions"/>
+                          <div class="image-btn">Get White Onions</div>
+                      </div>
+                    </div>
+                </div>
+            </section>
+            <div class="food-line-divider"></div>
             
             
            
@@ -186,7 +269,7 @@
 	                        <div class="image-btn">Get Pineapples</div>
 	                    </div>
 	                    <div class="per-image-container">
-	                        <input type="image" src="../img/kiwis.jpg" alt="Kiwis"/>
+	                        <input type="image" src="../img/kiwi.png" alt="Kiwi"/>
 	                        <div class="image-btn">Get Kiwis</div>
 	                    </div>
                         <div class="per-image-container">
@@ -204,6 +287,8 @@
                     </div>
                 </div>
             </section>
+            <div class="food-line-divider"></div>
+
             <section class="food-type-section">
                 <div class="food-type-heading">Nuts</div>
                 <div class="slide-btns-container">
@@ -245,8 +330,8 @@
 	                        <div class="image-btn">Get Pecans</div>
 	                    </div>
                         <div class="per-image-container">
-	                        <input type="image" src="../img/walnuts.jpg" alt="Walnuts"/>
-	                        <div class="image-btn">Get Walnuts</div>
+	                        <input type="image" src="../img/pinenuts.jpg" alt="Pine Nuts"/>
+	                        <div class="image-btn">Get Pine Nuts</div>
 	                    </div>
                         <div class="per-image-container">
 	                        <input type="image" src="../img/chestnuts.jpg" alt="Chestnuts"/>
@@ -255,58 +340,9 @@
                     </div>
                 </div>
             </section>
+            <div class="food-line-divider"></div>
 
-            <section class="food-type-section">
-                <div class="food-type-heading">Vegetables</div>
-                <div class="slide-btns-container">
-                  <button class="slide-left-btn"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
-                  <button class="slide-right-btn"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
-                </div>
-                <div class="outer-images-container">
-                    <div class="inner-images-container">
-                      <div class="per-image-container">
-                        <input type="image" src="../img/broccoli.jpeg" alt="Broccoli"/>
-                        <div class="image-btn">Get Broccoli</div>
-                      </div>
-                      <div class="per-image-container">
-                        <input type="image" src="../img/squash.jpeg" alt="Squash"/>
-                        <div class="image-btn">Get Squash</div>
-                      </div>
-                      <div class="per-image-container">
-                        <input type="image" src="../img/cauliflower.jpeg" alt="Cauliflower"/>
-                        <div class="image-btn">Get Cauliflower</div>
-                      </div>
-                      <div class="per-image-container">
-                        <input type="image" src="../img/carrots.jpeg" alt="Carrots"/>
-                        <div class="image-btn">Get Carrots</div>
-                      </div>
-                      <div class="per-image-container">
-                        <input type="image" src="../img/celery.jpg" alt="Celery"/>
-                        <div class="image-btn">Get Celery</div>
-                      </div>
-                      <div class="per-image-container" id="red-potatoes-image">
-                        <input type="image" src="../img/redpotatoes.jpg" alt="Red Potatoes"/>
-                        <div class="image-btn">Get Red Potatoes</div>
-                      </div>
-                      <div class="per-image-container">
-                        <input type="image" src="../img/potatoes.jpeg" alt="White potatoes"/>
-                        <div class="image-btn">Get White Potatoes</div>
-                      </div>
-                      <div class="per-image-container">
-                        <input type="image" src="../img/spinach.jpg" alt="Spinach"/>
-                        <div class="image-btn">Get Spinach</div>
-                      </div>
-                      <div class="per-image-container">
-                        <input type="image" src="../img/redonions.jpg" alt="Red Onions"/>
-                        <div class="image-btn">Get Red Onions</div>
-                      </div>
-                        <div class="per-image-container">
-                          <input type="image" src="../img/whiteonions.jpg" alt="White Onions"/>
-                          <div class="image-btn">Get White Onions</div>
-                      </div>
-                    </div>
-                </div>
-            </section>
+            
         </div>
 
         <div id="testimonial-area">
@@ -367,7 +403,7 @@
               </ul>
             </section>
           </div>
-          <span id="copyright">&copy; 2018 Foodiebin</span>
+          <span id="copyright">&copy; 2018 Foodbin</span>
         </footer>
         
      </div>
@@ -383,20 +419,6 @@
     		<div id="cart-modal-content">
     			<h3 id="cart-modal-heading">Shopping Cart</h3>
           <div class="line-divider"></div>
-          <div class="cart-row">
-            <div class="cart-left-col">
-              <h4 class="left-col-heading">Broccoli</h4>
-              <div class="col-image-container">
-                <input type="image" src="../img/broccoli.jpeg" alt="Broccoli"/>
-              </div>
-            </div>
-            <div class="cart-right-col">
-              <h4 class="right-col-heading">Details</h4>
-              <ul class="details-list">
-                
-              </ul>
-            </div>
-          </div>
           <p id="no-groceries-added">No groceries have been added to your cart yet</p>
     		</div>
         <div id="modal-footer">
@@ -405,8 +427,10 @@
     	</div>
     </div>
     <!-- End of Cart Modal -->
+
+
     <!-- Candy Food Section -->
-    <div class="modal-window">        
+    <div class="modal-window" id="twix-window">        
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
@@ -422,7 +446,7 @@
       </div>
     </div>
 
-    <div class="modal-window">        
+    <div class="modal-window" id="marsbar-window">        
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
@@ -438,7 +462,7 @@
       </div>
     </div>
 
-    <div class="modal-window">        
+    <div class="modal-window" id="gummybears-window">        
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
@@ -454,7 +478,7 @@
       </div>
     </div>
 
-    <div class="modal-window">        
+    <div class="modal-window" id="jellybeans-window">        
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
@@ -470,7 +494,7 @@
       </div>
     </div>
 
-    <div class="modal-window">        
+    <div class="modal-window" id="mandms-window">        
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
@@ -486,7 +510,7 @@
       </div>
     </div>
 
-    <div class="modal-window">        
+    <div class="modal-window" id="skittles-window">        
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
@@ -502,12 +526,12 @@
       </div>
     </div>
 
-    <div class="modal-window">        
+    <div class="modal-window" id="hersheys-window">        
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
             <div class="col-4">
-              <h3 class="modal-inner-image-heading">Hershey's</h3>
+              <h3 class="modal-inner-image-heading">Hersheys</h3>
               <input type="image" src="../img/hersheys.png" alt="Hersheys" class="modal-image"/>
             </div>
           </div>
@@ -518,7 +542,7 @@
       </div>
     </div>
 
-    <div class="modal-window">        
+    <div class="modal-window" id="snickers-window">        
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
@@ -534,7 +558,7 @@
       </div>
     </div>
 
-    <div class="modal-window">        
+    <div class="modal-window" id="sourpatches-window">        
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
@@ -550,7 +574,7 @@
       </div>
     </div>
 
-    <div class="modal-window">        
+    <div class="modal-window" id="candycorn-window">        
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
@@ -566,7 +590,7 @@
       </div>
     </div>
     <!-- End of Candy Section -->
-    <div class="modal-window">      	
+    <div class="modal-window" id="broccoli-window">      	
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
@@ -582,7 +606,7 @@
   		</div>
     </div>
 
-    <div class="modal-window">     	
+    <div class="modal-window" id="squash-window">     	
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
@@ -598,7 +622,7 @@
   		</div>
     </div>
 
-    <div class="modal-window">     	
+    <div class="modal-window" id="cauliflower-window">     	
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
@@ -614,7 +638,7 @@
   		</div>
     </div>
 
-    <div class="modal-window">     	
+    <div class="modal-window" id="carrots-window">     	
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
@@ -630,7 +654,7 @@
   		</div>
     </div>
 
-    <div class="modal-window">     	
+    <div class="modal-window" id="celery-window">     	
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
@@ -646,13 +670,13 @@
   		</div>
     </div>
 
-    <div class="modal-window">     	
+    <div class="modal-window" id="lettuce-window">     	
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Red Potatoes</h3>
-						<input type="image" src="../img/redpotatoes.jpg" alt="Red Potatoes" class="modal-image"/>
+						<h3 class="modal-inner-image-heading">Lettuce</h3>
+						<input type="image" src="../img/lettuce.jpg" alt="Lettuce" class="modal-image"/>
   					</div>
   				</div>
   			</div>
@@ -662,12 +686,12 @@
   		</div>
     </div>
 
-    <div class="modal-window">     	
+    <div class="modal-window" id="potatoes-window">     	
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
-						<h3 class="modal-inner-image-heading">White Potatoes</h3>
+						<h3 class="modal-inner-image-heading">Potatoes</h3>
 						<input type="image" src="../img/potatoes.jpeg" alt="White Potatoes" class="modal-image"/>
   					</div>
   				</div>
@@ -678,7 +702,7 @@
   		</div>
     </div>
 
-    <div class="modal-window">     	
+    <div class="modal-window" id="spinach-window">     	
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
@@ -694,13 +718,13 @@
   		</div>
     </div>
 
-    <div class="modal-window">     	
+    <div class="modal-window" id="kale-window">     	
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Red Onions</h3>
-						<input type="image" src="../img/redonions.jpeg" alt="Red Onions" class="modal-image"/>
+						<h3 class="modal-inner-image-heading">Kale</h3>
+						<input type="image" src="../img/kale.jpeg" alt="Kale" class="modal-image"/>
   					</div>
   				</div>
   			</div>
@@ -710,12 +734,12 @@
   		</div>
     </div>
 
-    <div class="modal-window">     	
+    <div class="modal-window" id="onions-window">     	
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
-						<h3 class="modal-inner-image-heading">White Onions</h3>
+						<h3 class="modal-inner-image-heading">Onions</h3>
 						<input type="image" src="../img/whiteonions.jpg" alt="White Onions" class="modal-image"/>
   					</div>
   				</div>
@@ -726,7 +750,7 @@
   		</div>
     </div>
 
-    <div class="modal-window">     	
+    <div class="modal-window" id="apples-window">     	
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
@@ -742,7 +766,7 @@
   		</div>
     </div>
 
-    <div class="modal-window">     	
+    <div class="modal-window" id="oranges-window">     	
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
@@ -758,7 +782,7 @@
   		</div>
     </div>
 
-    <div class="modal-window">     	
+    <div class="modal-window" id="bananas-window">     	
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
@@ -774,7 +798,7 @@
   		</div>
     </div>
 
-    <div class="modal-window">     	
+    <div class="modal-window" id="pears-window">     	
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
@@ -790,7 +814,7 @@
   		</div>
     </div>
 
-    <div class="modal-window">     	
+    <div class="modal-window" id="watermelons-window">     	
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
@@ -806,7 +830,7 @@
   		</div>
     </div>
 
-    <div class="modal-window">     	
+    <div class="modal-window" id="pineapples-window">     	
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
@@ -822,13 +846,13 @@
   		</div>
     </div>
 
-    <div class="modal-window">     	
+    <div class="modal-window" id="kiwis-window">     	
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
 						<h3 class="modal-inner-image-heading">Kiwis</h3>
-						<input type="image" src="../img/kiwis.jpg" alt="Kiwis" class="modal-image"/>
+						<input type="image" src="../img/kiwi.png" alt="Kiwis" class="modal-image"/>
   					</div>
   				</div>
   			</div>
@@ -838,7 +862,7 @@
   		</div>
     </div>
 
-    <div class="modal-window">     	
+    <div class="modal-window" id="tangerines-window">     	
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
@@ -854,7 +878,7 @@
   		</div>
     </div>
 
-    <div class="modal-window">     	
+    <div class="modal-window" id="grapefruit-window">     	
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
@@ -870,7 +894,7 @@
   		</div>
     </div>
 
-    <div class="modal-window">     	
+    <div class="modal-window" id="mangoes-window">     	
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
@@ -886,7 +910,7 @@
   		</div>
     </div>
 
-    <div class="modal-window">     	
+    <div class="modal-window" id="almonds-window">     	
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
@@ -902,7 +926,7 @@
   		</div>
     </div>
 
-    <div class="modal-window">     	
+    <div class="modal-window" id="peanuts-window">     	
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
@@ -918,7 +942,7 @@
   		</div>
     </div>
 
-    <div class="modal-window">     	
+    <div class="modal-window" id="pistachios-window">     	
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
@@ -934,7 +958,7 @@
   		</div>
     </div>
 
-    <div class="modal-window">     	
+    <div class="modal-window" id="walnuts-window">     	
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
@@ -950,7 +974,7 @@
   		</div>
     </div>
 
-    <div class="modal-window">     	
+    <div class="modal-window" id="cashews-window">     	
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
@@ -966,7 +990,7 @@
   		</div>
     </div>
 
-    <div class="modal-window">     	
+    <div class="modal-window" id="macadamias-window">     	
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
@@ -982,7 +1006,7 @@
   		</div>
     </div>
 
-    <div class="modal-window">     	
+    <div class="modal-window" id="hazelnuts-window">     	
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
@@ -998,7 +1022,7 @@
   		</div>
     </div>
 
-    <div class="modal-window">     	
+    <div class="modal-window" id="pecans-window">     	
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
@@ -1014,13 +1038,13 @@
   		</div>
     </div>
 
-    <div class="modal-window">     	
+    <div class="modal-window" id="pinenuts-window">     	
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Walnuts</h3>
-						<input type="image" src="../img/walnuts.jpg" alt="Walnuts" class="modal-image"/>
+						<h3 class="modal-inner-image-heading">Pine Nuts</h3>
+						<input type="image" src="../img/pinenuts.jpg" alt="Pine Nuts" class="modal-image"/>
   					</div>
   				</div>
   			</div>
@@ -1030,7 +1054,7 @@
   		</div>
     </div>
 
-    <div class="modal-window">     	
+    <div class="modal-window" id="chestnuts-window">     	
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
@@ -1093,28 +1117,28 @@
     <h3 class="modal-select-heading">Priority</h3>
     <form action="" id="priority-num-form">
       <select name="weight-priority" class="weight-priority priority-value">
-        <option value="one">One (high)</option>
+        <option value="one" selected="selected">One (high)</option>
         <option value="two">Two</option>
         <option value="three">Three</option>
         <option value="four">Four (low)</option>
       </select>
       <select name="cost-priority" class="cost-priority priority-value">
         <option value="one">One (high)</option>
-        <option value="two">Two</option>
+        <option value="two" selected="selected">Two</option>
         <option value="three">Three</option>
         <option value="four">Four (low)</option>
       </select>
       <select name="specialty-priority" class="specialty-priority priority-value">
         <option value="one">One (high)</option>
         <option value="two">Two</option>
-        <option value="three">Three</option>
+        <option value="three" selected="selected">Three</option>
         <option value="four">Four (low)</option>
       </select>
       <select name="quality-priority" class="quality-priority priority-value">
         <option value="one">One (high)</option>
         <option value="two">Two</option>
         <option value="three">Three</option>
-        <option value="four">Four (low)</option>
+        <option value="four" selected="selected">Four (low)</option>
       </select>
     </form>
   </div>

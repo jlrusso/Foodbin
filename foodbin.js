@@ -11,13 +11,27 @@ var perImageContainers = document.getElementsByClassName("per-image-container");
 //append constant close container and middle & third columns to each modal window that pops up
 for(let i = 0; i < perImageContainers.length; i++){
     perImageContainers[i].addEventListener("click", function(){
-        $(".close-btn-container").css("display", "block");
-        modalWindows[i].appendChild(closeContainer);
-        modalWindows[i].style.display = "block";
-        $(".middle-column").add(".last-column").css("display", "block");
-        row[i].appendChild(middleColumn);
-        row[i].appendChild(lastColumn);
+        openFoodModal(i);
     })
+}
+
+//open food item modal via homepage image click
+function openFoodModal(index){
+    $(".close-btn-container").css("display", "block");
+    modalWindows[index].appendChild(closeContainer);
+    modalWindows[index].style.display = "block";
+    $(".middle-column").add(".last-column").css("display", "block");
+    row[index].appendChild(middleColumn);
+    row[index].appendChild(lastColumn);
+}
+
+//open food item modal via make-changes-btn in cart modal
+function openFoodModal2(attribute){
+    var $row = $("#" + attribute).find(".row");
+    $(".close-btn-container").css("display", "block");
+    $(".middle-column").add(".last-column").css("display", "block");
+    $row.append(middleColumn);
+    $row.append(lastColumn);
 }
 
 //click on close container in modal window to close the modal window
@@ -31,7 +45,7 @@ for(let i = 0; i < closeBtnContainers.length; i++){
 
 //event listener for all modal windows to enable modal window click to close the modal window
 for(let i = 0; i < modalWindows.length; i++){
-    modalWindows[i].addEventListener("click", function(e){
+    modalWindows[i].addEventListener("click", function(e){ 
         if(e.target.matches(".modal-window")){
             this.style.display = "none";
         } 
@@ -41,19 +55,22 @@ for(let i = 0; i < modalWindows.length; i++){
 
 
 /*--- Start of Cart Modal ---*/
-var cartContainer = document.getElementById("cart-container");
-var cartIconBox = document.getElementById("cart-icon-box"),
+var cartContainer = document.getElementById("cart-container"),
+    cartIconBox = document.getElementById("cart-icon-box"),
     cartModalWindow = document.getElementById("cart-modal-window"),
-    cartCloseContainer = document.getElementById("cart-close-container");
+    cartCloseContainer = document.getElementById("cart-close-container"),
+    cartBadge = document.getElementById("cart-badge");
 
 //display cart modal window when cart icon box is clicked
-cartContainer.addEventListener("click", function(e){
+cartContainer.addEventListener("click", openCartModal);
+cartBadge.addEventListener("click", openCartModal);
+
+function openCartModal(e){
     if(e.target.matches("#cart")){
-        console.log("container clicked");
         cartModalWindow.style.display = "block";
     }
     cartModalWindow.style.display = "block";
-})
+}
 
 cartModalWindow.addEventListener("click", function(e){
     if(e.target.matches("#cart-modal-window")){
@@ -107,6 +124,181 @@ var innerImageContainers = document.getElementsByClassName("inner-images-contain
 
 
 
+/*--- Add Item to Cart with Add Btn ---*/
+var addToCartBtns = document.getElementsByClassName("add-to-cart-btn");
+var priorityNumForm = document.getElementById("priority-num-form");
+var selectorForm = document.getElementById("selector-form");
+var modalInnerImageHeadings = document.getElementsByClassName("modal-inner-image-heading");
+var modalImages = document.getElementsByClassName("modal-image");
+var gotHeading;
+var cartItems = 0;
+var placeOrderBtn = document.getElementById("place-order-btn");
+var noGroceriesAdded = document.getElementById("no-groceries-added");
+
+for(let i = 0; i < addToCartBtns.length; i++){
+    addToCartBtns[i].addEventListener("click", function(){
+        addFoodItem(i);
+    });
+}
+function addFoodItem(index){
+    var modalWindow = addToCartBtns[index].parentElement.parentElement.parentElement,
+        modalWindowId = modalWindow.id;
+        $modalContainer = $(".add-to-cart-btn").eq(index).parents(".modal-inner-container"),
+        $modalContent = $modalContainer.find(".modal-inner-content"),
+        $modalFoodHeading = $modalContent.find(".modal-inner-image-heading").text();
+
+        $weightSelectorValue = $modalContent.find(".weight-selector option:checked").text(),
+        $weightNumVal = $modalContent.find(".weight-priority option:checked").text(),
+
+        $costSelectorValue = $modalContent.find(".cost-selector option:checked").text(),
+        $costNumVal = $modalContent.find(".cost-priority option:checked").text(),
+
+        $specialtySelectorValue = $modalContent.find(".specialty-selector option:checked").text(),
+        $specialtyNumVal = $modalContent.find(".specialty-priority option:checked").text(),
+
+        $qualitySelectorValue = $modalContent.find(".quality-selector option:checked").text(); 
+        $qualityNumVal = $modalContent.find(".quality-priority option:checked").text();
+
+        //check to see if any two priority values are the same
+        if($weightNumVal == $costNumVal || 
+            $weightNumVal == $specialtyNumVal || 
+            $weightNumVal == $qualityNumVal || 
+            $costNumVal == $specialtyNumVal ||
+            $costNumVal == $qualityNumVal ||
+            $specialtyNumVal == $qualityNumVal){
+            var $currModalFooter = modalInnerFooter[index];
+            $currModalFooter.prepend(samePriorityError);
+            samePriorityError.style.display = "block";
+            return false;
+        }
+
+
+        itemImageSrc = modalImages[index].getAttribute("src");
+        gotHeading = modalInnerImageHeadings[index].textContent;
+        createCartItem(
+            modalWindowId, gotHeading, itemImageSrc, $weightSelectorValue, 
+            $weightNumVal, $costSelectorValue, $costNumVal, 
+            $specialtySelectorValue, $specialtyNumVal, 
+            $qualitySelectorValue, $qualityNumVal
+        );
+        cartItems++;
+        cartBadge.textContent = cartItems;
+        cartBadge.style.display = "block";
+        priorityNumForm.reset();
+        selectorForm.reset();
+        modalWindow.style.display = "none";            
+}
+
+/*--- End of Add Btn to Cart ---*/
+
+//make food item row in cart modal with options selected from the food item modal, and food heading
+function createCartItem(windowId, heading, imageSrc, weight, weightP, cost, costP, specialty, specialtyP, quality, qualityP){
+    
+    //create new cart row, cart columns, and add to cart-modal-content div
+    var cartContent = document.getElementById("cart-modal-content");
+    var newCartRow = document.createElement("div");
+    newCartRow.classList.add("cart-row");
+    var leftCartCol = document.createElement("div");
+    leftCartCol.classList.add("left-cart-col");
+    var leftColHeading = document.createElement("h4");
+    leftColHeading.classList.add("left-col-heading");
+    leftColHeading.textContent = heading;
+    var imageContainer = document.createElement("div");
+    imageContainer.classList.add("col-image-container")
+    var newImage = document.createElement("input");
+    newImage.setAttribute("type", "image");
+    newImage.setAttribute("src", imageSrc);
+    imageContainer.appendChild(newImage);
+    var rightCartCol = document.createElement("div");
+    rightCartCol.classList.add("right-cart-col");
+    var rightColHeading = document.createElement("h4");
+    rightColHeading.classList.add("right-col-heading");
+    rightColHeading.textContent = "Details";
+
+    //create list and list items with text from select options checked
+    var detailsList = document.createElement("ul");
+    detailsList.classList.add("details-list");
+    var listItem1 = document.createElement("li");
+    var listText1 = document.createTextNode("Weight: " + weight + ", Priority: " + weightP);
+    listItem1.appendChild(listText1);
+    detailsList.appendChild(listItem1);
+    var listItem2 = document.createElement("li");
+    var listText2 = document.createTextNode("Cost: " + cost + ", Priority: " + costP);
+    listItem2.appendChild(listText2);
+    detailsList.appendChild(listItem2);
+    var listItem3 = document.createElement("li");
+    var listText3 = document.createTextNode("Specialty: " + specialty + ", Priority: " + specialtyP);
+    listItem3.appendChild(listText3);
+    detailsList.appendChild(listItem3);
+    var listItem4 = document.createElement("li");
+    var listText4 = document.createTextNode("Quality: " + quality + ", Priority: " + qualityP);
+    listItem4.appendChild(listText4);
+    detailsList.appendChild(listItem4);
+    
+    //append created columns to the create cart row
+    leftCartCol.appendChild(leftColHeading);
+    leftCartCol.appendChild(imageContainer);
+    rightCartCol.appendChild(rightColHeading);
+    rightCartCol.appendChild(detailsList);
+    newCartRow.appendChild(leftCartCol);
+    newCartRow.appendChild(rightCartCol);
+
+    // create btn container and btn elements
+    var btnContainer = document.createElement("div");
+    btnContainer.classList.add("item-btns-container");
+    var btn1 = document.createElement("button");
+    btn1.classList.add("make-changes-btn");
+    btn1.setAttribute("for", "");
+    btn1.setAttribute("for", windowId);
+    btn1.textContent = "Make Changes";
+    var btn2 = document.createElement("button");
+    btn2.classList.add("remove-item-btn");
+    btn2.textContent = "Remove Item";
+    btnContainer.appendChild(btn1);
+    btnContainer.appendChild(btn2);
+    rightCartCol.appendChild(btnContainer);
+
+    //create line divider between food items in cart
+    var lineDivider = document.createElement("div");
+    lineDivider.classList.add("line-divider")
+
+    cartContent.appendChild(newCartRow);
+    cartContent.appendChild(lineDivider);
+    placeOrderBtn.style.display = "block";
+    noGroceriesAdded.style.display = "none";   
+}
+
+//add click event and run code if either the remove-item-btn or make-changes-btn is clicked
+$("body").click(function(event){
+    if(event.target.matches(".make-changes-btn")){
+        let foodAtt = $(event.target).attr("for");
+        cartModalWindow.style.display = "none";
+        let currFoodRow = event.target.parentElement.parentElement.parentElement;
+        let $nextLineDivider = $(event.target).parents(".cart-row").next(".line-divider");
+        $nextLineDivider.css("display", "none");
+        currFoodRow.style.display = "none";
+        cartItems--;
+        cartBadge.textContent = cartItems;
+        if(cartBadge.textContent === "0"){
+            cartBadge.style.display = "none";
+        }
+        $("#" + foodAtt).css("display", "block");
+        openFoodModal2(foodAtt);
+    }
+    if(event.target.matches(".remove-item-btn")){
+        var $thisBtn = event.target;
+        let thisFoodRow = $thisBtn.parentElement.parentElement.parentElement;
+        let $nextLineDivider = $(event.target).parents(".cart-row").next(".line-divider");
+        $nextLineDivider.css("display", "none");
+        thisFoodRow.style.display = "none";
+        cartItems--;
+        cartBadge.textContent = cartItems;
+        if(cartBadge.textContent === "0"){
+            cartBadge.style.display = "none";
+        }
+    }   
+});
+
 /*--- Initialize Google Maps API ---*/
 var locationInputField = document.getElementById("location-input-field"),
 searchListGroup = document.getElementById("search-list-group"),
@@ -114,8 +306,8 @@ searchListItem = document.querySelectorAll("#search-list-group li"),
 userLocation, userCoords;
 
 locationInputField.addEventListener("click", function(){
-    if(searchListGroup.style.height !== "215px"){
-        searchListGroup.style.height = "215px";
+    if(searchListGroup.style.height !== "185px"){
+        searchListGroup.style.height = "185px";
     }
 });
 
@@ -162,7 +354,26 @@ var storedLocations = [
     {location: "Riverside, CA", coords: {lat: 33.9533, lng: -117.3962}}
 ];
 
+var sacramentoStores = [
+    {storeName: "Safeway", address: "1025 Alhambra Blvd, Sacramento, CA 95816", coords: {lat: 38.5716084, lng: -121.464628699999}},
+    {storeName: "Safeway", address: "1814 19th St, Sacramento, CA 95811", coords: {lat: 38.567982, lng: -121.48602800000003}},
+    {storeName: "Sacramento Natural Foods Co-op", address: "2820 R St, Sacramento, CA 95816", coords: {lat: 38.564632, lng: -121.472913}},
+    {storeName: "Trader Joe's", address: "5000 Folsom Blvd, Sacramento, CA 95819", coords: {lat: 38.5604536, lng: -121.4448777}},
+    {storeName: "Corti Brothers", address: "5810 Folsom Blvd, Sacramento, CA 95819", coords: {lat: 38.5571126, lng: -121.43630050000002}},
+    {storeName: "Food Source", address: "3547 Bradshaw Rd, Sacramento, CA 95827", coords: {lat: 38.5583289, lng: -121.33411469999999}},
+    {storeName: "Taylor's Market", address: "2900 Freeport Blvd, Sacramento, CA 95818", coords: {lat: 38.5518472, lng: -121.48892610000001}},
+    {storeName: "Oto's Marketplace", address: "4990 Freeport Blvd, Sacramento, CA 95822", coords: {lat: 38.5289733, lng: -121.49626739999997}},
+    {storeName: "Smart & Final", address: "6340 Stockton Blvd, Sacramento, CA 95824", coords: {lat: 38.511698, lng: -121.43724259999999}},
+    {storeName: "Mi Rancho", address: "2355 Florin Rd, Sacramento, CA 95822, USA", coords: {lat: 38.4974369, lng: -121.4834611}},
+    {storeName: "India House of Grocery", address: "6618 Florin Rd # B, Sacramento, CA 95828", coords: {lat: 38.4952973, lng: -121.42554369999999}},
+    {storeName: "Smart & Final Extra", address: "7205 Freeport Blvd, Sacramento, CA 95831", coords: {lat: 38.4943793, lng: -121.50473090000003}},
+    {storeName: "Nugget Markets", address: "1040 Florin Rd, Sacramento, CA 95831", coords: {lat: 38.4946749, lng: -121.52080899999999}},
+    {storeName: "Foodsco", address: "5021 Fruitridge Rd, Sacramento, CA 95820", coords: {lat: 38.5269495, lng: -121.44444900000002}},
+];
+
 var mapElement = document.getElementById("map");
+
+
 
 function initMap(){
     for (let i = 0; i < searchListItem.length; i++){
@@ -176,7 +387,7 @@ function initMap(){
                     locationInputField.value = thisItem;
                     userLocation = storedLocation.location;
                     userCoords = storedLocation.coords;
-                    createMapObject(10, userLocation, userCoords);
+                    createMapObject(11, userLocation, userCoords);
                 }
             });
             $("#search-list-group").animate({
@@ -189,10 +400,11 @@ function initMap(){
     //default map zoom and center values
     function options1(){
         return {
-            zoom: 4,
-            center: {lat: 39.0997, lng: -94.5786}
+            zoom: 5,
+            center: {lat: 38.415405, lng: -120.770234}
         }
     }
+
     //zoom and center values used when user chooses a location
     function options2(z, coords){
         return {
@@ -200,17 +412,23 @@ function initMap(){
             center: coords
         }
     }
+
     //initilize map instance after calling function that incorporates zoom level, location name, and coordinates
     var mapInstance1 = new google.maps.Map(mapElement, options1());
     var mapInstance2;
     function createMapObject(z, userLocation, coords){
         mapInstance2 = new google.maps.Map(mapElement, options2(z, coords));
-        addMarker(userLocation, coords);   
-        //addMarker(userLocation, coords); 
+        addLocationMarker(userLocation, coords);
+        // if(userLocation === "Sacramento, CA"){
+        //     for(let i = 0; i < sacramentoStores.length; i++){
+        //         addStoreMarkers(sacramentoStores[i].storeName, sacramentoStores[i].coords);
+        //     }
+        // }   
+        //addLocationMarker(userLocation, coords); 
     }
 
     //adds marker based on user location input and the coordinates for the city name
-    function addMarker(userLocation, userCoordinates){
+    function addLocationMarker(userLocation, userCoordinates){
         var marker = new google.maps.Marker({
             map: mapInstance2,
             label: userLocation[0],
@@ -226,8 +444,62 @@ function initMap(){
             infoWindow.open(map, marker);
         });
     };
+
+
+    $("#store-list option").on("click", function(){
+        var $storeOptionText = $(this).text();
+        console.log("hello");
+        // for(let i = 0; sacramentoStores.length; i++){
+        //     if (sacramentoStores[i].address.indexOf($storeOptionText > -1)){
+        //         let storeName = sacramentoStores[i].storeName;
+        //         let storeCoords = sacramentoStores[i].coords;
+        //         addStoreMarkers(storeName, storeCoords);
+        //     } else {
+        //         return false;
+        //     }
+        // }
+    });
+    //add store to map when that store option is selected
+    function addStoreMarkers(storeName, storeCoords){
+        var marker = new google.maps.Marker({
+            map: mapInstance2,
+            icon: "../img/shopping-cart.png",
+            animation: google.maps.Animation.DROP,
+            position: storeCoords
+        });
+
+        var infoWindow = new google.maps.InfoWindow({
+            content: "<span>" + storeName + "</span><br/>" +
+                     "<span>" + storeName + "</span>"
+        })
+
+        marker.addListener("click", function(){
+            infoWindow.open(map, marker);
+        })
+    }
 }; //end of initMap function
 /*--- End of Google Maps API ---*/
+
+
+    $("#store-list option").on("click", function(){
+        var $storeOptionText = $(this).val();
+        console.log($storeOptionText);
+        // for(let i = 0; sacramentoStores.length; i++){
+        //     if (sacramentoStores[i].address.indexOf($storeOptionText > -1)){
+        //         let storeName = sacramentoStores[i].storeName;
+        //         let storeCoords = sacramentoStores[i].coords;
+        //         addStoreMarkers(storeName, storeCoords);
+        //     } else {
+        //         return false;
+        //     }
+        // }
+    });
+
+
+
+
+
+
 
 $(window).on('beforeunload', function() {
    $(window).scrollTop(0);
@@ -239,150 +511,15 @@ $("#search-case-list a").on("click", function(e){
 });
 
 
-
-
-/*--- Add Item to Cart with Add Btn ---*/
-var addToCartBtns = document.getElementsByClassName("add-to-cart-btn");
-var priorityNumForm = document.getElementById("priority-num-form");
-var selectorForm = document.getElementById("selector-form");
-var $cartBadgeNum = $("#cart:after");
-$cartBadgeNum.css("background-color", "green");
-var modalInnerImageHeadings = document.getElementsByClassName("modal-inner-image-heading");
-var modalImages = document.getElementsByClassName("modal-image");
-var gotHeading;
-var cartItems = 0;
-var placeOrderBtn = document.getElementById("place-order-btn");
-var noGroceriesAdded = document.getElementById("no-groceries-added");
-
-for(let i = 0; i < addToCartBtns.length; i++){
-    addToCartBtns[i].addEventListener("click", function(){
-        var modalWindow = this.parentElement.parentElement.parentElement;
-        var $modalContainer = $(this).parents(".modal-inner-container"),
-            $modalContent = $modalContainer.find(".modal-inner-content"),
-            $modalFoodHeading = $modalContent.find(".modal-inner-image-heading").text();
-
-            $weightSelectorValue = $modalContent.find(".weight-selector option:checked").text(),
-            $weightNumVal = $modalContent.find(".weight-priority option:checked").text(),
-
-            $costSelectorValue = $modalContent.find(".cost-selector option:checked").text(),
-            $costNumVal = $modalContent.find(".cost-priority option:checked").text(),
-
-            $specialtySelectorValue = $modalContent.find(".specialty-selector option:checked").text(),
-            $specialtyNumVal = $modalContent.find(".specialty-priority option:checked").text(),
-
-            $qualitySelectorValue = $modalContent.find(".quality-selector option:checked").text(); 
-            $qualityNumVal = $modalContent.find(".quality-priority option:checked").text();
-
-            //check to see if any two priority values are the same
-            if($weightNumVal == $costNumVal || 
-                $weightNumVal == $specialtyNumVal || 
-                $weightNumVal == $qualityNumVal || 
-                $costNumVal == $specialtyNumVal ||
-                $costNumVal == $qualityNumVal ||
-                $specialtyNumVal == $qualityNumVal){
-                var $currModalFooter = modalInnerFooter[i];
-                $currModalFooter.prepend(samePriorityError);
-                samePriorityError.style.display = "block";
-                return false;
-            }
-
-
-            itemImageSrc = modalImages[i].getAttribute("src");
-            gotHeading = modalInnerImageHeadings[i].textContent;
-            createCartItem(
-                gotHeading, itemImageSrc, $weightSelectorValue, $weightNumVal, $costSelectorValue, $costNumVal, $specialtySelectorValue, $specialtyNumVal, $qualitySelectorValue, $qualityNumVal
-            );
-            cartItems++;
-            $cartBadgeNum.css("background-color", "green");
-            priorityNumForm.reset();
-            selectorForm.reset();
-            modalWindow.style.display = "none";            
-    })
-}
-/*--- End of Add Btn to Cart ---*/
-
-function createCartItem(heading, imageSrc, weight, weightP, cost, costP, specialty, specialtyP, quality, qualityP){
-    var cartContent = document.getElementById("cart-modal-content");
-    var newCartRow = document.createElement("div");
-    newCartRow.classList.add("cart-row");
-    var pictureColumn = document.createElement("div");
-    pictureColumn.classList.add("cart-col-4");
-    pictureColumn.classList.add("picture-column");
-    var newImage = document.createElement("input");
-    newImage.setAttribute("type", "image");
-    newImage.setAttribute("src", imageSrc);
-    pictureColumn.appendChild(newImage);
-    
-
-    var newMidCol = document.createElement("div");
-    newMidCol.classList.add("cart-col-4");
-    newMidCol.classList.add("heading-and-details");
-    var newHead = document.createElement("h4");
-    newHead.classList.add("cart-modal-food-heading");
-    newHead.textContent = heading;
-    newMidCol.appendChild(newHead);
-
-    var newListGroup = document.createElement("ul");
-    newListGroup.classList.add("food-item-details");
-
-    var listItem1 = document.createElement("li");
-    var listText1 = document.createTextNode("Weight: " + weight + ", Priority: " + weightP);
-    listItem1.appendChild(listText1);
-    newListGroup.appendChild(listItem1);
-
-    var listItem2 = document.createElement("li");
-    var listText2 = document.createTextNode("Cost: " + cost + ", Priority: " + costP);
-    listItem2.appendChild(listText2);
-    newListGroup.appendChild(listItem2);
-
-    var listItem3 = document.createElement("li");
-    var listText3 = document.createTextNode("Specialty: " + specialty + ", Priority: " + specialtyP);
-    listItem3.appendChild(listText3);
-    newListGroup.appendChild(listItem3);
-
-    var listItem4 = document.createElement("li");
-    var listText4 = document.createTextNode("Quality: " + quality + ", Priority: " + qualityP);
-    listItem4.appendChild(listText4);
-    newListGroup.appendChild(listItem4);
-
-    newMidCol.appendChild(newListGroup);
-
-    var newLastCol = document.createElement("div");
-    newLastCol.classList.add("cart-col-4");
-    var btnContainer = document.createElement("div");
-    btnContainer.classList.add("cart-item-btn-container");
-    var btn1 = document.createElement("button");
-    btn1.classList.add("make-changes-btn");
-    btn1.textContent = "Make Changes";
-    var btn2 = document.createElement("button");
-    btn2.classList.add("remove-item-btn");
-    btn2.textContent = "Remove Item";
-    btnContainer.appendChild(btn1);
-    btnContainer.appendChild(btn2);
-    newLastCol.appendChild(btnContainer);
-
-    var lineDivider = document.createElement("div");
-    lineDivider.classList.add("line-divider")
-
-    newCartRow.appendChild(pictureColumn);
-    newCartRow.appendChild(newMidCol);
-    newCartRow.appendChild(newLastCol);
-    cartContent.appendChild(newCartRow);
-    cartContent.appendChild(lineDivider);
-    placeOrderBtn.style.display = "block";
-    noGroceriesAdded.style.display = "none";
-
-}
-
 $(".banner-btn").click(function(){
     $("html, body").animate({
-        scrollTop: $("#user-location-section").offset().top - 19
+        scrollTop: $("#user-location-section").offset().top - 60
     }, "slow");
 })
 
 $("#ca-locations a").click(function(e){
     e.preventDefault();
     $("html, body").animate({
-        scrollTop: $("#user-location-section").offset().top - 20
+        scrollTop: $("#user-location-section").offset().top - 60
     });
 })
