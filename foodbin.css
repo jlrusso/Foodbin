@@ -1,14 +1,13 @@
 html, body {
     margin: 0;
     padding: 0;
-    font-family: sans-serif;
 }
 body {
     position: relative;
 }
 * {
     box-sizing: border-box;
-    font-family: Verdana, sans-serif, Arial;
+    font-family: 'Ubuntu' , sans-serif;
 }
 
 a {
@@ -72,10 +71,10 @@ nav {
     display: none;
     position: absolute;
     top: 2px;
-    left: 240px;
+    left: 225px;
     background-color: red;
     border-radius: 4px;
-    padding: 2px;
+    padding: 1px 2px;
     color: white;
     font-size: 0.75rem;
     cursor: pointer;
@@ -90,12 +89,11 @@ nav {
 #banner-area {
     position: relative;
     width: 100%;
-    height: 450px;
+    height: 745px;
     background: url("../img/fresh-produce.jpeg");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center top;
-    background-attachment: fixed;
 }
 
 #banner-overlay {
@@ -110,7 +108,7 @@ nav {
 
 #banner-inner {
     position: absolute;
-    top: 58%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
     text-align: center;
@@ -224,42 +222,96 @@ nav {
 #user-map-area {
     padding: 10px 10px;
     background-color: #555;
-}
-
-#user-map-area::after {
-    content: " ";
-    display: table;
-    clear: both;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: 10px;
+    overflow-y: auto;
 }
 
 #user-location-section {
-    position: relative;            
-    float: left;
-    width: 49%;
+    position: relative;
     height: 400px;
-    padding-bottom: 10px;
     text-align: center;
 }
 
 #user-location-section h3 {
     width: 50%;
-    margin: 10px auto 0;
+    margin: 20px auto 0;
     padding: 10px 30px;
     background-color: green;
     border-radius: 4px;
     color: white;
 }
+#user-location-section form {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 80%;
+    height: 70%;
+    overflow-y: auto;
+}
 
-#input-container {
-    margin-top: 140px;
-    transition: 0.5s;
+#marker-input-container {
+    position: relative;
+    width: 65%;
+    margin: 0 auto 10px;
+}
+
+.fa-map-marker {
+    position: absolute;
+    top: 45%;
+    left: 4px;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    font-size: 1.5rem !important;
+    color: black;
+    z-index: 4;
 }
 
 #location-input-field {
-    position: absolute;
-    top: 80px;
-    left: 50%;
-    transform: translateX(-50%);
+    width: 100%;
+    font-size: 16px;
+    line-height: 1.42857143;
+    padding: 6px 6px 6px 27px;
+    color: #555;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: auto;
+}
+
+#search-list-group {
+    width: 65%;
+    height: 185px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    overflow-y: scroll;
+    transition: 0.5s;
+    margin: 10px auto 0;
+}
+
+#search-list-group li {
+    text-align: left;
+    cursor: pointer;
+}
+#search-list-group li:hover {
+    background-color: green;
+    color: aliceblue;
+}
+#search-list-group li a {
+    display: block;
+    padding: 8.8px;
+}
+
+#sacramento-store-list,
+#san-diego-store-list,
+#san-francisco-store-list,
+#oakland-store-list {
+    display: none;
+    margin: 10px auto 0;
     width: 65%;
     font-size: 16px;
     line-height: 1.42857143;
@@ -270,35 +322,17 @@ nav {
     border-radius: 4px;
 }
 
-#search-list-group {
-    position: absolute;
-    top: 130px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 65%;
-    height: 220px;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    overflow-y: scroll;
-    transition: 0.5s;
-}
-
-#search-list-group li {
-    text-align: left;
-    padding: 8.8px;
-    cursor: pointer;
-}
-#search-list-group li:hover {
-    background-color: green;
-    color: aliceblue;
+#map-container {
+    position: relative;
 }
 
 #map {
-    width: 50%;
-    float: right;
-    height: 400px;
-    margin-left: 4px;
+    position: absolute;
+    top: 50%;
+    left: 45%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 90%;
     border-radius: 5px;
 }
 /*--- end of google maps area ---*/
@@ -352,8 +386,8 @@ nav {
     height: 100%;
     padding-bottom: 3px;
     border: 2px solid rgb(34, 153, 84);
-    border-radius: 20px;
-    background-color: rgba(34, 153, 84, 0.5);
+    border-radius: 10px;
+    background-color: transparent;
     text-align: center;
     cursor: pointer;
     transition: 0.2s;
@@ -377,8 +411,8 @@ nav {
     height: 100%;
     padding-bottom: 3px;
     border: 2px solid rgb(34, 153, 84);
-    border-radius: 20px;
-    background-color: rgba(34, 153, 84, 0.5);
+    border-radius: 10px;
+    background-color: transparent;
     text-align: center;
     cursor: pointer;
     transition: 0.2s;
@@ -386,7 +420,7 @@ nav {
 
 .slide-left-btn:hover,
 .slide-right-btn:hover {
-    background-color: rgb(34, 153, 84);
+    background-color: rgba(34, 153, 84, 0.5);
 }
 
 .outer-images-container {
