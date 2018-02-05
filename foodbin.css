@@ -142,59 +142,33 @@ nav {
     position: relative;
     width: 100%;
     height: auto;
-    padding: 0;
     text-align: center;
     z-index: 1;
 }
 
 .hiw-row {
     width: 100%;
-    height: 300px;
+    height: 450px;
     background-color: #E5E7E9;
     position: relative;
 }
 
 .hiw-row-inner {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    width: 60%;
-    height: 80%;
+    width: 100%;
+    height: 100%;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-column-gap: 5px;
+    grid-column-gap: 0;
 }
 .image-caption {
     position: relative;
 }
 
-.right-caption p::after {
+.image-caption h1 {
     position: absolute;
-    top: 35%;
-    right: 96%;
-    content: "";
-    width: 20px;
-    height: 20px;
-    background-color: white;
-    border-left: 1px solid rgb(34, 153, 84);
-    border-bottom: 1px solid rgb(34, 153, 84);
-    border-radius: 3px;
-    transform: rotate(45deg);
-}
-
-.left-caption p::after {
-    position: absolute;
-    top: 35%;
-    left: 96%;
-    content: "";
-    width: 20px;
-    height: 20px;
-    background-color: white;
-    border-top: 1px solid rgb(34, 153, 84);
-    border-right: 1px solid rgb(34, 153, 84);
-    border-radius: 3px;
-    transform: rotate(45deg);
+    top: 25%;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .image-caption p {
@@ -206,14 +180,41 @@ nav {
     text-align: center;
     background-color: #fff;
     padding: 5px;
-    border: 1px solid rgb(34, 153, 84);
-    border-radius: 4px; 
+    border: 1.5px solid rgb(34, 153, 84);
+    border-radius: 4px;
+}
+
+.right-caption p::after {
+    position: absolute;
+    top: 35%;
+    right: 98%;
+    content: "";
+    width: 10px;
+    height: 10px;
+    background-color: white;
+    border-left: 1.5px solid rgb(34, 153, 84);
+    border-bottom: 1.5px solid rgb(34, 153, 84);
+    border-radius: 2px;
+    transform: rotate(45deg);
+}
+
+.left-caption p::after {
+    position: absolute;
+    top: 35%;
+    left: 98.2%;
+    content: "";
+    width: 10px;
+    height: 10px;
+    background-color: white;
+    border-top: 1.5px solid rgb(34, 153, 84);
+    border-right: 1.5px solid rgb(34, 153, 84);
+    border-radius: 2px;
+    transform: rotate(45deg);
 }
 
 .hiw-row-inner input[type="image"] {
     width: 100%;
     height: 100%;
-    border-radius: 10px;
 }
 /*--- End of How It Works area ---*/
 
@@ -235,7 +236,7 @@ nav {
 }
 
 #user-location-section h3 {
-    width: 50%;
+    width: 52%;
     margin: 20px auto 0;
     padding: 10px 30px;
     background-color: green;
@@ -255,7 +256,7 @@ nav {
 #marker-input-container {
     position: relative;
     width: 65%;
-    margin: 0 auto 10px;
+    margin: 0 auto 7px;
 }
 
 .fa-map-marker {
@@ -290,7 +291,7 @@ nav {
     border-radius: 4px;
     overflow-y: scroll;
     transition: 0.5s;
-    margin: 10px auto 0;
+    margin: 7px auto 0;
 }
 
 #search-list-group li {
@@ -311,7 +312,7 @@ nav {
 #san-francisco-store-list,
 #oakland-store-list {
     display: none;
-    margin: 10px auto 0;
+    margin: 7px auto 0;
     width: 65%;
     font-size: 16px;
     line-height: 1.42857143;
@@ -320,6 +321,25 @@ nav {
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 4px;
+}
+
+#delivery-btn-container {
+    width: 65%;
+    margin: 7px auto 0;
+    display: none;
+}
+
+#delivery-btn {
+    width: 100%;
+    padding: 10px 30px;
+    background-color: green;
+    border: 0;
+    border-radius: 4px;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer;
 }
 
 #map-container {

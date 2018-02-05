@@ -46,23 +46,26 @@
             <div class="hiw-row-inner">
               <input type="image" src="../img/map.jpeg" alt="Maps"/>
               <div class="image-caption right-caption">
-                <p>Choose a location below to see available grocery stores and available deliverers</p>
+                <h1>Choose a Location</h1>
+                <p>Find available grocery stores nearby and available deliverers</p>
               </div>
             </div>
           </div>
           <div class="hiw-row">             
             <div class="hiw-row-inner">
               <div class="image-caption left-caption">
-                <p>Select food items and get as specific as you want, then add the items to your cart</p>
+                <h1>Select Food Items</h1>
+                <p>Get as specific as you want, then add the items to your cart</p>
               </div>
               <input type="image" src="../img/grocery-aisle.jpg" alt="Grocery Aisle"/>
             </div>
           </div>
           <div class="hiw-row">
             <div class="hiw-row-inner">
-              <input type="image" src="../img/view-groceries.jpg" alt="Groceries"/>
+              <input type="image" src="../img/shoppinglist.jpg" alt="Shopping List"/>
               <div class="image-caption right-caption">
-                <p>Make last minute changes to your food bin before paying, then place an order</p>
+                <h1>Change Order Anytime</h1>
+                <p>Make changes to your order at any time before food is delivered</p>
               </div>
             </div>
           </div>
@@ -70,7 +73,7 @@
 
         <div id="user-map-area">
         	<div id="user-location-section">
-        		<h3>Choose your Location</h3>
+        		<h3>Choose a Location</h3>
         		<form action="">
 		            <div id="input-container">
                     <div id="marker-input-container">
@@ -83,19 +86,18 @@
                           <li><a href="#">San Francisco, CA</a></li>
                           <li><a href="#">Oakland, CA</a></li>
                           <li><a href="#">San Diego, CA</a></li>
-                          <!-- <li><a href="#">Fremont, CA</a></li>
+                          <li><a href="#">Fremont, CA</a></li>
                           <li><a href="#">Berkeley, CA</a></li>
                           <li><a href="#">Stockton, CA</a></li>
                           <li><a href="#">San Jose, CA</a></li>
                           <li><a href="#">Los Angeles, CA</a></li>
-                          
                           <li><a href="#">Santa Barbara, CA</a></li>
                           <li><a href="#">Riverside, CA</a></li>
                           <li><a href="#">Long Beach, CA</a></li>
-                          <li><a href="#">Santa Ana, CA</a></li>
-                          <li><a href="#">Irvine, CA</a></li> -->
+                          <li><a href="#">Anaheim, CA</a></li>
+                          <li><a href="#">Irvine, CA</a></li>
                       </ul>
-                  </div>
+                    </div>
 
                   <select name="sacramento-store-list" id="sacramento-store-list" class="store-list">
                     <option style="font-weight: bold" value="Stores Heading">Choose a store:</option>
@@ -111,26 +113,6 @@
                     <option value="7205-Smart-Final">Smart &amp; Final Extra (7205 Freeport Blvd)</option>
                     <option value="1040-Nugget-Markets">Nugget Market's (1040 Florin Rd)</option>
                     <option value="5021-Foodsco">Foodsco (5021 Fruitridge Rd)</option>
-                  </select>
-
-                  <select name="san-diego-store-list" id="san-diego-store-list" class="store-list">
-                    <option style="font-weight: bold" value="Stores Heading">Choose a store:</option>
-                    <option value="1666-Ralphs">Ralphs (1666 Rosecrans St)</option>
-                    <option value="3645-Vons">Vons (3645 Midway Dr)</option>
-                    <option value="3345-Ralphs">Ralphs (3345 Sports Arena Blvd)</option>
-                    <option value="515-Vons">Vons (515 W Washington St)</option>
-                    <option value="1020-Ralphs">Ralphs (1020 University Ave)</option>
-                    <option value="101-Ralphs">Ralphs (101 G St, San Diego)</option>
-                    <option value="1002-GOBM">Grocery Outlet Bargain Market (1002 Market street)</option>
-                    <option value="4315-Ralphs">Ralphs (4315 Mission Blvd)</option>
-                    <option value="1702-Vons">Vons (1702 Garnet Ave)</option>
-                    <option value="655-Albertsons">Albertsons (655 14th St)</option>
-                    <option value="5680-Ralphs">Ralphs (5680 Mission Center Rd)</option>
-                    <option value="3610-Vons">Vons (3610 Adams Ave)</option>
-                    <option value="6670-Ralphs">Ralphs (6670 Montezuma Rd)</option>
-                    <option value="6386-Windmill-Farms">Windmill Farms (6386 Del Cerro Blvd)</option>
-                    <option value="7403-Keils">Keils (7403 Jackson Dr)</option>
-                    <option value="3011-Ralphs">Ralphs (3011 Alta View Dr)</option>
                   </select>
 
                   <select name="san-franciso-store-list" id="san-francisco-store-list" class="store-list">
@@ -160,6 +142,31 @@
                     <option value="1431-Natures-Best-Foods">Nature's Best Foods (1431 Jackson St)</option>
                     <option value="3426-Farmer-Joes-Marketplace">Farmer Joe's Marketplace (3426 Fruitvale Ave)</option>
                   </select>
+
+                  <select name="san-diego-store-list" id="san-diego-store-list" class="store-list">
+                    <option style="font-weight: bold" value="Stores Heading">Choose a store:</option>
+                    <option value="1666-Ralphs">Ralphs (1666 Rosecrans St)</option>
+                    <option value="3645-Vons">Vons (3645 Midway Dr)</option>
+                    <option value="3345-Ralphs">Ralphs (3345 Sports Arena Blvd)</option>
+                    <option value="515-Vons">Vons (515 W Washington St)</option>
+                    <option value="1020-Ralphs">Ralphs (1020 University Ave)</option>
+                    <option value="101-Ralphs">Ralphs (101 G St, San Diego)</option>
+                    <option value="1002-GOBM">Grocery Outlet Bargain Market (1002 Market street)</option>
+                    <option value="4315-Ralphs">Ralphs (4315 Mission Blvd)</option>
+                    <option value="1702-Vons">Vons (1702 Garnet Ave)</option>
+                    <option value="655-Albertsons">Albertsons (655 14th St)</option>
+                    <option value="5680-Ralphs">Ralphs (5680 Mission Center Rd)</option>
+                    <option value="3610-Vons">Vons (3610 Adams Ave)</option>
+                    <option value="6670-Ralphs">Ralphs (6670 Montezuma Rd)</option>
+                    <option value="6386-Windmill-Farms">Windmill Farms (6386 Del Cerro Blvd)</option>
+                    <option value="7403-Keils">Keils (7403 Jackson Dr)</option>
+                    <option value="3011-Ralphs">Ralphs (3011 Alta View Dr)</option>
+                  </select>
+
+                    <div id="delivery-btn-container">
+                      <button id="delivery-btn">Deliver Here</button>
+                    </div>
+
 		            </div>
 		        </form>
         	</div>

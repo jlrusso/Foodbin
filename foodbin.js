@@ -300,15 +300,16 @@ $("body").click(function(event){
 });
 
 /*--- Initialize Google Maps API ---*/
-var locationInputField = document.getElementById("location-input-field"),
-searchListGroup = document.getElementById("search-list-group"),
-searchListItem = document.querySelectorAll("#search-list-group li"),
-userLocation, userCoords;
+var deliveryBtnContainer = document.getElementById("deliver-btn-container"),
+    locationInputField = document.getElementById("location-input-field"),
+    searchListGroup = document.getElementById("search-list-group"),
+    searchListItem = document.querySelectorAll("#search-list-group li"),
+    userLocation, userCoords;
 
 locationInputField.addEventListener("click", function(){
     if(searchListGroup.style.height !== "185px"){
         searchListGroup.style.height = "185px";
-    }
+    } 
 });
 
 locationInputField.addEventListener("input", function(){
@@ -330,6 +331,13 @@ var storedLocations = [
     {location: "Los Angeles, CA", coords: {lat: 34.052234, lng: -118.243685}},
     {location: "Oakland, CA", coords: {lat: 37.8044, lng: -122.2711}},
     {location: "San Francisco, CA", coords:{lat: 37.774929, lng: -122.419416}},
+    {location: "Fremont, CA", coords: {lat: 37.5483, lng: -121.9886}},
+    {location: "Berkeley, CA", coords: {lat: 37.8716, lng: -122.2727}},
+    {location: "Stockton, CA", coords: {lat: 37.9577, lng: -121.2908}},
+    {location: "Santa Barbara, CA", coords: {lat: 34.4208, lng: -119.6982}},
+    {location: "Long Beach, CA", coords: {lat: 33.7701, lng: -118.1937}},
+    {location: "Anaheim, CA", coords: {lat: 33.8366, lng: -117.9143}},
+    {location: "Irvine, CA", coords: {lat: 33.6846, lng: -117.8265}},
     {location: "San Diego, CA", coords: {lat: 32.715738,lng: -117.161084}},
     {location: "San Jose, CA", coords: {lat: 37.338208,lng: -121.886329}},
     {location: "Riverside, CA", coords: {lat: 33.9533, lng: -117.3962}}
@@ -353,7 +361,7 @@ var sacramentoStores = [
     {storeName: "Foodsco", address: "5021 Fruitridge Rd, Sacramento, CA 95820", coords: {lat: 38.5269495, lng: -121.44444900000002}},
 ];
 
-var sandiegoStores = [
+var sanDiegoStores = [
     {storeName: "Ralphs", address: "1666 Rosecrans St, San Diego, CA 92106", coords: {lat: 32.728515, lng: -117.22638360000002}},
     {storeName: "Vons", address: "3645 Midway Dr, San Diego, CA 92110", coords: {lat: 32.7510758, lng: -117.21749720000003}},
     {storeName: "Ralphs", address: "3345 Sports Arena Blvd, San Diego, CA 92110", coords: {lat: 32.7516318, lng: -117.21101880000003}},
@@ -397,6 +405,18 @@ var oaklandStores = [
     {storeName: "Nature's Best Foods", address: "1431 Jackson St, Oakland, CA 94612", coords: {lat: 37.8027177, lng: -122.26519960000002}},
     {storeName: "Farmer Joe's Marketplace", address: "3426 Fruitvale Ave, Oakland, CA 94602", coords: {lat: 37.7995471, lng: -122.21597509999998}},
 ];
+
+var fremontStores = [];
+var berkeleyStores = [];
+var stocktonStores = [];
+var sanjoseStores = [];
+var losangelesStores = [];
+var santaBarbaraStores = [];
+var riversideStores = [];
+var longBeachStores = [];
+var anaheimStores = [];
+var irvineStores = [];
+
 // end of california cities and grocery stores arrays
 
 var mapElement = document.getElementById("map"),
@@ -504,30 +524,26 @@ function initMap(){
         }
         switch(true){
             case ($(this).text() === "Sacramento, CA"):
-                console.log(this.textContent);
                 let sacramentoCity = this.textContent;
-                sacStoreMapSetup(sacramentoCity);
+                storeMapSetup(sacramentoCity);
                 sacramentoStoreList.style.display = "block";
                 sacramentoStoreList.options[0].selected = true;
             break;
             case ($(this).text() === "Oakland, CA"):
                 let oaklandCity = this.textContent;
-                console.log(this.textContent);
-                oaklandStoreMapSetup(oaklandCity);
+                storeMapSetup(oaklandCity);
                 oaklandStoreList.style.display = "block";
                 oaklandStoreList.options[0].selected = true;
             break;
             case ($(this).text() === "San Francisco, CA"):
                 let sanfranCity = this.textContent;
-                console.log(this.textContent);
-                sanfranStoreMapSetup(sanfranCity);
+                storeMapSetup(sanfranCity);
                 sanFranciscoStoreList.style.display = "block";
                 sanFranciscoStoreList.options[0].selected = true;
             break;
             case ($(this).text() === "San Diego, CA"):
                 let sandiegoCity = this.textContent;
-                console.log(this.textContent);
-                sandiegoStoreMapSetup(sandiegoCity);
+                storeMapSetup(sandiegoCity);
                 sanDiegoStoreList.style.display = "block";
                 sanDiegoStoreList.options[0].selected = true;
             break;
@@ -535,36 +551,21 @@ function initMap(){
     })
 
     //start of cityStoreSetup functions
-    function sacStoreMapSetup($selectedCity){
-        $("#sacramento-store-list").on("change", function(){
-            var thisStoreList = $(this).id;
-            if($selectedCity === "Sacramento, CA"){
-                addStoreToMap(sacramentoStores);
-            }
-        });
-    }
-
-    function sanfranStoreMapSetup($selectedCity){
-        $("#san-francisco-store-list").on("change", function(){
-            var thisStoreList = $(this).id;
-            if($selectedCity === "San Francisco, CA"){
-                addStoreToMap(sanFranciscoStores, thisStoreList);
-            }
-        });
-    }
-
-    function oaklandStoreMapSetup($selectedCity){
-        $("#oakland-store-list").on("change", function(){
-            if($selectedCity === "Oakland, CA"){
-                addStoreToMap(oaklandStores);
-            }
-        });
-    }
-
-    function sandiegoStoreMapSetup($selectedCity){
-        $("#san-diego-store-list").on("change", function(){
-            if($selectedCity === "San Diego, CA"){
-                addStoreToMap(sandiegoStores);
+    function storeMapSetup($selectedCity){
+        $(".store-list").on("change", function(){
+            switch(true){
+                case ($selectedCity === "Sacramento, CA"):
+                    addStoreToMap(sacramentoStores);
+                break;
+                case ($selectedCity === "San Francisco, CA"):
+                    addStoreToMap(sanFranciscoStores);
+                break;
+                case ($selectedCity === "Oakland, CA"):
+                    addStoreToMap(oaklandStores);
+                break;
+                case ($selectedCity === "San Diego, CA"):
+                    addStoreToMap(sanDiegoStores);
+                break;
             }
         });
     }
@@ -584,10 +585,9 @@ function initMap(){
         storeMarkers = [];
     }
 
-    function addStoreToMap(storeArr, thisStoreList){
+    function addStoreToMap(storeArr){
         deleteMarkers();
         var $storeOptionText = $(".store-list option:selected").text();
-        console.log($storeOptionText);
         var firstP = $storeOptionText.indexOf("(");
         var lastP = $storeOptionText.indexOf(")");
         var $finalOptionText = $storeOptionText.substring(firstP + 1, lastP).toUpperCase();
