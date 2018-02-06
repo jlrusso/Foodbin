@@ -307,8 +307,8 @@ var deliveryBtnContainer = document.getElementById("deliver-btn-container"),
     userLocation, userCoords;
 
 locationInputField.addEventListener("click", function(){
-    if(searchListGroup.style.height !== "185px"){
-        searchListGroup.style.height = "185px";
+    if(searchListGroup.style.height !== "150px"){
+        searchListGroup.style.height = "150px";
     } 
 });
 
@@ -354,8 +354,6 @@ var sacramentoStores = [
     {storeName: "Taylor's Market", address: "2900 Freeport Blvd, Sacramento, CA 95818", coords: {lat: 38.5518472, lng: -121.48892610000001}},
     {storeName: "Oto's Marketplace", address: "4990 Freeport Blvd, Sacramento, CA 95822", coords: {lat: 38.5289733, lng: -121.49626739999997}},
     {storeName: "Smart & Final", address: "6340 Stockton Blvd, Sacramento, CA 95824", coords: {lat: 38.511698, lng: -121.43724259999999}},
-    {storeName: "Mi Rancho", address: "2355 Florin Rd, Sacramento, CA 95822, USA", coords: {lat: 38.4974369, lng: -121.4834611}},
-    {storeName: "India House of Grocery", address: "6618 Florin Rd # B, Sacramento, CA 95828", coords: {lat: 38.4952973, lng: -121.42554369999999}},
     {storeName: "Smart & Final Extra", address: "7205 Freeport Blvd, Sacramento, CA 95831", coords: {lat: 38.4943793, lng: -121.50473090000003}},
     {storeName: "Nugget Markets", address: "1040 Florin Rd, Sacramento, CA 95831", coords: {lat: 38.4946749, lng: -121.52080899999999}},
     {storeName: "Foodsco", address: "5021 Fruitridge Rd, Sacramento, CA 95820", coords: {lat: 38.5269495, lng: -121.44444900000002}},
@@ -373,11 +371,7 @@ var sanDiegoStores = [
     {storeName: "Vons", address: "1702 Garnet Ave, San Diego, CA 92109", coords: {lat: 32.8020198, lng: -117.23895449999998}},
     {storeName: "Albertsons", address: "655 14th St, San Diego, CA 92101", coords: {lat: 32.7120903, lng: -117.15136000000001}},
     {storeName: "Ralphs", address: "5680 Mission Center Rd, San Diego, CA 92108", coords: {lat: 32.7748544, lng: -117.155842}},
-    {storeName: "Vons", address: "3610 Adams Ave, San Diego, CA 92116", coords: {lat: 32.7640694, lng: -117.11453510000001}},
-    {storeName: "Ralphs", address: "6670 Montezuma Rd, San Diego, CA 92115", coords: {lat: 32.7695215, lng: -117.05427529999997}},
-    {storeName: "Windmill Farms", address: "6386 Del Cerro Blvd, San Diego, CA 92120", coords: {lat: 32.7838935, lng: -117.0598693}},
-    {storeName: "Keils", address: "7403 Jackson Dr, San Diego, CA 92119", coords: {lat: 32.8037513, lng: -117.04444430000001}},
-    {storeName: "Ralphs", address: "3011 Alta View Dr, San Diego, CA 92139", coords: {lat: 32.6769872, lng: -117.03831130000003}}
+    {storeName: "Vons", address: "3610 Adams Ave, San Diego, CA 92116", coords: {lat: 32.7640694, lng: -117.11453510000001}}
 ];
 
 var sanFranciscoStores = [
@@ -406,16 +400,136 @@ var oaklandStores = [
     {storeName: "Farmer Joe's Marketplace", address: "3426 Fruitvale Ave, Oakland, CA 94602", coords: {lat: 37.7995471, lng: -122.21597509999998}},
 ];
 
-var fremontStores = [];
-var berkeleyStores = [];
-var stocktonStores = [];
-var sanjoseStores = [];
-var losangelesStores = [];
-var santaBarbaraStores = [];
-var riversideStores = [];
-var longBeachStores = [];
-var anaheimStores = [];
-var irvineStores = [];
+var fremontStores = [
+    {storeName: "Lucky", address: "35820 Fremont Blvd, Fremont, CA 94536", coords: {lat: 37.5675554, lng: -122.02325129999997}},
+    {storeName: "Maiwand Market", address: "37235 Fremont Blvd, Fremont, CA 94536", coords: {lat: 37.5587722, lng: -122.00875769999999}},
+    {storeName: "Whole Foods Market", address: "3111 Mowry Ave, Fremont, CA 94538", coords: {lat: 37.5549923, lng: -121.98521010000002}},
+    {storeName: "Raley's", address: "39200 Paseo Padre Pkwy, Fremont, CA 94538", coords: {lat: 37.5536735, lng: -121.97890660000002}},
+    {storeName: "Smart & Final Extra", address: "3171 Walnut Ave, Fremont, CA 94538", coords: {lat: 37.5513737, lng: -121.98059649999999}},
+    {storeName: "Indian Market", address: "3890 Walnut Ave, Fremont, CA 94538", coords: {lat: 37.546324, lng: -121.98159599999997}},
+    {storeName: "Safeway", address: "39100 Argonaut Way, Fremont, CA 94538", coords: {lat: 37.545291, lng: -121.98929129999999}},
+    {storeName: "Trader Joe's", address: "39324 Argonaut Way, Fremont, CA 94538", coords: {lat: 37.5435052, lng: -121.98624799999999}},
+    {storeName: "India Cash & Carry", address: "39175 Farwell Dr, Fremont, CA 94538", coords: {lat: 37.5300068, lng: -121.99900030000003}},
+    {storeName: "Grocery Outlet Bargain Market", address: "4949 Stevenson Blvd f, Fremont, CA 94538", coords: {lat: 37.5297689, lng: -121.98327080000001}},
+    {storeName: "Safeway", address: "3902 Washington Blvd, Fremont, CA 94538", coords: {lat: 37.5316114, lng: -121.95720990000001}}
+];
+var berkeleyStores = [
+    {storeName: "Berkeley Natural Grocery Company", address: "1336 Gilman St, Albany, CA 94706", coords: {lat: 37.880892, lng: -122.288567}},
+    {storeName: "Safeway", address: "1444 Shattuck Pl, Berkeley, CA 94709", coords: {lat: 37.88076640000001, lng: -122.27002749999997}},
+    {storeName: "Cedar Market", address: "1601 California St, Berkeley, CA 94703", coords: {lat: 37.8768539, lng: -122.28027329999998}},
+    {storeName: "Safeway Community Markets", address: "1550 Shattuck Ave, Berkeley, CA 94709", coords: {lat: 37.8787907, lng: -122.26997069999999}},
+    {storeName: "Foothill Club Market", address: "2700 Hearst Ave, Berkeley, CA 94720", coords: {lat: 37.87544279999999, lng: -122.25581820000002}},
+    {storeName: "Trader Joe's", address: "1885 University Ave, Berkeley, CA 94703", coords: {lat: 37.871738, lng: -122.27326640000001}},
+    {storeName: "Mi Tierra Foods", address: "2082 San Pablo Ave, Berkeley, CA 94702", coords: {lat: 37.8680016, lng: -122.2921038}},
+    {storeName: "Alex Market", address: "2440 Sacramento St, Berkeley, CA 94702", coords: {lat: 37.8624588, lng: -122.28140810000002}},
+    {storeName: "Shattuck Market", address: "2441 Shattuck Ave, Berkeley, CA 94704", coords: {lat: 37.8650546, lng: -122.26710049999997}},
+    {storeName: "Franklin Bros. Market", address: "901 Bancroft Way, Berkeley, CA 94710", coords: {lat: 37.8638964, lng: -122.29508900000002}},
+    {storeName: "Whole Foods Market", address: "3000 Telegraph Ave, Berkeley, CA 94705", coords: {lat: 37.8556007, lng: -122.2601477}},
+];
+
+var stocktonStores = [
+    {storeName: "Raley's", address: "4255 E Morada Ln, Stockton, CA 95212", coords: {lat: 38.0397617, lng: -121.26014190000001}},
+    {storeName: "Food 4 Less", address: "789 W Hammer Ln, Stockton, CA 95210", coords: {lat: 38.0228413, lng: -121.32136459999998}},
+    {storeName: "SF Supermarket", address: "8004 West Ln, Stockton, CA 95210", coords: {lat: 38.022886, lng: -121.29322769999999}},
+    {storeName: "WinCo Foods", address: "5110 Montauban Ave, Stockton, CA 95210", coords: {lat: 38.0046898, lng: -121.28375819999997}},
+    {storeName: "Safeway", address: "6445 Pacific Ave, Stockton, CA 95207", coords: {lat: 38.0085011, lng: -121.32089209999998}},
+    {storeName: "Smart & Final Extra", address: "744 W Hammer Ln, Stockton, CA 95210", coords: {lat: 38.0199804, lng: -121.3210004}},
+    {storeName: "Grocery Outlet Bargain Market", address: "6618 Pacific Ave, Stockton, CA 95207", coords: {lat: 38.0105832, lng: -121.3193422}},
+    {storeName: "Save Mart Supermarkets", address: "4725 Quail Lakes Dr, Stockton, CA 95207", coords: {lat: 37.9864003, lng: -121.3421659}},
+    {storeName: "La Superior Super Mercados", address: "1536 Waterloo Rd, Stockton, CA 95205", coords: {lat: 37.9721818, lng: -121.26756339999997}},
+    {storeName: "Madison Market", address: "748 N Madison St, Stockton, CA 95202", coords: {lat: 37.959899, lng: -121.2955369}}
+];
+var sanJoseStores = [
+    {storeName: "H Mart", address: "1179 S De Anza Blvd, San Jose, CA 95129", coords: {lat: 37.3041788, lng: -122.0336532}},
+    {storeName: "Lion Market", address: "471 Saratoga Ave, San Jose, CA 95129", coords: {lat: 37.3191117, lng: -121.97438199999999}},
+    {storeName: "Trader Joe's", address: "635 Coleman Ave, San Jose, CA 95110", coords: {lat: 37.3411464, lng: -121.90929570000003}},
+    {storeName: "Dai Thanh Supermarket", address: "420 S 2nd St, San Jose, CA 95113", coords: {lat: 37.3305671, lng: -121.88368500000001}},
+    {storeName: "Safeway", address: "1300 W San Carlos St, San Jose, CA 95126", coords: {lat: 37.3229324, lng: -121.9119445}},
+    {storeName: "Arteaga's", address: "1003 Lincoln Ave, San Jose, CA 95125", coords: {lat: 37.3121834, lng: -121.90422619999998}},
+    {storeName: "Whole Foods Market", address: "777 The Alameda, San Jose, CA 95126", coords: {lat: 37.3321739, lng: -121.90481360000001}},
+    {storeName: "Santo Market Inc", address: "245 E Taylor St, San Jose, CA 95112", coords: {lat: 37.3517084, lng: -121.89530910000002}},
+    {storeName: "Grocery Outlet Bargain Market", address: "2300 Monterey Rd, San Jose, CA 95112", coords: {lat: 37.301419, lng: -121.85831350000001}},
+    {storeName: "Safeway", address: "1530 Hamilton Ave, San Jose, CA 95125", coords: {lat: 37.2933062, lng: -121.9109977}},
+    {storeName: "Mitsuwa Marketplace", address: "675 Saratoga Ave, San Jose, CA 95129", coords: {lat: 37.3150592, lng: -121.97794770000002}}
+];
+var losAngelesStores = [
+    {storeName: "Whole Foods Market", address: "11737 San Vicente Blvd, Los Angeles, CA 90049", coords: {lat: 34.0536448, lng: -118.46738620000002}},
+    {storeName: "Gelson's Market", address: "10250 California State Route 2, Los Angeles, CA 90067", coords: {lat: 34.0596051, lng: -118.4194354}},
+    {storeName: "Super King Market", address: "2716 N San Fernando Rd, Los Angeles, CA 90065", coords: {lat: 34.1096587, lng: -118.24305579999998}},
+    {storeName: "Vons", address: "4520 Sunset Blvd, Los Angeles, CA 90028", coords: {lat: 34.0970404, lng: -118.28798549999999}},
+    {storeName: "Fresco Community Market", address: "5914 Monterey Rd, Los Angeles, CA 90042", coords: {lat: 34.104784, lng: -118.18324280000002}},
+    {storeName: "Pavilions", address: "727 N Vine St, Los Angeles, CA 90038", coords: {lat: 34.0845782, lng: -118.3272177}},
+    {storeName: "Ralph's", address: "5245 W Centinela Ave, Los Angeles, CA 90045", coords: {lat: 33.9790634, lng: -118.37152100000003}},
+    {storeName: "Whole Foods Market", address: "788 S Grand Ave, Los Angeles, CA 90017", coords: {lat: 34.0460562, lng: -118.25774380000001}},
+    {storeName: "Smart & Final Extra", address: "845 S Figueroa St #100, Los Angeles, CA 90017", coords: {lat: 34.0475167, lng: -118.2628287}},
+    {storeName: "Vons", address: "3461 W 3rd St, Los Angeles, CA 90020", coords: {lat: 34.0699936, lng: -118.2908984}},
+    {storeName: "Urban Radish", address: "661 Imperial St, Los Angeles, CA 90021", coords: {lat: 34.0361074, lng: -118.2316935}},
+];
+var santaBarbaraStores = [
+    {storeName: "European Deli Market", address: "4422 Hollister Ave, Santa Barbara, CA 93110", coords: {lat: 34.4402771, lng: -119.77074579999999}},
+    {storeName: "Vons", address: "3855 State St, Santa Barbara, CA 93105", coords: {lat: 34.4384846, lng: -119.7495222}},
+    {storeName: "Whole Foods Market", address: "3761 State St, Santa Barbara, CA 93105", coords: {lat: 34.439222, lng: -119.7452194}},
+    {storeName: "Gelson's Market", address: "3303 State St, Santa Barbara, CA 93105, USA", coords: {lat: 34.4395706, lng: -119.73534919999997}},
+    {storeName: "Grocery Outlet Bargain Market", address: "2840 De La Vina St, Santa Barbara, CA 93105", coords: {lat: 34.4375348, lng: -119.72621930000003}},
+    {storeName: "Foodland Market", address: "1501 San Andres St, Santa Barbara, CA 93101", coords: {lat: 34.4186878, lng: -119.71653559999999}},
+    {storeName: "Ralph's", address: "100 W Carrillo St, Santa Barbara, CA 93101", coords: {lat: 34.4200294, lng: -119.70422830000001}},
+    {storeName: "Santa Cruz Market", address: "324 W Montecito St, Santa Barbara, CA 93101", coords: {lat: 34.4112431, lng: -119.69728409999999}},
+    {storeName: "Smart & Final", address: "217 E Gutierrez St, Santa Barbara, CA 93101", coords: {lat: 34.4189521, lng: -119.69221570000002}},
+    {storeName: "Vons", address: "2010 Cliff Dr, Santa Barbara, CA 93109", coords: {lat: 34.4025252, lng: -119.723747}},
+    {storeName: "Brownie's Market", address: "435 De La Vina St, Santa Barbara, CA 93101", coords: {lat: 34.4144594, lng: -119.69777349999998}}
+];
+var riversideStores = [
+    {storeName: "Maxi Foods Market", address: "4050 University Ave, Riverside, CA 92501", coords: {lat: 33.9830631, lng: -117.37890759999999}},
+    {storeName: "Goodwin's Organic Foods and Drinks", address: "191 W Big Springs Rd, Riverside, CA 92507", coords: {lat: 33.975942, lng: -117.3154222}},
+    {storeName: "Smart & Final", address: "3310 Vine St, Riverside, CA 92507", coords: {lat: 33.9834169, lng: -117.36502210000003}},
+    {storeName: "Ralphs", address: "6155 Magnolia Ave, Riverside, CA 92506", coords: {lat: 33.9591705, lng: -117.39444279999998}},
+    {storeName: "Ralphs", address: "5225 Canyon Crest Dr, Riverside, CA 92507", coords: {lat: 33.9552904, lng: -117.33018149999998}},
+    {storeName: "Vons", address: "3520 Riverside Plaza Dr, Riverside, CA 92506", coords: {lat: 33.9548964, lng: -117.38940339999999}},
+    {storeName: "Smart & Final Extra", address: "5202 Arlington Ave, Riverside, CA 92504", coords: {lat: 33.9446028, lng: -117.41644400000001}},
+    {storeName: "Trader Joe's", address: "6225 Riverside Ave, Riverside, CA 92506", coords: {lat: 33.955921, lng: -117.38852409999998}},
+    {storeName: "Albertsons", address: "2975 Van Buren Boulevard, Riverside, CA 92503", coords: {lat: 33.9099358, lng: -117.4363358}},
+    {storeName: "Smart & Final Extra", address: "2744 Canyon Springs Pkwy, Riverside, CA 92507", coords: {lat: 33.9414981, lng: -117.2803836}},
+    {storeName: "Sprouts Farmers Market", address: "475 E Alessandro Blvd, Riverside, CA 92508", coords: {lat: 33.9163108, lng: -117.3236306}},
+];
+var longBeachStores = [
+    {storeName: "Northgate Gonzalez Markets", address: "4700 Cherry Ave, Long Beach, CA 90807", coords: {lat: 33.8445794, lng: -118.1670143}},
+    {storeName: "Vons", address: "4550 Atlantic Ave, Long Beach, CA 90807", coords: {lat: 33.8410622, lng: -118.18280060000001}},
+    {storeName: "Ralphs", address: "2250 E Carson St, Long Beach, CA 90807", coords: {lat: 33.8306903, lng: -118.16502309999998}},
+    {storeName: "Albertsons", address: "101 E Willow St, Long Beach, CA 90806", coords: {lat: 33.8056952, lng: -118.19232640000001}},
+    {storeName: "Ralphs", address: "3380 N Los Coyotes Diagonal, Long Beach, CA 90808", coords: {lat: 33.8181205, lng: -118.10879950000003}},
+    {storeName: "Trader Joe's", address: "2222 N Bellflower Blvd, Long Beach, CA 90815", coords: {lat: 33.7967882, lng: -118.12298149999998}},
+    {storeName: "Ralphs", address: "1930 N Lakewood Blvd, Long Beach, CA 90815", coords: {lat: 33.7921236, lng: -118.14142859999998}},
+    {storeName: "Ralphs", address: "2930 E 4th St, Long Beach, CA 90814", coords: {lat: 33.7713424, lng: -118.1575014}},
+    {storeName: "Vons", address: "600 E Broadway, Long Beach, CA 90802", coords: {lat: 33.7689188, lng: -118.18433670000002}},
+    {storeName: "Ma N' Pa Grocery", address: "346 Roycroft Ave, Long Beach, CA 90814", coords: {lat: 33.7697332, lng: -118.13810330000001}},
+    {storeName: "Vons", address: "3900 E Ocean Blvd, Long Beach, CA 90803", coords: {lat: 33.7597895, lng: -118.1471611}},
+];
+var anaheimStores = [
+    {storeName: "Vons", address: "12961 W Chapman Ave, Garden Grove, CA 92840", coords: {lat: 33.7896752, lng: -117.90720379999999}},
+    {storeName: "Super King Markets", address: "10500 S Magnolia Ave, Anaheim, CA 92804", coords: {lat: 33.8102723, lng: -117.97574639999999}},
+    {storeName: "Vallarta Supermarkets", address: "2394 W Lincoln Ave, Anaheim, CA 92801", coords: {lat: 33.8313679, lng: -117.96720449999998}},
+    {storeName: "Food 4 Less", address: "1616 W Katella Ave, Anaheim, CA 92802", coords: {lat: 33.8018771, lng: -117.9377907}},
+    {storeName: "Vons", address: "130 W Lincoln Ave, Anaheim, CA 92805", coords: {lat: 33.8351714, lng: -117.91458269999998}},
+    {storeName: "Walmart Neighborhood Market", address: "1120 S Anaheim Blvd, Anaheim, CA 92805", coords: {lat: 33.8194611, lng: -117.9080356}},
+    {storeName: "Vons", address: "810 S State College Blvd, Anaheim, CA 92806", coords: {lat: 33.831271, lng: -117.88862499999999}},
+    {storeName: "Vons", address: "5600 E Santa Ana Canyon Rd, Anaheim, CA 92807", coords: {lat: 33.8498098, lng: -117.7917195}},
+    {storeName: "Ralphs", address: "711 S Weir Canyon Rd, Anaheim, CA 92808", coords: {lat: 33.8615302, lng: -117.74013150000002}},
+    {storeName: "Northgate Gonzalez Markets", address: "2030 E Lincoln Ave, Anaheim, CA 92806", coords: {lat: 33.837602, lng: -117.8885368}},
+    {storeName: "Wholesome Choice", address: "5755 La Palma Ave, Anaheim, CA 92807", coords: {lat: 33.8595085, lng: -117.7888251}}
+];
+var irvineStores = [
+    {storeName: "Whole Foods Market", address: "8525 Irvine Center Dr, Irvine, CA 92618", coords: {lat: 33.6463128, lng: -117.74437080000001}},
+    {storeName: "Albertsons", address: "6601 Quail Hill Pkwy, Irvine, CA 92603", coords: {lat: 33.6552144, lng: -117.77975730000003}},
+    {storeName: "Albertsons", address: "4541 Campus Dr, Irvine, CA 92612", coords: {lat: 33.6501347, lng: -117.8313612}},
+    {storeName: "Albertsons", address: "3825 Alton Pkwy, Irvine, CA 92606", coords: {lat: 33.6837153, lng: -117.813988}},
+    {storeName: "Ralphs", address: "17605 Harvard Ave, Irvine, CA 92614", coords: {lat: 33.6773086, lng: -117.83302750000001}},
+    {storeName: "Gelson's Market", address: "5521 Alton Pkwy, Irvine, CA 92618", coords: {lat: 33.6702916, lng: -117.7867501}},
+    {storeName: "Village Market", address: "7020 Scholarship, Irvine, CA 92612", coords: {lat: 33.6660729, lng: -117.85317609999998}},
+    {storeName: "Ralphs", address: "6300 Irvine Blvd, Irvine, CA 92620", coords: {lat: 33.6966115, lng: -117.74277599999999}},
+    {storeName: "Super Irvine", address: "14120 Culver Dr, Irvine, CA 92604", coords: {lat: 33.7082775, lng: -117.782193}},
+    {storeName: "Smart & Final Extra", address: "14417 Culver Dr, Irvine, CA 92604", coords: {lat: 33.7064765, lng: -117.78725550000001}},
+    {storeName: "Ralphs", address: "14400 Culver Dr, Irvine, CA 92604", coords: {lat: 33.7058189, lng: -117.78607369999997}},
+];
 
 // end of california cities and grocery stores arrays
 
@@ -424,7 +538,17 @@ var mapElement = document.getElementById("map"),
     sacramentoStoreList = document.getElementById("sacramento-store-list"),
     sanDiegoStoreList = document.getElementById("san-diego-store-list"),
     oaklandStoreList = document.getElementById("oakland-store-list"),
-    sanFranciscoStoreList = document.getElementById("san-francisco-store-list");
+    sanFranciscoStoreList = document.getElementById("san-francisco-store-list"),
+    fremontStoreList = document.getElementById("fremont-store-list"),
+    berkeleyStoreList = document.getElementById("berkeley-store-list"),
+    stocktonStoreList = document.getElementById("stockton-store-list"),
+    sanJoseStoreList = document.getElementById("san-jose-store-list"),
+    losAngelesStoreList = document.getElementById("los-angeles-store-list"),
+    santaBarbaraStoreList = document.getElementById("santa-barbara-store-list"),
+    riversideStoreList = document.getElementById("riverside-store-list"),
+    longBeachStoreList = document.getElementById("long-beach-store-list"),
+    anaheimStoreList = document.getElementById("anaheim-store-list"),
+    irvineStoreList = document.getElementById("irvine-store-list");
 
 var userInfoWindow;
 var storeMarkers = [];
@@ -524,28 +648,74 @@ function initMap(){
         }
         switch(true){
             case ($(this).text() === "Sacramento, CA"):
-                let sacramentoCity = this.textContent;
-                storeMapSetup(sacramentoCity);
+                storeMapSetup(this.textContent);
                 sacramentoStoreList.style.display = "block";
                 sacramentoStoreList.options[0].selected = true;
             break;
             case ($(this).text() === "Oakland, CA"):
-                let oaklandCity = this.textContent;
-                storeMapSetup(oaklandCity);
+                storeMapSetup(this.textContent);
                 oaklandStoreList.style.display = "block";
                 oaklandStoreList.options[0].selected = true;
             break;
             case ($(this).text() === "San Francisco, CA"):
-                let sanfranCity = this.textContent;
-                storeMapSetup(sanfranCity);
+                storeMapSetup(this.textContent);
                 sanFranciscoStoreList.style.display = "block";
                 sanFranciscoStoreList.options[0].selected = true;
             break;
             case ($(this).text() === "San Diego, CA"):
-                let sandiegoCity = this.textContent;
-                storeMapSetup(sandiegoCity);
+                storeMapSetup(this.textContent);
                 sanDiegoStoreList.style.display = "block";
                 sanDiegoStoreList.options[0].selected = true;
+            break;
+            case ($(this).text() === "Fremont, CA"):
+                storeMapSetup(this.textContent);
+                fremontStoreList.style.display = "block";
+                fremontStoreList.options[0].selected = true;
+            break;
+            case ($(this).text() === "Berkeley, CA"):
+                storeMapSetup(this.textContent);
+                berkeleyStoreList.style.display = "block";
+                berkeleyStoreList.options[0].selected = true;
+            break;
+            case ($(this).text() === "Stockton, CA"):
+                storeMapSetup(this.textContent);
+                stocktonStoreList.style.display = "block";
+                stocktonStoreList.options[0].selected = true;
+            break;
+            case ($(this).text() === "San Jose, CA"):
+                storeMapSetup(this.textContent);
+                sanJoseStoreList.style.display = "block";
+                sanJoseStoreList.options[0].selected = true;
+            break;
+            case ($(this).text() === "Los Angeles, CA"):
+                storeMapSetup(this.textContent);
+                losAngelesStoreList.style.display = "block";
+                losAngelesStoreList.options[0].selected = true;
+            break;
+            case ($(this).text() === "Santa Barbara, CA"):
+                storeMapSetup(this.textContent);
+                santaBarbaraStoreList.style.display = "block";
+                santaBarbaraStoreList.options[0].selected = true;
+            break;
+            case ($(this).text() === "Riverside, CA"):
+                storeMapSetup(this.textContent);
+                riversideStoreList.style.display = "block";
+                riversideStoreList.options[0].selected = true;
+            break;
+            case ($(this).text() === "Long Beach, CA"):
+                storeMapSetup(this.textContent);
+                longBeachStoreList.style.display = "block";
+                longBeachStoreList.options[0].selected = true;
+            break;
+            case ($(this).text() === "Anaheim, CA"):
+                storeMapSetup(this.textContent);
+                anaheimStoreList.style.display = "block";
+                anaheimStoreList.options[0].selected = true;
+            break;
+            case ($(this).text() === "Irvine, CA"):
+                storeMapSetup(this.textContent);
+                irvineStoreList.style.display = "block";
+                irvineStoreList.options[0].selected = true;
             break;
         }
     })
@@ -565,6 +735,36 @@ function initMap(){
                 break;
                 case ($selectedCity === "San Diego, CA"):
                     addStoreToMap(sanDiegoStores);
+                break;
+                case ($selectedCity === "Fremont, CA"):
+                    addStoreToMap(fremontStores);
+                break;
+                case ($selectedCity === "Berkeley, CA"):
+                    addStoreToMap(berkeleyStores);
+                break;
+                case ($selectedCity === "Stockton, CA"):
+                    addStoreToMap(stocktonStores);
+                break;
+                case ($selectedCity === "San Jose, CA"):
+                    addStoreToMap(sanjoseStores);
+                break;
+                case ($selectedCity === "Los Angeles, CA"):
+                    addStoreToMap(losangelesStores);
+                break;
+                case ($selectedCity === "Santa Barbara, CA"):
+                    addStoreToMap(santaBarbaraStores);
+                break;
+                case ($selectedCity === "Riverside, CA"):
+                    addStoreToMap(riversideStores);
+                break;
+                case ($selectedCity === "Long Beach, CA"):
+                    addStoreToMap(longBeachStores);
+                break;
+                case ($selectedCity === "Anaheim, CA"):
+                    addStoreToMap(anaheimStores);
+                break;
+                case ($selectedCity === "Irvine, CA"):
+                    addStoreToMap(irvineStores);
                 break;
             }
         });

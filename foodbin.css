@@ -222,7 +222,7 @@ nav {
 /*-- start of google maps area ---*/
 #user-map-area {
     padding: 10px 10px;
-    background-color: #555;
+    background-color: #F2F3F4;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-column-gap: 10px;
@@ -285,13 +285,13 @@ nav {
 
 #search-list-group {
     width: 65%;
-    height: 185px;
+    height: 150px;
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 4px;
     overflow-y: scroll;
     transition: 0.5s;
-    margin: 7px auto 0;
+    margin: 5px auto 0;
 }
 
 #search-list-group li {
@@ -310,9 +310,19 @@ nav {
 #sacramento-store-list,
 #san-diego-store-list,
 #san-francisco-store-list,
-#oakland-store-list {
+#oakland-store-list,
+#fremont-store-list,
+#berkeley-store-list,
+#stockton-store-list,
+#san-jose-store-list,
+#los-angeles-store-list,
+#santa-barbara-store-list,
+#riverside-store-list,
+#long-beach-store-list,
+#anaheim-store-list,
+#irvine-store-list {
     display: none;
-    margin: 7px auto 0;
+    margin: 5px auto 0;
     width: 65%;
     font-size: 16px;
     line-height: 1.42857143;
@@ -325,8 +335,7 @@ nav {
 
 #delivery-btn-container {
     width: 65%;
-    margin: 7px auto 0;
-    display: none;
+    margin: 5px auto 0;
 }
 
 #delivery-btn {
@@ -363,7 +372,7 @@ nav {
     width: 100%;
     height: auto;
     background-color: #F2F3F4;
-    padding: 5% 0 5%;
+    padding: 5% 0 2%;
 }
 
 .food-type-section {
