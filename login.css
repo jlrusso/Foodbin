@@ -112,7 +112,8 @@ h4 {
 #login-btn {
 =======
 #terms-and-conditions {
-	font-size: 0.9rem;
+	width: 100%;
+	font-size: 0.95rem;
 }
 
 #terms-and-conditions a {
