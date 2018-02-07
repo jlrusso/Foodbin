@@ -142,22 +142,18 @@ for(let i = 0; i < addToCartBtns.length; i++){
 }
 function addFoodItem(index){
     var modalWindow = addToCartBtns[index].parentElement.parentElement.parentElement,
-        modalWindowId = modalWindow.id;
         $modalContainer = $(".add-to-cart-btn").eq(index).parents(".modal-inner-container"),
         $modalContent = $modalContainer.find(".modal-inner-content"),
-        $modalFoodHeading = $modalContent.find(".modal-inner-image-heading").text();
-
+        $modalFoodHeading = $modalContent.find(".modal-inner-image-heading").text(),
         $weightSelectorValue = $modalContent.find(".weight-selector option:checked").text(),
         $weightNumVal = $modalContent.find(".weight-priority option:checked").text(),
-
         $costSelectorValue = $modalContent.find(".cost-selector option:checked").text(),
         $costNumVal = $modalContent.find(".cost-priority option:checked").text(),
-
         $specialtySelectorValue = $modalContent.find(".specialty-selector option:checked").text(),
         $specialtyNumVal = $modalContent.find(".specialty-priority option:checked").text(),
-
-        $qualitySelectorValue = $modalContent.find(".quality-selector option:checked").text(); 
-        $qualityNumVal = $modalContent.find(".quality-priority option:checked").text();
+        $qualitySelectorValue = $modalContent.find(".quality-selector option:checked").text(), 
+        $qualityNumVal = $modalContent.find(".quality-priority option:checked").text(),
+        modalWindowId = modalWindow.id;
 
         //check to see if any two priority values are the same
         if($weightNumVal == $costNumVal || 
