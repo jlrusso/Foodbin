@@ -746,10 +746,10 @@ function initMap(){
                     addStoreToMap(stocktonStores);
                 break;
                 case ($selectedCity === "San Jose, CA"):
-                    addStoreToMap(sanjoseStores);
+                    addStoreToMap(sanJoseStores);
                 break;
                 case ($selectedCity === "Los Angeles, CA"):
-                    addStoreToMap(losangelesStores);
+                    addStoreToMap(losAngelesStores);
                 break;
                 case ($selectedCity === "Santa Barbara, CA"):
                     addStoreToMap(santaBarbaraStores);
