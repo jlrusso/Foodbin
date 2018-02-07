@@ -12,6 +12,7 @@ body {
 
 * {
 	box-sizing: border-box;
+	font-family: "Ubuntu", sans-serif;
 }
 
 .container {
@@ -107,6 +108,16 @@ h4 {
 	box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
 }
 
+#forgot-pwd-container {
+	text-align: right;
+}
+
+#forgot-pwd-link {
+	color: rgb(59, 89, 152);
+	text-decoration: none;
+	font-size: 0.9rem;
+}
+
 #login-btn {
 	width: 100%;
 	border: 0;
@@ -134,5 +145,8 @@ h4 {
 
 #register-container a {
 	color: rgb(59, 89, 152);
+	text-decoration: none;
 }
+
+
 
