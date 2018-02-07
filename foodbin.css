@@ -249,7 +249,7 @@ nav {
 /*-- start of google maps area ---*/
 #user-map-area {
     padding: 10px 10px;
-    background-color: #F2F3F4;
+    background-color: #E5E7E9;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-column-gap: 10px;
@@ -410,7 +410,7 @@ nav {
     position: relative;
     width: 100%;
     height: auto;
-    background-color: #F2F3F4;
+    background-color: #E5E7E9;
     padding: 5% 0 2%;
 }
 
@@ -580,7 +580,7 @@ nav {
     width: 100%;
     height: auto;
     padding: 0 40px 40px 40px;
-    background-color: #F2F3F4;
+    background-color: #E5E7E9;
 
 }
 
