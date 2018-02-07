@@ -131,6 +131,7 @@ nav {
     color: #F2F3F4;
     cursor: pointer;
     transition: 0.3s;
+    outline: none;
 }
 #banner-inner button:hover {
     background-color: rgb(34, 153, 84);
@@ -353,15 +354,20 @@ nav {
 
 #delivery-btn {
     width: 100%;
-    padding: 10px 30px;
-    background-color: green;
-    border: 0;
+    padding: 9px 30px;
+    background-color: rgba(34, 153, 84, 0.9);
+    border: 2px solid green;
     border-radius: 4px;
     color: white;
     font-size: 1rem;
     font-weight: bold;
     letter-spacing: 1px;
     cursor: pointer;
+    transition: 0.4s;
+}
+
+#delivery-btn:hover {
+    background-color: green;
 }
 
 #map-container {
@@ -554,7 +560,7 @@ nav {
     position: relative;
     width: 100%;
     height: auto;
-    padding: 40px;
+    padding: 0 40px 40px 40px;
     background-color: #F2F3F4;
 
 }
