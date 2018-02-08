@@ -5,7 +5,7 @@ var perImageContainers = document.getElementsByClassName("per-image-container");
     row = document.getElementsByClassName("row"),
     middleColumn = document.getElementsByClassName("middle-column")[0],
     lastColumn = document.getElementsByClassName("last-column")[0],
-    modalInnerFooter = document.getElementsByClassName("modal-inner-footer");
+    modalInnerFooter = document.getElementsByClassName("modal-inner-footer"),
     samePriorityError = document.getElementById("same-priority-error");
 
 //append constant close container and middle & third columns to each modal window that pops up
@@ -15,7 +15,7 @@ for(let i = 0; i < perImageContainers.length; i++){
     })
 }
 
-//open food item modal via homepage image click
+//open food item modal when user clicks on food item
 function openFoodModal(index){
     $(".close-btn-container").css("display", "block");
     modalWindows[index].appendChild(closeContainer);
@@ -25,7 +25,7 @@ function openFoodModal(index){
     row[index].appendChild(lastColumn);
 }
 
-//open food item modal via make-changes-btn in cart modal
+//open food item modal when user clicks "Make Changes" btn in cart modal
 function openFoodModal2(attribute){
     var $row = $("#" + attribute).find(".row");
     $(".close-btn-container").css("display", "block");
@@ -34,7 +34,7 @@ function openFoodModal2(attribute){
     $row.append(lastColumn);
 }
 
-//click on close container in modal window to close the modal window
+//close modal window when user clicks on X btn in modal window
 var closeBtnContainers = document.getElementsByClassName("close-btn-container");
 for(let i = 0; i < closeBtnContainers.length; i++){
     closeBtnContainers[i].addEventListener("click", function(){
@@ -43,7 +43,7 @@ for(let i = 0; i < closeBtnContainers.length; i++){
     })
 }
 
-//event listener for all modal windows to enable modal window click to close the modal window
+//close modal window when user clicks on dark area, but not modal content area
 for(let i = 0; i < modalWindows.length; i++){
     modalWindows[i].addEventListener("click", function(e){ 
         if(e.target.matches(".modal-window")){
@@ -65,6 +65,7 @@ var cartContainer = document.getElementById("cart-container"),
 cartContainer.addEventListener("click", openCartModal);
 cartBadge.addEventListener("click", openCartModal);
 
+//open cart modal when user clicks on cart icon in nav bar
 function openCartModal(e){
     if(e.target.matches("#cart")){
         cartModalWindow.style.display = "block";
@@ -72,12 +73,14 @@ function openCartModal(e){
     cartModalWindow.style.display = "block";
 }
 
+//close cart modal if user clicks on dark area of modal window and not modal content area
 cartModalWindow.addEventListener("click", function(e){
     if(e.target.matches("#cart-modal-window")){
         this.style.display = "none";
     }
 })
 
+//close cart modal when user clicks on X btn in the modal window
 cartCloseContainer.addEventListener("click", function(){
     this.parentElement.style.display = "none";
 })
@@ -305,7 +308,7 @@ var deliveryBtnContainer = document.getElementById("deliver-btn-container"),
 locationInputField.addEventListener("click", function(){
     if(searchListGroup.style.height !== "150px"){
         searchListGroup.style.height = "150px";
-    } 
+    }
 });
 
 locationInputField.addEventListener("input", function(){
@@ -528,8 +531,8 @@ var irvineStores = [
 ];
 
 // end of california cities and grocery stores arrays
-
-var mapElement = document.getElementById("map"),
+var locationSelected, storeSelected,
+    mapElement = document.getElementById("map"),
     storeLists = document.getElementsByClassName("store-list"),
     sacramentoStoreList = document.getElementById("sacramento-store-list"),
     sanDiegoStoreList = document.getElementById("san-diego-store-list"),
@@ -548,16 +551,16 @@ var mapElement = document.getElementById("map"),
 
 var userInfoWindow;
 var storeMarkers = [];
+var storeCartName;
 function initMap(){
     userInfoWindow = new google.maps.InfoWindow;
     if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(position) {
-      var pos = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-      };
+        navigator.geolocation.getCurrentPosition(function(position) {
+        var pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+        };
       
-
       userInfoWindow.setPosition(pos);
       userInfoWindow.setContent('User location:');
       userInfoWindow.open(mapInstance1);
@@ -579,6 +582,7 @@ function initMap(){
             var thisItem = this.textContent;
             var itemScrollHeight = this.scrollHeight;
             searchListGroup.style.height = itemScrollHeight + "px";
+            locationSelected = this.textContent;
             //go through stored location names in location object and compare to list item selected
             storedLocations.forEach(function(storedLocation){
                 if(storedLocation.location === thisItem){
@@ -781,17 +785,20 @@ function initMap(){
         storeMarkers = [];
     }
 
+    //this function takes in all the store addresses for a given location and matches the one that is selected
     function addStoreToMap(storeArr){
         deleteMarkers();
         var $storeOptionText = $(".store-list option:selected").text();
         var firstP = $storeOptionText.indexOf("(");
         var lastP = $storeOptionText.indexOf(")");
         var $finalOptionText = $storeOptionText.substring(firstP + 1, lastP).toUpperCase();
-
+        storeAddress = $storeOptionText.substring(firstP + 1, lastP);
         storeArr.forEach(function(store){
             var add = store.address;
             if(add.toUpperCase().lastIndexOf($finalOptionText) > -1){
+                console.log(store.storeName);
                 let storeName = store.storeName;
+                storeCartName = storeName;
                 let storeCoords = store.coords;
                 let storeAddress = store.address;
                 addStoreMarkers(storeName, storeCoords, storeAddress);
@@ -834,6 +841,31 @@ function handleLocationError(browserHasGeolocation, info, pos) {
 }
 /*--- End of Google Maps API ---*/
 
+
+//when user clicks on "Deliver From Here" btn
+var deliveryBtn = document.getElementById("delivery-btn"),
+    deliveryBtnCaption = document.getElementById("delivery-btn-caption"),
+    locationStoreContainer = document.getElementById("location-and-store-container"),
+    cartLocation = document.getElementById("cart-location"),
+    cartStoreName = document.getElementById("cart-store-name"),
+    cartStoreAddress = document.getElementById("cart-store-address");
+
+deliveryBtn.addEventListener("click", function(e){
+    e.preventDefault();
+    if(locationSelected == undefined || storeAddress == undefined){
+        deliveryBtnCaption.style.display = "block";
+        return;
+    } else {
+        deliveryBtnCaption.style.display = "none";
+        locationStoreContainer.style.display = "grid";
+        var locationText = document.createTextNode(locationSelected);
+        var addressText = document.createTextNode(storeAddress);
+        var storeNameText = document.createTextNode(storeCartName);
+        cartLocation.appendChild(locationText);
+        cartStoreName.appendChild(storeNameText);
+        cartStoreAddress.appendChild(addressText);
+    }
+})
 
     
 
