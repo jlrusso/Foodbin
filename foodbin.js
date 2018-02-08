@@ -796,7 +796,6 @@ function initMap(){
         storeArr.forEach(function(store){
             var add = store.address;
             if(add.toUpperCase().lastIndexOf($finalOptionText) > -1){
-                console.log(store.storeName);
                 let storeName = store.storeName;
                 storeCartName = storeName;
                 let storeCoords = store.coords;

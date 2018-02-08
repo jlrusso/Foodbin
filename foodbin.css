@@ -20,8 +20,7 @@ body {
 }
  
 ::-webkit-scrollbar-thumb {
-    background: rgb(34, 153, 84); 
-    border-radius: 5px;
+    background: rgb(34, 153, 84);
 }
 
 a {
@@ -391,6 +390,10 @@ nav {
     letter-spacing: 1px;
     cursor: pointer;
     transition: 0.3s;
+}
+
+#delivery-btn:focus {
+    outline: none;
 }
 
 #delivery-btn:hover {
@@ -983,7 +986,7 @@ nav {
 }
 
 #location-and-store-container {
-    width: 80%;
+    width: 85%;
     display: none;
     grid-template-columns: repeat(3, 1fr);
     grid-column-gap: 10px;
