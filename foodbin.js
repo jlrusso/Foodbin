@@ -67,6 +67,7 @@ cartBadge.addEventListener("click", openCartModal);
 
 //open cart modal when user clicks on cart icon in nav bar
 function openCartModal(e){
+    e.preventDefault();
     if(e.target.matches("#cart")){
         cartModalWindow.style.display = "block";
     }
@@ -850,6 +851,7 @@ var deliveryBtn = document.getElementById("delivery-btn"),
     cartStoreAddress = document.getElementById("cart-store-address");
 
 deliveryBtn.addEventListener("click", function(e){
+    $("#cart-location").add("#cart-store-name").add("#cart-store-address").text("");
     e.preventDefault();
     if(locationSelected == undefined || storeAddress == undefined){
         deliveryBtnCaption.style.display = "block";
@@ -857,9 +859,9 @@ deliveryBtn.addEventListener("click", function(e){
     } else {
         deliveryBtnCaption.style.display = "none";
         locationStoreContainer.style.display = "grid";
-        var locationText = document.createTextNode(locationSelected);
-        var addressText = document.createTextNode(storeAddress);
-        var storeNameText = document.createTextNode(storeCartName);
+        locationText = document.createTextNode(locationSelected);
+        addressText = document.createTextNode(storeAddress);
+        storeNameText = document.createTextNode(storeCartName);
         cartLocation.appendChild(locationText);
         cartStoreName.appendChild(storeNameText);
         cartStoreAddress.appendChild(addressText);
