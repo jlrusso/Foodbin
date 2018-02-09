@@ -353,7 +353,6 @@ var sacramentoStores = [
     {storeName: "Food Source", address: "3547 Bradshaw Rd, Sacramento, CA 95827", coords: {lat: 38.5583289, lng: -121.33411469999999}},
     {storeName: "Taylor's Market", address: "2900 Freeport Blvd, Sacramento, CA 95818", coords: {lat: 38.5518472, lng: -121.48892610000001}},
     {storeName: "Oto's Marketplace", address: "4990 Freeport Blvd, Sacramento, CA 95822", coords: {lat: 38.5289733, lng: -121.49626739999997}},
-    {storeName: "Smart & Final", address: "6340 Stockton Blvd, Sacramento, CA 95824", coords: {lat: 38.511698, lng: -121.43724259999999}},
     {storeName: "Smart & Final Extra", address: "7205 Freeport Blvd, Sacramento, CA 95831", coords: {lat: 38.4943793, lng: -121.50473090000003}},
     {storeName: "Nugget Markets", address: "1040 Florin Rd, Sacramento, CA 95831", coords: {lat: 38.4946749, lng: -121.52080899999999}},
     {storeName: "Foodsco", address: "5021 Fruitridge Rd, Sacramento, CA 95820", coords: {lat: 38.5269495, lng: -121.44444900000002}},

@@ -12,7 +12,7 @@ body {
 
 
 ::-webkit-scrollbar {
-    width: 12px;
+    width: 9px;
 }
 
 ::-webkit-scrollbar-track {
@@ -785,15 +785,15 @@ nav {
     padding: 10px 35px;
     border-radius: 5px;
     border: 2px solid rgb(34, 153, 84);
-    background-color: rgba(39, 174, 96, 0.2);
+    background-color: #fff;
     font-size: 1rem;
     color: rgb(34, 153, 84);
     cursor: pointer;
-    transition: 0.4s;
+    transition: 0.2s;
 }
 .add-to-cart-btn:hover {
     background-color: rgb(34, 153, 84);
-    color: white;
+    color: #fff;
 }
 /*--- End of Food Item Modals ---*/
 
@@ -962,31 +962,8 @@ nav {
     position: relative;
 }
 
-#place-order-btn {
-    display: none;
-    position: relative;
-    left: 50%;
-    top: 0;
-    transform: translateX(-50%);
-    padding: 10px 35px;
-    background-color: rgba(0,105,0, 0.4);
-    border: 1.5px solid rgb(0,105,0);
-    border-radius: 5px;
-    font-size: 1rem;
-    cursor: pointer;
-}
-
-.line-divider {
-    display: block;
-    width: 90%;
-    height: 2px;
-    background-color: rgba(0,0,0,0.3);
-    margin: 20px auto;
-    border-radius: 10px;
-}
-
 #location-and-store-container {
-    width: 85%;
+    width: 90%;
     display: none;
     grid-template-columns: repeat(3, 1fr);
     grid-column-gap: 10px;
@@ -998,8 +975,42 @@ nav {
 #cart-store-address {
     border: 1px solid rgba(0, 0, 0, 0.4);
     height: 50px;
+    padding: 0 5px;
     line-height: 50px;
     text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#place-order-btn {
+    display: none;
+    position: relative;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    padding: 10px 35px;
+    background-color: #fff;
+    border: 2px solid rgb(34, 153, 84);
+    border-radius: 5px;
+    font-size: 1rem;
+    color: rgb(34, 153, 84);
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#place-order-btn:hover {
+    background-color: rgb(34, 153, 84);
+    color: #fff;
+}
+
+.line-divider {
+    display: block;
+    width: 90%;
+    height: 2px;
+    background-color: rgba(0,0,0,0.3);
+    margin: 20px auto;
+    border-radius: 10px;
 }
 
 .cart-modal-food-heading {
