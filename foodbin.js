@@ -306,12 +306,14 @@ var deliveryBtnContainer = document.getElementById("deliver-btn-container"),
     searchListItem = document.querySelectorAll("#search-list-group li"),
     userLocation, userCoords;
 
+//expand the search list group when it's height = item scrollHeight
 locationInputField.addEventListener("click", function(){
     if(searchListGroup.style.height !== "150px"){
         searchListGroup.style.height = "150px";
     }
 });
 
+//only display search list items that match the text in the location input field
 locationInputField.addEventListener("input", function(){
     let inputValue = this.value.toUpperCase();
     for(let i = 0; i < searchListItem.length; i++){
