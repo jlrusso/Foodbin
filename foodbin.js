@@ -1,3 +1,23 @@
+/*--- Start of User Icon JS --*/
+    var userIcon = document.getElementsByClassName("fa-user")[0],
+        userList = document.getElementsByClassName("user-list")[0];
+        if(userIcon){
+            userIcon.addEventListener("click", function(){
+                userList.classList.toggle("show-user-list");
+            });
+        }
+
+    window.addEventListener("click", function(e){
+        if(userIcon){
+            if(!e.target.matches(".fa-user")){
+                if(userList.classList.contains("show-user-list")){
+                    userList.classList.remove("show-user-list");
+                }
+            }
+        }
+    });
+/*--- End of User Icon JS ---*/
+
 /*--- Food Item Modals ---*/
 var perImageContainers = document.getElementsByClassName("per-image-container");
     modalWindows = document.getElementsByClassName("modal-window"),
@@ -5,7 +25,7 @@ var perImageContainers = document.getElementsByClassName("per-image-container");
     row = document.getElementsByClassName("row"),
     middleColumn = document.getElementsByClassName("middle-column")[0],
     lastColumn = document.getElementsByClassName("last-column")[0],
-    modalInnerFooter = document.getElementsByClassName("modal-inner-footer");
+    modalInnerFooter = document.getElementsByClassName("modal-inner-footer"),
     samePriorityError = document.getElementById("same-priority-error");
 
 //append constant close container and middle & third columns to each modal window that pops up
@@ -15,7 +35,7 @@ for(let i = 0; i < perImageContainers.length; i++){
     })
 }
 
-//open food item modal via homepage image click
+//open food item modal when user clicks on food item
 function openFoodModal(index){
     $(".close-btn-container").css("display", "block");
     modalWindows[index].appendChild(closeContainer);
@@ -25,7 +45,7 @@ function openFoodModal(index){
     row[index].appendChild(lastColumn);
 }
 
-//open food item modal via make-changes-btn in cart modal
+//open food item modal when user clicks "Make Changes" btn in cart modal
 function openFoodModal2(attribute){
     var $row = $("#" + attribute).find(".row");
     $(".close-btn-container").css("display", "block");
@@ -34,7 +54,7 @@ function openFoodModal2(attribute){
     $row.append(lastColumn);
 }
 
-//click on close container in modal window to close the modal window
+//close modal window when user clicks on X btn in modal window
 var closeBtnContainers = document.getElementsByClassName("close-btn-container");
 for(let i = 0; i < closeBtnContainers.length; i++){
     closeBtnContainers[i].addEventListener("click", function(){
@@ -43,7 +63,7 @@ for(let i = 0; i < closeBtnContainers.length; i++){
     })
 }
 
-//event listener for all modal windows to enable modal window click to close the modal window
+//close modal window when user clicks on dark area, but not modal content area
 for(let i = 0; i < modalWindows.length; i++){
     modalWindows[i].addEventListener("click", function(e){ 
         if(e.target.matches(".modal-window")){
@@ -65,19 +85,23 @@ var cartContainer = document.getElementById("cart-container"),
 cartContainer.addEventListener("click", openCartModal);
 cartBadge.addEventListener("click", openCartModal);
 
+//open cart modal when user clicks on cart icon in nav bar
 function openCartModal(e){
+    e.preventDefault();
     if(e.target.matches("#cart")){
         cartModalWindow.style.display = "block";
     }
     cartModalWindow.style.display = "block";
 }
 
+//close cart modal if user clicks on dark area of modal window and not modal content area
 cartModalWindow.addEventListener("click", function(e){
     if(e.target.matches("#cart-modal-window")){
         this.style.display = "none";
     }
 })
 
+//close cart modal when user clicks on X btn in the modal window
 cartCloseContainer.addEventListener("click", function(){
     this.parentElement.style.display = "none";
 })
@@ -302,12 +326,14 @@ var deliveryBtnContainer = document.getElementById("deliver-btn-container"),
     searchListItem = document.querySelectorAll("#search-list-group li"),
     userLocation, userCoords;
 
+//expand the search list group when it's height = item scrollHeight
 locationInputField.addEventListener("click", function(){
     if(searchListGroup.style.height !== "150px"){
         searchListGroup.style.height = "150px";
-    } 
+    }
 });
 
+//only display search list items that match the text in the location input field
 locationInputField.addEventListener("input", function(){
     let inputValue = this.value.toUpperCase();
     for(let i = 0; i < searchListItem.length; i++){
@@ -349,7 +375,6 @@ var sacramentoStores = [
     {storeName: "Food Source", address: "3547 Bradshaw Rd, Sacramento, CA 95827", coords: {lat: 38.5583289, lng: -121.33411469999999}},
     {storeName: "Taylor's Market", address: "2900 Freeport Blvd, Sacramento, CA 95818", coords: {lat: 38.5518472, lng: -121.48892610000001}},
     {storeName: "Oto's Marketplace", address: "4990 Freeport Blvd, Sacramento, CA 95822", coords: {lat: 38.5289733, lng: -121.49626739999997}},
-    {storeName: "Smart & Final", address: "6340 Stockton Blvd, Sacramento, CA 95824", coords: {lat: 38.511698, lng: -121.43724259999999}},
     {storeName: "Smart & Final Extra", address: "7205 Freeport Blvd, Sacramento, CA 95831", coords: {lat: 38.4943793, lng: -121.50473090000003}},
     {storeName: "Nugget Markets", address: "1040 Florin Rd, Sacramento, CA 95831", coords: {lat: 38.4946749, lng: -121.52080899999999}},
     {storeName: "Foodsco", address: "5021 Fruitridge Rd, Sacramento, CA 95820", coords: {lat: 38.5269495, lng: -121.44444900000002}},
@@ -528,8 +553,8 @@ var irvineStores = [
 ];
 
 // end of california cities and grocery stores arrays
-
-var mapElement = document.getElementById("map"),
+var locationSelected, storeSelected,
+    mapElement = document.getElementById("map"),
     storeLists = document.getElementsByClassName("store-list"),
     sacramentoStoreList = document.getElementById("sacramento-store-list"),
     sanDiegoStoreList = document.getElementById("san-diego-store-list"),
@@ -548,16 +573,16 @@ var mapElement = document.getElementById("map"),
 
 var userInfoWindow;
 var storeMarkers = [];
+var storeCartName;
 function initMap(){
     userInfoWindow = new google.maps.InfoWindow;
     if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(position) {
-      var pos = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-      };
+        navigator.geolocation.getCurrentPosition(function(position) {
+        var pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+        };
       
-
       userInfoWindow.setPosition(pos);
       userInfoWindow.setContent('User location:');
       userInfoWindow.open(mapInstance1);
@@ -579,6 +604,7 @@ function initMap(){
             var thisItem = this.textContent;
             var itemScrollHeight = this.scrollHeight;
             searchListGroup.style.height = itemScrollHeight + "px";
+            locationSelected = this.textContent;
             //go through stored location names in location object and compare to list item selected
             storedLocations.forEach(function(storedLocation){
                 if(storedLocation.location === thisItem){
@@ -781,17 +807,19 @@ function initMap(){
         storeMarkers = [];
     }
 
+    //this function takes in all the store addresses for a given location and matches the one that is selected
     function addStoreToMap(storeArr){
         deleteMarkers();
         var $storeOptionText = $(".store-list option:selected").text();
         var firstP = $storeOptionText.indexOf("(");
         var lastP = $storeOptionText.indexOf(")");
         var $finalOptionText = $storeOptionText.substring(firstP + 1, lastP).toUpperCase();
-
+        storeAddress = $storeOptionText.substring(firstP + 1, lastP);
         storeArr.forEach(function(store){
             var add = store.address;
             if(add.toUpperCase().lastIndexOf($finalOptionText) > -1){
                 let storeName = store.storeName;
+                storeCartName = storeName;
                 let storeCoords = store.coords;
                 let storeAddress = store.address;
                 addStoreMarkers(storeName, storeCoords, storeAddress);
@@ -834,6 +862,32 @@ function handleLocationError(browserHasGeolocation, info, pos) {
 }
 /*--- End of Google Maps API ---*/
 
+
+//when user clicks on "Deliver From Here" btn
+var deliveryBtn = document.getElementById("delivery-btn"),
+    deliveryBtnCaption = document.getElementById("delivery-btn-caption"),
+    locationStoreContainer = document.getElementById("location-and-store-container"),
+    cartLocation = document.getElementById("cart-location"),
+    cartStoreName = document.getElementById("cart-store-name"),
+    cartStoreAddress = document.getElementById("cart-store-address");
+
+deliveryBtn.addEventListener("click", function(e){
+    $("#cart-location").add("#cart-store-name").add("#cart-store-address").text("");
+    e.preventDefault();
+    if(locationSelected == undefined || storeAddress == undefined){
+        deliveryBtnCaption.style.display = "block";
+        return;
+    } else {
+        deliveryBtnCaption.style.display = "none";
+        locationStoreContainer.style.display = "grid";
+        locationText = document.createTextNode(locationSelected);
+        addressText = document.createTextNode(storeAddress);
+        storeNameText = document.createTextNode(storeCartName);
+        cartLocation.appendChild(locationText);
+        cartStoreName.appendChild(storeNameText);
+        cartStoreAddress.appendChild(addressText);
+    }
+})
 
     
 
