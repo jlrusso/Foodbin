@@ -1,4 +1,4 @@
-<?php 
+<?php
   session_start();
 ?>
 
@@ -16,83 +16,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="foodbin.css"></link>
+    <link rel="stylesheet" href="foodbin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet"></link>
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
     <title>Foodie Bin</title>
-    <style type="text/css">
-      .fa-user {
-        position: relative;
-        display: block;
-        padding: 6px 20px 8px;
-        color: rgb(34, 153, 84);
-        border: 2px solid rgb(34, 153, 84);
-        border-radius: 10px; 
-        transition: 0.2s;
-        font-size: 1.1rem;
-        cursor: pointer;
-        -webkit-user-select: none;
-        z-index: 2 !important;
-        transition: 0.2s;
-      }
-
-      .fa-user:hover {
-        background-color: rgb(34, 153, 84);
-        color: #fff;
-      }
-
-      .user-list {
-        display: none;
-        position: absolute;
-        top: 119%;
-        right: 64px;
-        width: 100px;
-        background-color: #fff;
-        padding: 0;
-        margin: 0;
-        text-align: center;
-        -webkit-user-select: none;
-        transition: 0.2s;
-      }
-
-      .show-user-list {
-        display: block;
-      }
-
-      .user-list li {
-        width: 100%;
-        cursor: pointer;
-        font-size: 1rem;
-        background-color: #fff;
-        color: rgb(34, 153, 84);
-      }
-
-      .user-list li:not(:last-child) {
-        padding: 5px;
-      }
-
-      .profile {
-        border: 0;
-        padding: 0;
-      }
-
-      input[type="submit"]{
-        width: 100%;
-        border: 0;
-        background-color: transparent;
-        padding: 5px;
-        color: rgb(34, 153, 84);
-        cursor: pointer;
-        transition: 0.2s;
-        font-size: 1rem;
-      }
-
-      .user-list li:hover,
-      input[type="submit"]:hover {
-        background-color: rgb(34, 153, 84);
-        color: white;
-      }
-    </style>
 </head>
 <body>
     <div id="container">
@@ -101,12 +28,12 @@
             <div id="nav-logo"><a href="foodbin.php"><b>Foodbin</b></a></div>
              <div id="horizontal-nav">
                 <ul>
-                    <?php 
-                      if (isset($_SESSION['u_id'])){
+                    <?php
+                      if (isset($_SESSION['user_id'])){
+                        echo "<span id='logged-in' class='yes'></span>";
                         echo '<li><i class="fa fa-user"></i>
                                 <ul class="user-list">
-                                  ' . '<li>' . $_SESSION['u_username'] . '</li>
-                                        <li>Profile</li>
+                                  ' . '<li id="user-parent"><a href="profile.php" id="user">' . $_SESSION['user_username'] . '</a></li>
                                         <li class="logout-item">
                                             <form action="includes/logout-inc.php" method="POST">
                                               <input type="submit" name="submit" value="Logout"/>
@@ -115,13 +42,14 @@
                                 </ul>
                               </li>';
                       } else {
+                        echo "<span id='logged-in' class='no'></span>";
                         echo '<li id="login-btn"><a href="login.php">Login</a></li>
                               <li id="signup-btn"><a href="signup.php">Sign Up</a></li>';
                       }
                     ?>
                     <li><a href="#" id="cart-container"><i class="fa fa-shopping-cart" id="shopping-cart" aria-hidden="true"></i><span id="cart-badge"></span></a></li>
                 </ul>
-            </div>            
+            </div>
         </nav>
 
         <div id="banner-area">
@@ -131,7 +59,7 @@
                 <p>No need to drive, wait in a long line, or hope that your items are available</p>
                 <button type="button" class="banner-btn" id="request-btn">Place an Order</button>
                 <button type="button" class="banner-btn" id="deliver-btn">Make a Delivery</button>
-            </div> 
+            </div>
         </div>
 
         <div id="how-it-works-area">
@@ -146,7 +74,7 @@
               </div>
             </div>
           </div>
-          <div class="hiw-row">             
+          <div class="hiw-row">
             <div class="hiw-row-inner">
               <div class="image-caption left-caption">
                 <div class="image-caption-inner">
@@ -411,6 +339,7 @@
                   </select>
 
                   <div id="delivery-btn-container">
+                    <span id="checkmark">&#10004;</span>
                     <input type="submit" id="delivery-btn" value="Deliver From Here"/>
                     <p id="delivery-btn-caption">Must choose a city and store for delivery</p>
                   </div>
@@ -433,44 +362,44 @@
                 <div class="outer-images-container">
                     <div class="inner-images-container">
                       <div class="per-image-container">
-                          <input type="image" src="../img/twix.jpg" alt="Twix"/>
-                          <div class="image-btn">Get Twix</div>
+                          <input type="image" src="../img/twix.jpg" alt="Twix" data="1"/>
+                          <div class="image-btn">Twix</div>
                       </div>
                       <div class="per-image-container">
-                        <input type="image" src="../img/marsbar.jpg" alt="Marsbar"/>
-                        <div class="image-btn">Get Marsbar</div>
+                        <input type="image" src="../img/marsbar.jpg" alt="Marsbar" data="2"/>
+                        <div class="image-btn">Marsbar</div>
                       </div>
                       <div class="per-image-container">
-                        <input type="image" src="../img/gummybears.jpg" alt="Gummybears"/>
-                        <div class="image-btn">Get Gummybears</div>
+                        <input type="image" src="../img/gummybears.jpg" alt="Gummybears" data="3"/>
+                        <div class="image-btn">Gummybears</div>
                       </div>
                       <div class="per-image-container">
-                        <input type="image" src="../img/jellybeans.jpg" alt="Jellybeans"/>
-                        <div class="image-btn">Get Jellybeans</div>
+                        <input type="image" src="../img/jellybeans.jpg" alt="Jellybeans" data="4"/>
+                        <div class="image-btn">Jellybeans</div>
                       </div>
                       <div class="per-image-container">
-                        <input type="image" src="../img/mandms.jpg" alt="M&M's"/>
-                        <div class="image-btn">Get M&amp;M's</div>
+                        <input type="image" src="../img/mandms.jpg" alt="M&M's" data="5"/>
+                        <div class="image-btn">M&amp;M's</div>
                       </div>
                       <div class="per-image-container">
-                        <input type="image" src="../img/skittles.jpg" alt="Skittles"/>
-                        <div class="image-btn">Get Skittles</div>
+                        <input type="image" src="../img/skittles.jpg" alt="Skittles" data="6"/>
+                        <div class="image-btn">Skittles</div>
                       </div>
                       <div class="per-image-container">
-                        <input type="image" src="../img/hersheys.png" alt="Hersheys"/>
-                        <div class="image-btn">Get Hersheys</div>
+                        <input type="image" src="../img/hersheys.png" alt="Hersheys" data="7"/>
+                        <div class="image-btn">Hersheys</div>
                       </div>
                       <div class="per-image-container">
-                        <input type="image" src="../img/snickers.jpg" alt="Snickers"/>
-                        <div class="image-btn">Get Snickers</div>
+                        <input type="image" src="../img/snickers.jpg" alt="Snickers" data="8"/>
+                        <div class="image-btn">Snickers</div>
                       </div>
                       <div class="per-image-container">
-                        <input type="image" src="../img/sourpatch.jpg" alt="Sourpatch"/>
-                        <div class="image-btn">Get Sourpatch</div>
+                        <input type="image" src="../img/sourpatch.jpg" alt="Sourpatch" data="9"/>
+                        <div class="image-btn">Sourpatch</div>
                       </div>
                       <div class="per-image-container">
-                        <input type="image" src="../img/candycorn.jpg" alt="Candycorn"/>
-                        <div class="image-btn">Get Candycorn</div>
+                        <input type="image" src="../img/candycorn.jpg" alt="Candycorn" data="10"/>
+                        <div class="image-btn">Candycorn</div>
                       </div>
                     </div>
                 </div>
@@ -486,52 +415,52 @@
                 <div class="outer-images-container">
                     <div class="inner-images-container">
                       <div class="per-image-container">
-                        <input type="image" src="../img/broccoli.jpeg" alt="Broccoli"/>
-                        <div class="image-btn">Get Broccoli</div>
+                        <input type="image" src="../img/broccoli.jpeg" alt="Broccoli" data="11"/>
+                        <div class="image-btn">Broccoli</div>
                       </div>
                       <div class="per-image-container">
-                        <input type="image" src="../img/squash.jpeg" alt="Squash"/>
-                        <div class="image-btn">Get Squash</div>
+                        <input type="image" src="../img/squash.jpeg" alt="Squash" data="12"/>
+                        <div class="image-btn">Squash</div>
                       </div>
                       <div class="per-image-container">
-                        <input type="image" src="../img/cauliflower.jpeg" alt="Cauliflower"/>
-                        <div class="image-btn">Get Cauliflower</div>
+                        <input type="image" src="../img/cauliflower.jpeg" alt="Cauliflower" data="13"/>
+                        <div class="image-btn">Cauliflower</div>
                       </div>
                       <div class="per-image-container">
-                        <input type="image" src="../img/carrots.jpeg" alt="Carrots"/>
-                        <div class="image-btn">Get Carrots</div>
+                        <input type="image" src="../img/carrots.jpeg" alt="Carrots" data="14"/>
+                        <div class="image-btn">Carrots</div>
                       </div>
                       <div class="per-image-container">
-                        <input type="image" src="../img/celery.jpg" alt="Celery"/>
-                        <div class="image-btn">Get Celery</div>
+                        <input type="image" src="../img/celery.jpg" alt="Celery" data="15"/>
+                        <div class="image-btn">Celery</div>
                       </div>
                       <div class="per-image-container">
-                        <input type="image" src="../img/lettuce.jpg" alt="Lettuce"/>
-                        <div class="image-btn">Get Lettuce</div>
+                        <input type="image" src="../img/lettuce.jpg" alt="Lettuce" data="16"/>
+                        <div class="image-btn">Lettuce</div>
                       </div>
                       <div class="per-image-container">
-                        <input type="image" src="../img/potatoes.jpeg" alt="White potatoes"/>
-                        <div class="image-btn">Get White Potatoes</div>
+                        <input type="image" src="../img/potatoes.jpeg" alt="White potatoes" data="17"/>
+                        <div class="image-btn">White Potatoes</div>
                       </div>
                       <div class="per-image-container">
-                        <input type="image" src="../img/spinach.jpg" alt="Spinach"/>
-                        <div class="image-btn">Get Spinach</div>
+                        <input type="image" src="../img/spinach.jpg" alt="Spinach" data="18"/>
+                        <div class="image-btn">Spinach</div>
                       </div>
                       <div class="per-image-container">
-                        <input type="image" src="../img/kale.jpeg" alt="Kale"/>
-                        <div class="image-btn">Get Kale</div>
+                        <input type="image" src="../img/kale.jpeg" alt="Kale" data="19"/>
+                        <div class="image-btn">Kale</div>
                       </div>
                         <div class="per-image-container">
-                          <input type="image" src="../img/whiteonions.jpg" alt="White Onions"/>
-                          <div class="image-btn">Get White Onions</div>
+                          <input type="image" src="../img/whiteonions.jpg" alt="White Onions" data="20"/>
+                          <div class="image-btn">White Onions</div>
                       </div>
                     </div>
                 </div>
             </section>
             <div class="food-line-divider"></div>
-            
-            
-           
+
+
+
             <section class="food-type-section">
                 <div class="food-type-heading">Fruits</div>
                 <div class="slide-btns-container">
@@ -541,44 +470,44 @@
                 <div class="outer-images-container">
                     <div class="inner-images-container">
                     	<div class="per-image-container">
-	                        <input type="image" src="../img/apples.jpeg" alt="Apple"/>
-	                        <div class="image-btn">Get Apples</div>
+	                        <input type="image" src="../img/apples.jpeg" alt="Apple" data="21"/>
+	                        <div class="image-btn">Apples</div>
 	                    </div>
 	                    <div class="per-image-container">
-	                        <input type="image" src="../img/orange.jpeg" alt="Orange"/>
-	                        <div class="image-btn">Get Oranges</div>
+	                        <input type="image" src="../img/orange.jpeg" alt="Orange" data="22"/>
+	                        <div class="image-btn">Oranges</div>
 	                    </div>
                         <div class="per-image-container">
-	                        <input type="image" src="../img/bananas.jpeg" alt="Bananas"/>
-	                        <div class="image-btn">Get Bananas</div>
+	                        <input type="image" src="../img/bananas.jpeg" alt="Bananas" data="23"/>
+	                        <div class="image-btn">Bananas</div>
 	                    </div>
                         <div class="per-image-container">
-	                        <input type="image" src="../img/pears.jpeg" alt="Pears"/>
-	                        <div class="image-btn">Get Pears</div>
+	                        <input type="image" src="../img/pears.jpeg" alt="Pears" data="24"/>
+	                        <div class="image-btn">Pears</div>
 	                    </div>
                         <div class="per-image-container">
-	                        <input type="image" src="../img/watermelons.jpeg" alt="Watermelons"/>
-	                        <div class="image-btn">Get Watermelons</div>
+	                        <input type="image" src="../img/watermelons.jpeg" alt="Watermelons" data="25"/>
+	                        <div class="image-btn">Watermelons</div>
 	                    </div>
 	                    <div class="per-image-container">
-	                        <input type="image" src="../img/pineapples.jpg" alt="Pineapples"/>
-	                        <div class="image-btn">Get Pineapples</div>
+	                        <input type="image" src="../img/pineapples.jpg" alt="Pineapples" data="26"/>
+	                        <div class="image-btn">Pineapples</div>
 	                    </div>
 	                    <div class="per-image-container">
-	                        <input type="image" src="../img/kiwi.png" alt="Kiwi"/>
-	                        <div class="image-btn">Get Kiwis</div>
+	                        <input type="image" src="../img/kiwi.png" alt="Kiwi" data="27"/>
+	                        <div class="image-btn">Kiwis</div>
 	                    </div>
                         <div class="per-image-container">
-	                        <input type="image" src="../img/tangerines.jpg" alt="Tangerines"/>
-	                        <div class="image-btn">Get Tangerines</div>
+	                        <input type="image" src="../img/tangerines.jpg" alt="Tangerines" data="28"/>
+	                        <div class="image-btn">Tangerines</div>
 	                    </div>
                         <div class="per-image-container">
-	                        <input type="image" src="../img/grapefruits.jpg" alt="Grapefruits"/>
-	                        <div class="image-btn">Get Grapefruits</div>
+	                        <input type="image" src="../img/grapefruits.jpg" alt="Grapefruits" data="29"/>
+	                        <div class="image-btn">Grapefruits</div>
 	                    </div>
                         <div class="per-image-container">
-	                        <input type="image" src="../img/mangoes.jpg" alt="Mangoes"/>
-	                        <div class="image-btn">Get Mangoes</div>
+	                        <input type="image" src="../img/mangoes.jpg" alt="Mangoes" data="30"/>
+	                        <div class="image-btn">Mangoes</div>
 	                    </div>
                     </div>
                 </div>
@@ -594,51 +523,51 @@
                 <div class="outer-images-container">
                     <div class="inner-images-container">
                         <div class="per-image-container">
-	                        <input type="image" src="../img/almonds.jpg" alt="Almonds"/>
-	                        <div class="image-btn">Get Almonds</div>
+	                        <input type="image" src="../img/almonds.jpg" alt="Almonds" data="31"/>
+	                        <div class="image-btn">Almonds</div>
 	                    </div>
 	                    <div class="per-image-container">
-	                        <input type="image" src="../img/peanuts.jpg" alt="Peanuts"/>
-	                        <div class="image-btn">Get Peanuts</div>
+	                        <input type="image" src="../img/peanuts.jpg" alt="Peanuts" data="32"/>
+	                        <div class="image-btn">Peanuts</div>
 	                    </div>
                         <div class="per-image-container">
-	                        <input type="image" src="../img/pistachios.jpeg" alt="Pistachios"/>
-	                        <div class="image-btn">Get Pistachios</div>
+	                        <input type="image" src="../img/pistachios.jpeg" alt="Pistachios" data="33"/>
+	                        <div class="image-btn">Pistachios</div>
 	                    </div>
                         <div class="per-image-container">
-	                        <input type="image" src="../img/walnuts.jpg" alt="Walnuts"/>
-	                        <div class="image-btn">Get Walnuts</div>
+	                        <input type="image" src="../img/walnuts.jpg" alt="Walnuts" data="34"/>
+	                        <div class="image-btn">Walnuts</div>
 	                    </div>
                         <div class="per-image-container">
-	                        <input type="image" src="../img/cashews.jpg" alt="Cashews"/>
-	                        <div class="image-btn">Get Cashews</div>
+	                        <input type="image" src="../img/cashews.jpg" alt="Cashews" data="35"/>
+	                        <div class="image-btn">Cashews</div>
 	                    </div>
 	                    <div class="per-image-container">
-	                        <input type="image" src="../img/macadamias.jpg" alt="Macadamias"/>
-	                        <div class="image-btn">Get Macadamias</div>
+	                        <input type="image" src="../img/macadamias.jpg" alt="Macadamias" data="36"/>
+	                        <div class="image-btn">Macadamias</div>
 	                    </div>
 	                    <div class="per-image-container">
-	                        <input type="image" src="../img/hazelnuts.jpg" alt="Hazelnuts"/>
-	                        <div class="image-btn">Get Hazelnuts</div>
+	                        <input type="image" src="../img/hazelnuts.jpg" alt="Hazelnuts" data="37"/>
+	                        <div class="image-btn">Hazelnuts</div>
 	                    </div>
                         <div class="per-image-container">
-	                        <input type="image" src="../img/pecans.jpg" alt="Pecans"/>
-	                        <div class="image-btn">Get Pecans</div>
+	                        <input type="image" src="../img/pecans.jpg" alt="Pecans" data="38"/>
+	                        <div class="image-btn">Pecans</div>
 	                    </div>
                         <div class="per-image-container">
-	                        <input type="image" src="../img/pinenuts.jpg" alt="Pine Nuts"/>
-	                        <div class="image-btn">Get Pine Nuts</div>
+	                        <input type="image" src="../img/pinenuts.jpg" alt="Pine Nuts" data="39"/>
+	                        <div class="image-btn">Pine Nuts</div>
 	                    </div>
                         <div class="per-image-container">
-	                        <input type="image" src="../img/chestnuts.jpg" alt="Chestnuts"/>
-	                        <div class="image-btn">Get Chestnuts</div>
+	                        <input type="image" src="../img/chestnuts.jpg" alt="Chestnuts" data="40"/>
+	                        <div class="image-btn">Chestnuts</div>
 	                    </div>
                     </div>
                 </div>
             </section>
             <div class="food-line-divider"></div>
 
-            
+
         </div>
 
         <div id="testimonial-area">
@@ -654,7 +583,7 @@
 	        		</div>
 	        		<div class="testimonial-content">
 	        			<p><span class="quotes">"</span> With four kids and a super busy schedule, im glad getting groceries is just a click away. <span class="quotes">"</span></p>
-	        		</div>        		
+	        		</div>
 	        	</div>
 	        	<div class="testimonial-column">
 	        		<div class="testimonial-heading">
@@ -700,22 +629,27 @@
             </section>
           </div>
         </footer>
-        
+
      </div>
       <!-- End of Container -->
 
 
     <!-- Start of Cart Modal -->
     <div id="cart-modal-window">
-       <div id="cart-close-container">
+      <div id="cart-close-container">
         <span class="modal-close-btn"></span>
-      </div> 
+      </div>
     	<div id="cart-modal-container">
     		<div id="cart-modal-content">
     			<h3 id="cart-modal-heading">Shopping Cart</h3>
           <div class="line-divider"></div>
           <p id="no-groceries-added">No groceries have been added to your cart yet</p>
     		</div>
+        <div id="hidden-form">
+          <form action="includes/orderfood.php" id="form-inner" method="POST">
+            <input type="submit" name="submit" value="Submit" id="hidden-submit"/>
+          </form>
+        </div>
         <div id="modal-footer">
           <div id="location-and-store-container">
             <div id="cart-location"></div>
@@ -730,13 +664,13 @@
 
 
     <!-- Candy Food Section -->
-    <div class="modal-window" id="twix-window">        
+    <div class="modal-window" id="twix-window">
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
             <div class="col-4">
               <h3 class="modal-inner-image-heading">Twix</h3>
-              <input type="image" src="../img/twix.jpg" alt="Twix" class="modal-image"/>
+              <input type="image" src="../img/twix.jpg" alt="Twix" class="modal-image" data="1"/>
             </div>
           </div>
         </div>
@@ -746,13 +680,13 @@
       </div>
     </div>
 
-    <div class="modal-window" id="marsbar-window">        
+    <div class="modal-window" id="marsbar-window">
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
             <div class="col-4">
               <h3 class="modal-inner-image-heading">Marsbar</h3>
-              <input type="image" src="../img/marsbar.jpg" alt="Marsbar" class="modal-image"/>
+              <input type="image" src="../img/marsbar.jpg" alt="Marsbar" class="modal-image" data="2"/>
             </div>
           </div>
         </div>
@@ -762,13 +696,13 @@
       </div>
     </div>
 
-    <div class="modal-window" id="gummybears-window">        
+    <div class="modal-window" id="gummybears-window">
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
             <div class="col-4">
               <h3 class="modal-inner-image-heading">Gummybears</h3>
-              <input type="image" src="../img/gummybears.jpg" alt="Gummybears" class="modal-image"/>
+              <input type="image" src="../img/gummybears.jpg" alt="Gummybears" class="modal-image" data="3"/>
             </div>
           </div>
         </div>
@@ -778,13 +712,13 @@
       </div>
     </div>
 
-    <div class="modal-window" id="jellybeans-window">        
+    <div class="modal-window" id="jellybeans-window">
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
             <div class="col-4">
               <h3 class="modal-inner-image-heading">Jellybeans</h3>
-              <input type="image" src="../img/jellybeans.jpg" alt="Jellybeans" class="modal-image" />
+              <input type="image" src="../img/jellybeans.jpg" alt="Jellybeans" class="modal-image" data="4"/>
             </div>
           </div>
         </div>
@@ -794,13 +728,13 @@
       </div>
     </div>
 
-    <div class="modal-window" id="mandms-window">        
+    <div class="modal-window" id="mandms-window">
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
             <div class="col-4">
               <h3 class="modal-inner-image-heading">M&amp;Ms</h3>
-              <input type="image" src="../img/mandms.jpg" alt="M&M's" class="modal-image"/>
+              <input type="image" src="../img/mandms.jpg" alt="M&M's" class="modal-image" data="5"/>
             </div>
           </div>
         </div>
@@ -810,13 +744,13 @@
       </div>
     </div>
 
-    <div class="modal-window" id="skittles-window">        
+    <div class="modal-window" id="skittles-window">
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
             <div class="col-4">
               <h3 class="modal-inner-image-heading">Skittles</h3>
-              <input type="image" src="../img/skittles.jpg" alt="Skittles" class="modal-image"/>
+              <input type="image" src="../img/skittles.jpg" alt="Skittles" class="modal-image" data="6"/>
             </div>
           </div>
         </div>
@@ -826,13 +760,13 @@
       </div>
     </div>
 
-    <div class="modal-window" id="hersheys-window">        
+    <div class="modal-window" id="hersheys-window">
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
             <div class="col-4">
               <h3 class="modal-inner-image-heading">Hersheys</h3>
-              <input type="image" src="../img/hersheys.png" alt="Hersheys" class="modal-image"/>
+              <input type="image" src="../img/hersheys.png" alt="Hersheys" class="modal-image" data="7"/>
             </div>
           </div>
         </div>
@@ -842,13 +776,13 @@
       </div>
     </div>
 
-    <div class="modal-window" id="snickers-window">        
+    <div class="modal-window" id="snickers-window">
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
             <div class="col-4">
               <h3 class="modal-inner-image-heading">Snickers</h3>
-              <input type="image" src="../img/snickers.jpg" alt="Snickers" class="modal-image"/>
+              <input type="image" src="../img/snickers.jpg" alt="Snickers" class="modal-image" data="8"/>
             </div>
           </div>
         </div>
@@ -858,13 +792,13 @@
       </div>
     </div>
 
-    <div class="modal-window" id="sourpatches-window">        
+    <div class="modal-window" id="sourpatches-window">
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
             <div class="col-4">
               <h3 class="modal-inner-image-heading">Sourpatches</h3>
-              <input type="image" src="../img/sourpatch.jpg" alt="Sourpatch" class="modal-image"/>
+              <input type="image" src="../img/sourpatch.jpg" alt="Sourpatch" class="modal-image" data="9"/>
             </div>
           </div>
         </div>
@@ -874,13 +808,13 @@
       </div>
     </div>
 
-    <div class="modal-window" id="candycorn-window">        
+    <div class="modal-window" id="candycorn-window">
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
             <div class="col-4">
               <h3 class="modal-inner-image-heading">Candycorn</h3>
-              <input type="image" src="../img/candycorn.jpg" alt="Candycorn" class="modal-image"/>
+              <input type="image" src="../img/candycorn.jpg" alt="Candycorn" class="modal-image" data="10"/>
             </div>
           </div>
         </div>
@@ -890,13 +824,13 @@
       </div>
     </div>
     <!-- End of Candy Section -->
-    <div class="modal-window" id="broccoli-window">      	
+    <div class="modal-window" id="broccoli-window">
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
   						<h3 class="modal-inner-image-heading">Broccoli</h3>
-  						<input type="image" src="../img/broccoli.jpeg" alt="Broccoli" class="modal-image"/>
+  						<input type="image" src="../img/broccoli.jpeg" alt="Broccoli" class="modal-image" data="11"/>
   					</div>
   				</div>
   			</div>
@@ -906,13 +840,13 @@
   		</div>
     </div>
 
-    <div class="modal-window" id="squash-window">     	
+    <div class="modal-window" id="squash-window">
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
 						<h3 class="modal-inner-image-heading">Squash</h3>
-						<input type="image" src="../img/squash.jpeg" alt="Squash" class="modal-image"/>
+						<input type="image" src="../img/squash.jpeg" alt="Squash" class="modal-image" data="12"/>
   					</div>
   				</div>
   			</div>
@@ -922,13 +856,13 @@
   		</div>
     </div>
 
-    <div class="modal-window" id="cauliflower-window">     	
+    <div class="modal-window" id="cauliflower-window">
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
   						<h3 class="modal-inner-image-heading">Cauliflower</h3>
-  						<input type="image" src="../img/cauliflower.jpeg" alt="Cauliflower" class="modal-image"/>
+  						<input type="image" src="../img/cauliflower.jpeg" alt="Cauliflower" class="modal-image" data="13"/>
   					</div>
   				</div>
   			</div>
@@ -938,13 +872,13 @@
   		</div>
     </div>
 
-    <div class="modal-window" id="carrots-window">     	
+    <div class="modal-window" id="carrots-window">
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
 						<h3 class="modal-inner-image-heading">Carrots</h3>
-						<input type="image" src="../img/carrots.jpeg" alt="Carrots" class="modal-image"/>
+						<input type="image" src="../img/carrots.jpeg" alt="Carrots" class="modal-image" data="14"/>
   					</div>
   				</div>
   			</div>
@@ -954,13 +888,13 @@
   		</div>
     </div>
 
-    <div class="modal-window" id="celery-window">     	
+    <div class="modal-window" id="celery-window">
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
 						<h3 class="modal-inner-image-heading">Celery</h3>
-						<input type="image" src="../img/celery.jpg" alt="Celery" class="modal-image"/>
+						<input type="image" src="../img/celery.jpg" alt="Celery" class="modal-image" data="15"/>
   					</div>
   				</div>
   			</div>
@@ -970,13 +904,13 @@
   		</div>
     </div>
 
-    <div class="modal-window" id="lettuce-window">     	
+    <div class="modal-window" id="lettuce-window">
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
 						<h3 class="modal-inner-image-heading">Lettuce</h3>
-						<input type="image" src="../img/lettuce.jpg" alt="Lettuce" class="modal-image"/>
+						<input type="image" src="../img/lettuce.jpg" alt="Lettuce" class="modal-image" data="16"/>
   					</div>
   				</div>
   			</div>
@@ -986,13 +920,13 @@
   		</div>
     </div>
 
-    <div class="modal-window" id="potatoes-window">     	
+    <div class="modal-window" id="potatoes-window">
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
 						<h3 class="modal-inner-image-heading">Potatoes</h3>
-						<input type="image" src="../img/potatoes.jpeg" alt="White Potatoes" class="modal-image"/>
+						<input type="image" src="../img/potatoes.jpeg" alt="White Potatoes" class="modal-image" data="17"/>
   					</div>
   				</div>
   			</div>
@@ -1002,13 +936,13 @@
   		</div>
     </div>
 
-    <div class="modal-window" id="spinach-window">     	
+    <div class="modal-window" id="spinach-window">
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
 						<h3 class="modal-inner-image-heading">Spinach</h3>
-						<input type="image" src="../img/spinach.jpg" alt="Spinach" class="modal-image"/>
+						<input type="image" src="../img/spinach.jpg" alt="Spinach" class="modal-image" data="18"/>
   					</div>
   				</div>
   			</div>
@@ -1018,13 +952,13 @@
   		</div>
     </div>
 
-    <div class="modal-window" id="kale-window">     	
+    <div class="modal-window" id="kale-window">
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
 						<h3 class="modal-inner-image-heading">Kale</h3>
-						<input type="image" src="../img/kale.jpeg" alt="Kale" class="modal-image"/>
+						<input type="image" src="../img/kale.jpeg" alt="Kale" class="modal-image" data="19"/>
   					</div>
   				</div>
   			</div>
@@ -1034,13 +968,13 @@
   		</div>
     </div>
 
-    <div class="modal-window" id="onions-window">     	
+    <div class="modal-window" id="onions-window">
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
 						<h3 class="modal-inner-image-heading">Onions</h3>
-						<input type="image" src="../img/whiteonions.jpg" alt="White Onions" class="modal-image"/>
+						<input type="image" src="../img/whiteonions.jpg" alt="White Onions" class="modal-image" data="20"/>
   					</div>
   				</div>
   			</div>
@@ -1050,13 +984,13 @@
   		</div>
     </div>
 
-    <div class="modal-window" id="apples-window">     	
+    <div class="modal-window" id="apples-window">
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
 						<h3 class="modal-inner-image-heading">Apples</h3>
-						<input type="image" src="../img/apples.jpeg" alt="Apples" class="modal-image"/>
+						<input type="image" src="../img/apples.jpeg" alt="Apples" class="modal-image" data="21"/>
   					</div>
   				</div>
   			</div>
@@ -1066,13 +1000,13 @@
   		</div>
     </div>
 
-    <div class="modal-window" id="oranges-window">     	
+    <div class="modal-window" id="oranges-window">
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
 						<h3 class="modal-inner-image-heading">Oranges</h3>
-						<input type="image" src="../img/orange.jpeg" alt="Oranges" class="modal-image"/>
+						<input type="image" src="../img/orange.jpeg" alt="Oranges" class="modal-image" data="22"/>
   					</div>
   				</div>
   			</div>
@@ -1082,13 +1016,13 @@
   		</div>
     </div>
 
-    <div class="modal-window" id="bananas-window">     	
+    <div class="modal-window" id="bananas-window">
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
 						<h3 class="modal-inner-image-heading">Bananas</h3>
-						<input type="image" src="../img/bananas.jpeg" alt="Bananas" class="modal-image"/>
+						<input type="image" src="../img/bananas.jpeg" alt="Bananas" class="modal-image" data="23"/>
   					</div>
   				</div>
   			</div>
@@ -1098,13 +1032,13 @@
   		</div>
     </div>
 
-    <div class="modal-window" id="pears-window">     	
+    <div class="modal-window" id="pears-window">
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
 						<h3 class="modal-inner-image-heading">Pears</h3>
-						<input type="image" src="../img/pears.jpeg" alt="Pears" class="modal-image"/>
+						<input type="image" src="../img/pears.jpeg" alt="Pears" class="modal-image" data="24"/>
   					</div>
   				</div>
   			</div>
@@ -1114,13 +1048,13 @@
   		</div>
     </div>
 
-    <div class="modal-window" id="watermelons-window">     	
+    <div class="modal-window" id="watermelons-window">
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
 						<h3 class="modal-inner-image-heading">Watermelons</h3>
-						<input type="image" src="../img/watermelons.jpeg" alt="Watermelons" class="modal-image"/>
+						<input type="image" src="../img/watermelons.jpeg" alt="Watermelons" class="modal-image" data="25"/>
   					</div>
   				</div>
   			</div>
@@ -1130,13 +1064,13 @@
   		</div>
     </div>
 
-    <div class="modal-window" id="pineapples-window">     	
+    <div class="modal-window" id="pineapples-window">
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
 						<h3 class="modal-inner-image-heading">Pineapples</h3>
-						<input type="image" src="../img/pineapples.jpg" alt="Pineapples" class="modal-image"/>
+						<input type="image" src="../img/pineapples.jpg" alt="Pineapples" class="modal-image" data="26"/>
   					</div>
   				</div>
   			</div>
@@ -1146,13 +1080,13 @@
   		</div>
     </div>
 
-    <div class="modal-window" id="kiwis-window">     	
+    <div class="modal-window" id="kiwis-window">
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
 						<h3 class="modal-inner-image-heading">Kiwis</h3>
-						<input type="image" src="../img/kiwi.png" alt="Kiwis" class="modal-image"/>
+						<input type="image" src="../img/kiwi.png" alt="Kiwis" class="modal-image" data="27"/>
   					</div>
   				</div>
   			</div>
@@ -1162,13 +1096,13 @@
   		</div>
     </div>
 
-    <div class="modal-window" id="tangerines-window">     	
+    <div class="modal-window" id="tangerines-window">
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
 						<h3 class="modal-inner-image-heading">Tangerines</h3>
-						<input type="image" src="../img/tangerines.jpg" alt="Tangerines" class="modal-image"/>
+						<input type="image" src="../img/tangerines.jpg" alt="Tangerines" class="modal-image" data="28"/>
   					</div>
   				</div>
   			</div>
@@ -1178,13 +1112,13 @@
   		</div>
     </div>
 
-    <div class="modal-window" id="grapefruit-window">     	
+    <div class="modal-window" id="grapefruit-window">
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
 						<h3 class="modal-inner-image-heading">Grapefruit</h3>
-						<input type="image" src="../img/grapefruits.jpg" alt="Grapefruit" class="modal-image"/>
+						<input type="image" src="../img/grapefruits.jpg" alt="Grapefruit" class="modal-image" data="29"/>
   					</div>
   				</div>
   			</div>
@@ -1194,13 +1128,13 @@
   		</div>
     </div>
 
-    <div class="modal-window" id="mangoes-window">     	
+    <div class="modal-window" id="mangoes-window">
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
 						<h3 class="modal-inner-image-heading">Mangoes</h3>
-						<input type="image" src="../img/mangoes.jpg" alt="Mangoes" class="modal-image"/>
+						<input type="image" src="../img/mangoes.jpg" alt="Mangoes" class="modal-image" data="30"/>
   					</div>
   				</div>
   			</div>
@@ -1210,13 +1144,13 @@
   		</div>
     </div>
 
-    <div class="modal-window" id="almonds-window">     	
+    <div class="modal-window" id="almonds-window">
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
 						<h3 class="modal-inner-image-heading">Almonds</h3>
-						<input type="image" src="../img/almonds.jpg" alt="Almonds" class="modal-image"/>
+						<input type="image" src="../img/almonds.jpg" alt="Almonds" class="modal-image" data="31"/>
   					</div>
   				</div>
   			</div>
@@ -1226,13 +1160,13 @@
   		</div>
     </div>
 
-    <div class="modal-window" id="peanuts-window">     	
+    <div class="modal-window" id="peanuts-window">
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
 						<h3 class="modal-inner-image-heading">Peanuts</h3>
-						<input type="image" src="../img/peanuts.jpg" alt="Peanuts" class="modal-image"/>
+						<input type="image" src="../img/peanuts.jpg" alt="Peanuts" class="modal-image" data="32"/>
   					</div>
   				</div>
   			</div>
@@ -1242,13 +1176,13 @@
   		</div>
     </div>
 
-    <div class="modal-window" id="pistachios-window">     	
+    <div class="modal-window" id="pistachios-window">
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
 						<h3 class="modal-inner-image-heading">Pistachios</h3>
-						<input type="image" src="../img/pistachios.jpeg" alt="Pistachios" class="modal-image"/>
+						<input type="image" src="../img/pistachios.jpeg" alt="Pistachios" class="modal-image" data="33"/>
   					</div>
   				</div>
   			</div>
@@ -1258,13 +1192,13 @@
   		</div>
     </div>
 
-    <div class="modal-window" id="walnuts-window">     	
+    <div class="modal-window" id="walnuts-window">
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
 						<h3 class="modal-inner-image-heading">Walnuts</h3>
-						<input type="image" src="../img/walnuts.jpg" alt="Walnuts" class="modal-image"/>
+						<input type="image" src="../img/walnuts.jpg" alt="Walnuts" class="modal-image" data="34"/>
   					</div>
   				</div>
   			</div>
@@ -1274,13 +1208,13 @@
   		</div>
     </div>
 
-    <div class="modal-window" id="cashews-window">     	
+    <div class="modal-window" id="cashews-window">
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
 						<h3 class="modal-inner-image-heading">Cashews</h3>
-						<input type="image" src="../img/cashews.jpg" alt="Cashews" class="modal-image"/>
+						<input type="image" src="../img/cashews.jpg" alt="Cashews" class="modal-image" data="35"/>
   					</div>
   				</div>
   			</div>
@@ -1290,13 +1224,13 @@
   		</div>
     </div>
 
-    <div class="modal-window" id="macadamias-window">     	
+    <div class="modal-window" id="macadamias-window">
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
 						<h3 class="modal-inner-image-heading">Macadamias</h3>
-						<input type="image" src="../img/macadamias.jpg" alt="Macadamias" class="modal-image"/>
+						<input type="image" src="../img/macadamias.jpg" alt="Macadamias" class="modal-image" data="36"/>
   					</div>
   				</div>
   			</div>
@@ -1306,13 +1240,13 @@
   		</div>
     </div>
 
-    <div class="modal-window" id="hazelnuts-window">     	
+    <div class="modal-window" id="hazelnuts-window">
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
 						<h3 class="modal-inner-image-heading">Hazelnuts</h3>
-						<input type="image" src="../img/hazelnuts.jpg" alt="Hazelnuts" class="modal-image"/>
+						<input type="image" src="../img/hazelnuts.jpg" alt="Hazelnuts" class="modal-image" data="37"/>
   					</div>
   				</div>
   			</div>
@@ -1322,13 +1256,13 @@
   		</div>
     </div>
 
-    <div class="modal-window" id="pecans-window">     	
+    <div class="modal-window" id="pecans-window">
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
 						<h3 class="modal-inner-image-heading">Pecans</h3>
-						<input type="image" src="../img/pecans.jpg" alt="Pecans" class="modal-image"/>
+						<input type="image" src="../img/pecans.jpg" alt="Pecans" class="modal-image" data="38"/>
   					</div>
   				</div>
   			</div>
@@ -1338,13 +1272,13 @@
   		</div>
     </div>
 
-    <div class="modal-window" id="pinenuts-window">     	
+    <div class="modal-window" id="pinenuts-window">
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
 						<h3 class="modal-inner-image-heading">Pine Nuts</h3>
-						<input type="image" src="../img/pinenuts.jpg" alt="Pine Nuts" class="modal-image"/>
+						<input type="image" src="../img/pinenuts.jpg" alt="Pine Nuts" class="modal-image" data="39"/>
   					</div>
   				</div>
   			</div>
@@ -1354,13 +1288,13 @@
   		</div>
     </div>
 
-    <div class="modal-window" id="chestnuts-window">     	
+    <div class="modal-window" id="chestnuts-window">
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
   					<div class="col-4">
 						<h3 class="modal-inner-image-heading">Chestnuts</h3>
-						<input type="image" src="../img/chestnuts.jpg" alt="Chestnuts" class="modal-image"/>
+						<input type="image" src="../img/chestnuts.jpg" alt="Chestnuts" class="modal-image" data="40"/>
   					</div>
   				</div>
   			</div>
@@ -1375,10 +1309,10 @@
 
 	<div class="close-btn-container">
 		<span class="modal-close-btn"></span>
-	</div> 
+	</div>
 
 
-  
+
 	<div class="col-4 middle-column">
 		<h3 class="modal-select-heading">Properties</h3>
     <form action="" id="selector-form">
@@ -1389,6 +1323,7 @@
   			<option value="3 lb">3 lb</option>
   			<option value="4 lb">4 lb</option>
   			<option value="5 lb">5 lb</option>
+        <option value="Any">Any</option>
   		</select>
   		<select name="cost" class="cost-selector" class="product-options-selector">
   			<option>Cost</option>
@@ -1397,6 +1332,7 @@
   			<option value="less-than-3$">&lt; 3$</option>
   			<option value="less-than-4$">&lt; 4$</option>
   			<option value="less-than-5$">&lt; 5$</option>
+        <option value="Any">Any</option>
   		</select>
   		<select name="specialty" class="specialty-selector" class="product-options-selector">
   			<option>Specialty</option>
@@ -1409,6 +1345,7 @@
   			<option>Quality</option>
   			<option value="Ripe">Ripe</option>
   			<option value="Unripe">Unripe</option>
+        <option value="Any">Any</option>
   		</select>
     </form>
 	</div>

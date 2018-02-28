@@ -1,3 +1,6 @@
+<?php
+	session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,10 +18,10 @@
 		<form action="includes/login-inc.php" method="POST" id="login-form">
 			<h4>Social Media</h4>
 			<div id="social-btn-container">
-				<button id="facebook-btn">Facebook Login</button>
-				<button id="google-btn">Google Login</button>
+				<button id="facebook-btn">Log in with Facebook</button>
+				<button id="google-btn">Log in with Google</button>
 				<span id="or-text">or</span>
-			</div>	
+			</div>
 			<hr/>
 			<input type="text" name="username" id="username-field" placeholder="Username" required="required"/>
 			<input type="password" name="pwd" id="password-field" placeholder="Password" required="required"/>
@@ -29,7 +32,7 @@
 			<div id="register-container">
 				<p>Dont have an account? <a href="signup.php">Register</a></p>
 			</div>
-		</form>	
+		</form>
 	</div>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script type="text/javascript" src="login.js"></script>
