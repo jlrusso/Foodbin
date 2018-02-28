@@ -159,10 +159,8 @@
                 while($row = mysqli_fetch_assoc($result)){
                   $prevData[] = $row;
                 }
-                if($resultRows2 < 1 || $resultRows > 0){
-                  echo "<h3 style='text-align: center'>No previous orders</h3>";
-                } else {
-                  if($resultRows2 > 1 || $resultRows < 1){
+                if($resultRows2 > 0 && $resultRows == 0){
+                  if($resultRows2 > 0 && $resultRows == 0){
                     echo "
                       <h2 id='previous-orders-heading'>Previous Orders</h2>
                       <div class='previous-order-outer'>
@@ -256,6 +254,10 @@
                         <div class='line-divider'></div>
                       ";
                     }
+                  }
+                } else {
+                  if($resultRows2 == 1 && $resultRows  == 1){
+                    echo "<h3 style='text-align: center'>No previous orders</h3>";
                   }
                 }
               ?>
