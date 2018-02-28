@@ -1,6 +1,8 @@
 /*--- Start of User Icon JS --*/
     var userIcon = document.getElementsByClassName("fa-user")[0],
-        userList = document.getElementsByClassName("user-list")[0];
+        userList = document.getElementsByClassName("user-list")[0],
+        username = document.getElementById("user"),
+        userParent = document.getElementById("user-parent");
         if(userIcon){
             userIcon.addEventListener("click", function(){
                 userList.classList.toggle("show-user-list");
@@ -16,10 +18,15 @@
             }
         }
     });
+    if(userParent){
+      userParent.addEventListener("click", function(){
+        user.click();
+      })
+    }
 /*--- End of User Icon JS ---*/
 
 /*--- Food Item Modals ---*/
-var perImageContainers = document.getElementsByClassName("per-image-container");
+var perImageContainers = document.getElementsByClassName("per-image-container"),
     modalWindows = document.getElementsByClassName("modal-window"),
     closeContainer = document.getElementsByClassName("close-btn-container")[0],
     row = document.getElementsByClassName("row"),
@@ -65,10 +72,10 @@ for(let i = 0; i < closeBtnContainers.length; i++){
 
 //close modal window when user clicks on dark area, but not modal content area
 for(let i = 0; i < modalWindows.length; i++){
-    modalWindows[i].addEventListener("click", function(e){ 
+    modalWindows[i].addEventListener("click", function(e){
         if(e.target.matches(".modal-window")){
             this.style.display = "none";
-        } 
+        }
     })
 }
 /*--- End of Food Item Modals ---*/
@@ -141,7 +148,7 @@ var innerImageContainers = document.getElementsByClassName("inner-images-contain
     function moveFoodSection(){
         innerImageContainers[foodContainerRowIndex].style.left = -width * currentSectionIndex + "%";
     }
-    
+
 
 /*--- End of Food Sliders ---*/
 
@@ -158,10 +165,20 @@ var gotHeading;
 var cartItems = 0;
 var placeOrderBtn = document.getElementById("place-order-btn");
 var noGroceriesAdded = document.getElementById("no-groceries-added");
+var loggedInElement = document.getElementById("logged-in");
+var loggedIn = loggedInElement.getAttribute("class");
 
 for(let i = 0; i < addToCartBtns.length; i++){
-    addToCartBtns[i].addEventListener("click", function(){
+    addToCartBtns[i].addEventListener("click", function(e){
+      if(loggedIn == "no"){
+        e.preventDefault();
+        alert("You must log in to place an order");
+      } else if(localStorage.getItem("order-in-progress") == "yes") {
+        e.preventDefault();
+        alert("You have an order in progress");
+      } else {
         addFoodItem(i);
+      }
     });
 }
 function addFoodItem(index){
@@ -175,14 +192,14 @@ function addFoodItem(index){
         $costNumVal = $modalContent.find(".cost-priority option:checked").text(),
         $specialtySelectorValue = $modalContent.find(".specialty-selector option:checked").text(),
         $specialtyNumVal = $modalContent.find(".specialty-priority option:checked").text(),
-        $qualitySelectorValue = $modalContent.find(".quality-selector option:checked").text(), 
+        $qualitySelectorValue = $modalContent.find(".quality-selector option:checked").text(),
         $qualityNumVal = $modalContent.find(".quality-priority option:checked").text(),
         modalWindowId = modalWindow.id;
 
         //check to see if any two priority values are the same
-        if($weightNumVal == $costNumVal || 
-            $weightNumVal == $specialtyNumVal || 
-            $weightNumVal == $qualityNumVal || 
+        if($weightNumVal == $costNumVal ||
+            $weightNumVal == $specialtyNumVal ||
+            $weightNumVal == $qualityNumVal ||
             $costNumVal == $specialtyNumVal ||
             $costNumVal == $qualityNumVal ||
             $specialtyNumVal == $qualityNumVal){
@@ -194,11 +211,13 @@ function addFoodItem(index){
 
 
         itemImageSrc = modalImages[index].getAttribute("src");
+        itemImageData = modalImages[index].getAttribute("data");
+
         gotHeading = modalInnerImageHeadings[index].textContent;
         createCartItem(
-            modalWindowId, gotHeading, itemImageSrc, $weightSelectorValue, 
-            $weightNumVal, $costSelectorValue, $costNumVal, 
-            $specialtySelectorValue, $specialtyNumVal, 
+            modalWindowId, gotHeading, itemImageSrc, itemImageData, $weightSelectorValue,
+            $weightNumVal, $costSelectorValue, $costNumVal,
+            $specialtySelectorValue, $specialtyNumVal,
             $qualitySelectorValue, $qualityNumVal
         );
         cartItems++;
@@ -206,15 +225,17 @@ function addFoodItem(index){
         cartBadge.style.display = "block";
         priorityNumForm.reset();
         selectorForm.reset();
-        modalWindow.style.display = "none";            
+        modalWindow.style.display = "none";
 }
 
 /*--- End of Add Btn to Cart ---*/
-
+var foodItemIds = "";
+var formInner = document.getElementById("form-inner");
+var hiddenSubmit = document.getElementById("hidden-submit");
 //make food item row in cart modal with options selected from the food item modal, and food heading
-function createCartItem(windowId, heading, imageSrc, weight, weightP, cost, costP, specialty, specialtyP, quality, qualityP){
-    
-    //create new cart row, cart columns, and add to cart-modal-content div
+function createCartItem(windowId, heading, imageSrc, imageData, weight, weightP, cost, costP, specialty, specialtyP, quality, qualityP){
+
+    //create new cart row, cart row columns, and add to cart-modal-content div
     var cartContent = document.getElementById("cart-modal-content");
     var newCartRow = document.createElement("div");
     newCartRow.classList.add("cart-row");
@@ -228,6 +249,7 @@ function createCartItem(windowId, heading, imageSrc, weight, weightP, cost, cost
     var newImage = document.createElement("input");
     newImage.setAttribute("type", "image");
     newImage.setAttribute("src", imageSrc);
+    newImage.setAttribute("data", imageData);
     imageContainer.appendChild(newImage);
     var rightCartCol = document.createElement("div");
     rightCartCol.classList.add("right-cart-col");
@@ -254,7 +276,7 @@ function createCartItem(windowId, heading, imageSrc, weight, weightP, cost, cost
     var listText4 = document.createTextNode("Quality: " + quality + ", Priority: " + qualityP);
     listItem4.appendChild(listText4);
     detailsList.appendChild(listItem4);
-    
+
     //append created columns to the create cart row
     leftCartCol.appendChild(leftColHeading);
     leftCartCol.appendChild(imageContainer);
@@ -263,7 +285,7 @@ function createCartItem(windowId, heading, imageSrc, weight, weightP, cost, cost
     newCartRow.appendChild(leftCartCol);
     newCartRow.appendChild(rightCartCol);
 
-    // create btn container and btn elements
+    // create btn container and btn elements 'Make Changes' and 'Remove Item'
     var btnContainer = document.createElement("div");
     btnContainer.classList.add("item-btns-container");
     var btn1 = document.createElement("button");
@@ -285,8 +307,53 @@ function createCartItem(windowId, heading, imageSrc, weight, weightP, cost, cost
     cartContent.appendChild(newCartRow);
     cartContent.appendChild(lineDivider);
     placeOrderBtn.style.display = "block";
-    noGroceriesAdded.style.display = "none";   
+    noGroceriesAdded.style.display = "none";
+    foodItemIds += imageData + " ";
+    createHiddenForm(foodItemIds, imageData, listText1, listText2, listText3, listText4);
 }
+/*--- Start of Hidden Form ---*/
+function createHiddenForm(itemIds, dataNum, wp, cp, sp, qp){
+  var newInput = document.createElement("input");
+  newInput.setAttribute("type", "text");
+  newInput.setAttribute("name", "item_" + dataNum + "_specs");
+  newInput.setAttribute("data", dataNum);
+  newInput.setAttribute("value", getString(wp) + " | " + getString(cp) + " | " + getString(sp) + " | " + getString(qp));
+  formInner.insertBefore(newInput, hiddenSubmit);
+}
+
+function getString(obj){
+  return obj.textContent ? obj.textContent : obj.innerText;
+}
+/*--- End of Hidden Form ---*/
+
+/*--- Storing the Order in the Database ---*/
+
+placeOrderBtn.addEventListener("click", function(){
+  var locationInput = document.createElement("input");
+  locationInput.setAttribute("type", "text");
+  locationInput.setAttribute("name", "store_city");
+  locationInput.setAttribute("value", locationSelected);
+  formInner.insertBefore(locationInput, formInner.childNodes[0]);
+  var addressInput = document.createElement("input");
+  addressInput.setAttribute("type", "text");
+  addressInput.setAttribute("name", "store_address");
+  addressInput.setAttribute("value", storeAddress);
+  formInner.insertBefore(addressInput, formInner.childNodes[0]);
+  var storeInput = document.createElement("input");
+  storeInput.setAttribute("type", "text");
+  storeInput.setAttribute("name", "store_name");
+  storeInput.setAttribute("value", storeCartName);
+  formInner.insertBefore(storeInput, formInner.childNodes[0]);
+  var idInput = document.createElement("input");
+  idInput.setAttribute("type", "text");
+  idInput.setAttribute("name", "food_ids");
+  idInput.setAttribute("value", foodItemIds);
+  formInner.insertBefore(idInput, hiddenSubmit);
+  hiddenSubmit.click();
+  localStorage.setItem("order-in-progress", "yes");
+});
+/*--- End of Storing Order in Database ---*/
+
 
 //add click event and run code if either the remove-item-btn or make-changes-btn is clicked
 $("body").click(function(event){
@@ -316,7 +383,7 @@ $("body").click(function(event){
         if(cartBadge.textContent === "0"){
             cartBadge.style.display = "none";
         }
-    }   
+    }
 });
 
 /*--- Initialize Google Maps API ---*/
@@ -342,7 +409,7 @@ locationInputField.addEventListener("input", function(){
             currItem.style.display = "";
         } else {
             currItem.style.display = "none";
-        }    
+        }
     }
 });
 
@@ -582,11 +649,10 @@ function initMap(){
             lat: position.coords.latitude,
             lng: position.coords.longitude
         };
-      
+
       userInfoWindow.setPosition(pos);
       userInfoWindow.setContent('User location:');
       userInfoWindow.open(mapInstance1);
-      //map.setCenter(pos);
     }, function() {
       handleLocationError(true, userInfoWindow, mapInstance1.getCenter());
     });
@@ -662,8 +728,13 @@ function initMap(){
     };
 
     //show store marker on map when user clicks on store list option for sacramento location
-    
+    var checkmark = document.getElementById("checkmark");
+
     $("#search-list-group li a").click(function(){
+        if(deliveryBtnCaption.style.display == "block"){
+          deliveryBtnCaption.style.display = "none";
+        }
+        checkmark.style.left = "-100px";
         for(let i = 0; i < storeLists.length; i++){
             storeLists[i].style.display = "none";
             storeLists[i].options[0].selected = true;
@@ -745,6 +816,10 @@ function initMap(){
     //start of cityStoreSetup functions
     function storeMapSetup($selectedCity){
         $(".store-list").on("change", function(){
+            if(deliveryBtnCaption.style.display == "block"){
+              deliveryBtnCaption.style.display = "none";
+            }
+            checkmark.style.left == "-100px";
             switch(true){
                 case ($selectedCity === "Sacramento, CA"):
                     addStoreToMap(sacramentoStores);
@@ -792,8 +867,8 @@ function initMap(){
         });
     }
     //end of cityStoreSetup functions
-    
-    
+
+
     function setMapOnAll(mapInstance2) {
         for (var i = 0; i < storeMarkers.length; i++) {
           storeMarkers[i].setMap(mapInstance2);
@@ -829,7 +904,7 @@ function initMap(){
 
 
     //add store to map when that store option is selected
-    
+
     function addStoreMarkers(storeName, storeCoords, storeAddress){
         var marker = new google.maps.Marker({
             map: mapInstance2,
@@ -842,9 +917,10 @@ function initMap(){
         var infoWindow = new google.maps.InfoWindow({
             content: "<p style='font-weight: bold'>" + storeName + "</p><br/>" +
                      "<span>" + storeAddress + "</span><br/>" +
-                     "<a href='https://maps.google.com/?q=" + storeName + " " + storeAddress + "' target='_blank' style='color: #427fed'>View on Google Maps</a>"
+                     "<a href='https://maps.google.com/?q=" + storeName + " " + storeAddress + "' target='_blank' style='color: #427fed'>View on Google Maps</a><br/>" +
+                     "<span class='orders' onclick='consoleIt()' id='" + storeAddress + "'>0 orders</span>"
         })
-      
+
         infoWindow.open(map, marker);
         marker.addListener("click", function(){
             infoWindow.open(map, marker);
@@ -861,7 +937,9 @@ function handleLocationError(browserHasGeolocation, info, pos) {
   info.open(mapElement);
 }
 /*--- End of Google Maps API ---*/
-
+function consoleIt(){
+    $(".orders").css("color", "red");
+}
 
 //when user clicks on "Deliver From Here" btn
 var deliveryBtn = document.getElementById("delivery-btn"),
@@ -877,25 +955,23 @@ deliveryBtn.addEventListener("click", function(e){
     if(locationSelected == undefined || storeAddress == undefined){
         deliveryBtnCaption.style.display = "block";
         return;
-    } else {
-        deliveryBtnCaption.style.display = "none";
-        locationStoreContainer.style.display = "grid";
-        locationText = document.createTextNode(locationSelected);
-        addressText = document.createTextNode(storeAddress);
-        storeNameText = document.createTextNode(storeCartName);
-        cartLocation.appendChild(locationText);
-        cartStoreName.appendChild(storeNameText);
-        cartStoreAddress.appendChild(addressText);
+    } else if (locationSelected != undefined && storeAddress != undefined){
+      $("#checkmark").css({"position":"absolute", "left": "40px"});
+      deliveryBtnCaption.style.display = "none";
+      locationStoreContainer.style.display = "grid";
+      locationText = document.createTextNode(locationSelected);
+      addressText = document.createTextNode(storeAddress);
+      storeNameText = document.createTextNode(storeCartName);
+      cartLocation.appendChild(locationText);
+      cartStoreName.appendChild(storeNameText);
+      cartStoreAddress.appendChild(addressText);
     }
-})
-
-    
+});
 
 
-
-
-
-
+$(".orders").click(function(){
+    console.log($(this).text());
+});
 
 $(window).on('beforeunload', function() {
    $(window).scrollTop(0);
