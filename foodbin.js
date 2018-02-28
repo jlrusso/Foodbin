@@ -167,7 +167,7 @@ var placeOrderBtn = document.getElementById("place-order-btn");
 var noGroceriesAdded = document.getElementById("no-groceries-added");
 var loggedInElement = document.getElementById("logged-in");
 var loggedIn = loggedInElement.getAttribute("class");
-
+var cartImgSrcs = [];
 for(let i = 0; i < addToCartBtns.length; i++){
     addToCartBtns[i].addEventListener("click", function(e){
       if(loggedIn == "no"){
@@ -177,10 +177,24 @@ for(let i = 0; i < addToCartBtns.length; i++){
         e.preventDefault();
         alert("You have an order in progress");
       } else {
-        addFoodItem(i);
+        $thisModalContainer = $(this).parents(".modal-inner-container");
+        $thisModalImageSrc = $thisModalContainer.find("input:image").attr("src");
+        if(cartImgSrcs.indexOf($thisModalImageSrc) > -1){
+          alert("Item in cart. Make changes in cart");
+          e.preventDefault();
+        } else {
+          cartImgSrcs.push($thisModalImageSrc);
+          addFoodItem(i);
+        }
       }
     });
 }
+
+function checkIfItemAlreadyInCart(){
+
+}
+
+
 function addFoodItem(index){
     var modalWindow = addToCartBtns[index].parentElement.parentElement.parentElement,
         $modalContainer = $(".add-to-cart-btn").eq(index).parents(".modal-inner-container"),
@@ -250,6 +264,7 @@ function createCartItem(windowId, heading, imageSrc, imageData, weight, weightP,
     newImage.setAttribute("type", "image");
     newImage.setAttribute("src", imageSrc);
     newImage.setAttribute("data", imageData);
+    newImage.setAttribute("class", "cart-image");
     imageContainer.appendChild(newImage);
     var rightCartCol = document.createElement("div");
     rightCartCol.classList.add("right-cart-col");
@@ -329,6 +344,7 @@ function getString(obj){
 /*--- Storing the Order in the Database ---*/
 
 placeOrderBtn.addEventListener("click", function(){
+  cartImgSrcs = [];
   var locationInput = document.createElement("input");
   locationInput.setAttribute("type", "text");
   locationInput.setAttribute("name", "store_city");
