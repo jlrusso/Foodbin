@@ -159,8 +159,8 @@
                 while($row = mysqli_fetch_assoc($result)){
                   $prevData[] = $row;
                 }
-                if($resultRows2 > 0 && $resultRows == 0){
-                  if($resultRows2 > 0 && $resultRows == 0){
+                if($resultRows == 0 || $resultRows2 > 0){
+                  if($resultRows == 0 || $resultRows2 > 0){
                     echo "
                       <h2 id='previous-orders-heading'>Previous Orders</h2>
                       <div class='previous-order-outer'>
