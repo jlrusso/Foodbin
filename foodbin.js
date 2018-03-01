@@ -184,6 +184,7 @@ for(let i = 0; i < addToCartBtns.length; i++){
           e.preventDefault();
         } else {
           cartImgSrcs.push($thisModalImageSrc);
+          console.log(cartImgSrcs);
           addFoodItem(i);
         }
       }
@@ -382,7 +383,7 @@ $("body").click(function(event){
         var imgSrc = "" + $modalImageSrc;
         var imgData = "" + $modalImageData;
         let $nextLineDivider = $(event.target).parents(".cart-row").next(".line-divider");
-        var $hiddenInput = $("#form-inner").find("input:text").attr("data", imgData);
+        var $hiddenInput = $("#form-inner").find("input[data='" + imgData + "']");
         removeCartRowAndInput($thisBtn, $thisFoodRow, $nextLineDivider, $hiddenInput);
         changeCartBadgeNum();
         removeImgSrcFromArray(imgSrc);
@@ -398,7 +399,7 @@ $("body").click(function(event){
         var imgSrc = "" + $modalImageSrc;
         var imgData = "" + $modalImageData;
         let $nextLineDivider = $(event.target).parents(".cart-row").next(".line-divider");
-        var $hiddenInput = $("#form-inner").find("input:text").attr("data", imgData);
+        var $hiddenInput = $("#form-inner").find("input[data='" + imgData + "']");
         removeCartRowAndInput($thisBtn, $thisFoodRow, $nextLineDivider, $hiddenInput);
         changeCartBadgeNum();
         removeImgSrcFromArray(imgSrc);
@@ -409,6 +410,7 @@ function removeCartRowAndInput($thisBtn, $thisFoodRow, $nextLineDivider, $hidden
   $thisFoodRow.remove();
   $nextLineDivider.remove();
   $hiddenInput.remove();
+  console.log(cartImgSrcs);
 }
 
 function changeCartBadgeNum(){
