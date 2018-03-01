@@ -374,33 +374,56 @@ placeOrderBtn.addEventListener("click", function(){
 //add click event and run code if either the remove-item-btn or make-changes-btn is clicked
 $("body").click(function(event){
     if(event.target.matches(".make-changes-btn")){
+        var $thisBtn = $(event.target);
         let foodAtt = $(event.target).attr("for");
-        cartModalWindow.style.display = "none";
-        let currFoodRow = event.target.parentElement.parentElement.parentElement;
+        let $thisFoodRow = $thisBtn.parents(".cart-row");
+        let $modalImageData = $thisFoodRow.find("input:image").attr("data");
+        let $modalImageSrc = $thisFoodRow.find("input:image").attr("src");
+        var imgSrc = "" + $modalImageSrc;
+        var imgData = "" + $modalImageData;
         let $nextLineDivider = $(event.target).parents(".cart-row").next(".line-divider");
-        $nextLineDivider.css("display", "none");
-        currFoodRow.style.display = "none";
-        cartItems--;
-        cartBadge.textContent = cartItems;
-        if(cartBadge.textContent === "0"){
-            cartBadge.style.display = "none";
-        }
+        var $hiddenInput = $("#form-inner").find("input:text").attr("data", imgData);
+        removeCartRowAndInput($thisBtn, $thisFoodRow, $nextLineDivider, $hiddenInput);
+        changeCartBadgeNum();
+        removeImgSrcFromArray(imgSrc);
+        $("#cart-modal-window").css("display", "none");
         $("#" + foodAtt).css("display", "block");
         openFoodModal2(foodAtt);
     }
     if(event.target.matches(".remove-item-btn")){
-        var $thisBtn = event.target;
-        let thisFoodRow = $thisBtn.parentElement.parentElement.parentElement;
+        var $thisBtn = $(event.target);
+        let $thisFoodRow = $thisBtn.parents(".cart-row");
+        let $modalImageData = $thisFoodRow.find("input:image").attr("data");
+        let $modalImageSrc = $thisFoodRow.find("input:image").attr("src");
+        var imgSrc = "" + $modalImageSrc;
+        var imgData = "" + $modalImageData;
         let $nextLineDivider = $(event.target).parents(".cart-row").next(".line-divider");
-        $nextLineDivider.css("display", "none");
-        thisFoodRow.style.display = "none";
-        cartItems--;
-        cartBadge.textContent = cartItems;
-        if(cartBadge.textContent === "0"){
-            cartBadge.style.display = "none";
-        }
+        var $hiddenInput = $("#form-inner").find("input:text").attr("data", imgData);
+        removeCartRowAndInput($thisBtn, $thisFoodRow, $nextLineDivider, $hiddenInput);
+        changeCartBadgeNum();
+        removeImgSrcFromArray(imgSrc);
     }
 });
+
+function removeCartRowAndInput($thisBtn, $thisFoodRow, $nextLineDivider, $hiddenInput){
+  $thisFoodRow.remove();
+  $nextLineDivider.remove();
+  $hiddenInput.remove();
+}
+
+function changeCartBadgeNum(){
+  cartItems--;
+  cartBadge.textContent = cartItems;
+  if(cartBadge.textContent === "0"){
+      cartBadge.style.display = "none";
+  }
+}
+
+function removeImgSrcFromArray(imgSrc){
+  var index = cartImgSrcs.indexOf(imgSrc);
+  cartImgSrcs.splice(index, 1);
+}
+
 
 /*--- Initialize Google Maps API ---*/
 var deliveryBtnContainer = document.getElementById("deliver-btn-container"),
