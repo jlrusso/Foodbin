@@ -184,15 +184,10 @@ for(let i = 0; i < addToCartBtns.length; i++){
           e.preventDefault();
         } else {
           cartImgSrcs.push($thisModalImageSrc);
-          console.log(cartImgSrcs);
           addFoodItem(i);
         }
       }
     });
-}
-
-function checkIfItemAlreadyInCart(){
-
 }
 
 
@@ -244,6 +239,8 @@ function addFoodItem(index){
 }
 
 /*--- End of Add Btn to Cart ---*/
+
+
 var foodItemIds = "";
 var formInner = document.getElementById("form-inner");
 var hiddenSubmit = document.getElementById("hidden-submit");
@@ -327,6 +324,7 @@ function createCartItem(windowId, heading, imageSrc, imageData, weight, weightP,
     foodItemIds += imageData + " ";
     createHiddenForm(foodItemIds, imageData, listText1, listText2, listText3, listText4);
 }
+
 /*--- Start of Hidden Form ---*/
 function createHiddenForm(itemIds, dataNum, wp, cp, sp, qp){
   var newInput = document.createElement("input");
@@ -342,8 +340,71 @@ function getString(obj){
 }
 /*--- End of Hidden Form ---*/
 
-/*--- Storing the Order in the Database ---*/
+//add click event and run code if either the remove-item-btn or make-changes-btn is clicked
+$("body").click(function(event){
+    if(event.target.matches(".make-changes-btn")){
+        var $thisBtn = $(event.target);
+        let foodAtt = $(event.target).attr("for");
+        let $thisFoodRow = $thisBtn.parents(".cart-row");
+        let $modalImageData = $thisFoodRow.find("input:image").attr("data");
+        let $modalImageSrc = $thisFoodRow.find("input:image").attr("src");
+        var imgSrc = "" + $modalImageSrc;
+        var imgData = "" + $modalImageData;
+        let $nextLineDivider = $(event.target).parents(".cart-row").next(".line-divider");
+        var $hiddenInput = $("#form-inner").find("input[data='" + imgData + "']");
+        removeCartRowAndInput($thisBtn, $thisFoodRow, $nextLineDivider, $hiddenInput);
+        changeCartBadgeNum();
+        removeImgSrcFromArray(imgSrc);
+        removeFoodItemId(imgData, foodItemIds);
+        $("#cart-modal-window").css("display", "none");
+        $("#" + foodAtt).css("display", "block");
+        openFoodModal2(foodAtt);
+    }
+    if(event.target.matches(".remove-item-btn")){
+        var $thisBtn = $(event.target);
+        let $thisFoodRow = $thisBtn.parents(".cart-row");
+        let $modalImageData = $thisFoodRow.find("input:image").attr("data");
+        let $modalImageSrc = $thisFoodRow.find("input:image").attr("src");
+        var imgSrc = "" + $modalImageSrc;
+        var imgData = "" + $modalImageData;
+        let $nextLineDivider = $(event.target).parents(".cart-row").next(".line-divider");
+        var $hiddenInput = $("#form-inner").find("input[data='" + imgData + "']");
+        removeCartRowAndInput($thisBtn, $thisFoodRow, $nextLineDivider, $hiddenInput);
+        changeCartBadgeNum();
+        removeImgSrcFromArray(imgSrc);
+        removeFoodItemId(imgData, foodItemIds);
+    }
+});
 
+function removeCartRowAndInput($thisBtn, $thisFoodRow, $nextLineDivider, $hiddenInput){
+  $thisFoodRow.remove();
+  $nextLineDivider.remove();
+  $hiddenInput.remove();
+}
+
+function changeCartBadgeNum(){
+  cartItems--;
+  cartBadge.textContent = cartItems;
+  if(cartBadge.textContent === "0"){
+      cartBadge.style.display = "none";
+  }
+}
+
+function removeImgSrcFromArray(imgSrc){
+  var index = cartImgSrcs.indexOf(imgSrc);
+  cartImgSrcs.splice(index, 1);
+}
+
+function removeFoodItemId(imgData, ids){
+  tempIds = foodItemIds.replace(imgData, "");
+  foodItemIds = tempIds.replace("  ", " ");
+  console.log(imgData);
+  console.log(foodItemIds);
+}
+
+
+/*--- Storing the Order in the Database ---*/
+var idInput;
 placeOrderBtn.addEventListener("click", function(){
   cartImgSrcs = [];
   var locationInput = document.createElement("input");
@@ -361,7 +422,7 @@ placeOrderBtn.addEventListener("click", function(){
   storeInput.setAttribute("name", "store_name");
   storeInput.setAttribute("value", storeCartName);
   formInner.insertBefore(storeInput, formInner.childNodes[0]);
-  var idInput = document.createElement("input");
+  idInput = document.createElement("input");
   idInput.setAttribute("type", "text");
   idInput.setAttribute("name", "food_ids");
   idInput.setAttribute("value", foodItemIds);
@@ -370,61 +431,6 @@ placeOrderBtn.addEventListener("click", function(){
   localStorage.setItem("order-in-progress", "yes");
 });
 /*--- End of Storing Order in Database ---*/
-
-
-//add click event and run code if either the remove-item-btn or make-changes-btn is clicked
-$("body").click(function(event){
-    if(event.target.matches(".make-changes-btn")){
-        var $thisBtn = $(event.target);
-        let foodAtt = $(event.target).attr("for");
-        let $thisFoodRow = $thisBtn.parents(".cart-row");
-        let $modalImageData = $thisFoodRow.find("input:image").attr("data");
-        let $modalImageSrc = $thisFoodRow.find("input:image").attr("src");
-        var imgSrc = "" + $modalImageSrc;
-        var imgData = "" + $modalImageData;
-        let $nextLineDivider = $(event.target).parents(".cart-row").next(".line-divider");
-        var $hiddenInput = $("#form-inner").find("input[data='" + imgData + "']");
-        removeCartRowAndInput($thisBtn, $thisFoodRow, $nextLineDivider, $hiddenInput);
-        changeCartBadgeNum();
-        removeImgSrcFromArray(imgSrc);
-        $("#cart-modal-window").css("display", "none");
-        $("#" + foodAtt).css("display", "block");
-        openFoodModal2(foodAtt);
-    }
-    if(event.target.matches(".remove-item-btn")){
-        var $thisBtn = $(event.target);
-        let $thisFoodRow = $thisBtn.parents(".cart-row");
-        let $modalImageData = $thisFoodRow.find("input:image").attr("data");
-        let $modalImageSrc = $thisFoodRow.find("input:image").attr("src");
-        var imgSrc = "" + $modalImageSrc;
-        var imgData = "" + $modalImageData;
-        let $nextLineDivider = $(event.target).parents(".cart-row").next(".line-divider");
-        var $hiddenInput = $("#form-inner").find("input[data='" + imgData + "']");
-        removeCartRowAndInput($thisBtn, $thisFoodRow, $nextLineDivider, $hiddenInput);
-        changeCartBadgeNum();
-        removeImgSrcFromArray(imgSrc);
-    }
-});
-
-function removeCartRowAndInput($thisBtn, $thisFoodRow, $nextLineDivider, $hiddenInput){
-  $thisFoodRow.remove();
-  $nextLineDivider.remove();
-  $hiddenInput.remove();
-  console.log(cartImgSrcs);
-}
-
-function changeCartBadgeNum(){
-  cartItems--;
-  cartBadge.textContent = cartItems;
-  if(cartBadge.textContent === "0"){
-      cartBadge.style.display = "none";
-  }
-}
-
-function removeImgSrcFromArray(imgSrc){
-  var index = cartImgSrcs.indexOf(imgSrc);
-  cartImgSrcs.splice(index, 1);
-}
 
 
 /*--- Initialize Google Maps API ---*/
