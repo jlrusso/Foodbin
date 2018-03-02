@@ -264,16 +264,52 @@
               </div>
             </div>
 				</div>
-        <div id="edit-modal-window">
-          <!-- <div id="cart-close-container">
-            <span class="modal-close-btn"></span>
-          </div> -->
-          <div id="edit-profile-Container">
-
-          </div>
-        </div>
 			</div>
 		</div>
+
+    <div id="modal-window">
+      <div id="close-btn-container">
+        <span id="modal-close-btn"></span>
+      </div>
+      <div id="modal-inner-container">
+        <div id="modal-inner-content">
+          <h3>Edit My Info</h3>
+          <form action="includes/editprofile.php" method="POST" id="edit-profile-form">
+            <?php
+              if(isset($_SESSION['user_id'])){
+                $first = $_SESSION['user_first'];
+                $last = $_SESSION['user_last'];
+                $email = $_SESSION['user_email'];
+                echo "
+                <input type='text' name='first' placeholder='First name' required autocomplete='off' value='" . $first . "'/'/>
+                <input type='text' name='last' placeholder='Last name' required autocomplete='off' value='" . $last . "'/'/>
+                <input type='text' name='email' placeholder='E-mail' required autocomplete='off' value='" . $email . "'/'/>
+                <select required name='city' id='city-selection'>
+                  <option value=' id='city-heading'>City:</option>
+                  <option value='Sacramento, CA'>Sacramento, CA</option>
+                  <option value='San Francisco, CA'>San Francisco, CA</option>
+                  <option value='Oakland, CA'>Oakland, CA</option>
+                  <option value='Fremont, CA'>Fremont, CA</option>
+                  <option value='Berkeley, CA'>Berkeley, CA</option>
+                  <option value='Stockton, CA'>Stockton, CA</option>
+                  <option value='San Jose, CA'>San Jose, CA</option>
+                  <option value='Los Angeles, CA'>Los Angeles, CA</option>
+                  <option value='San Diego, CA'>San Diego, CA</option>
+                  <option value='Santa Barbara, CA'>Santa Barbara, CA</option>
+                  <option value='Riverside, CA'>Riverside, CA</option>
+                  <option value='Long Beach, CA'>Long Beach, CA</option>
+                  <option value='Anaheim, CA'>Anaheim, CA</option>
+                  <option value='Irvine, CA'>Irvine, CA</option>
+                </select>
+                <input type='submit' name='edit-submit' id='edit-submit-btn'/>
+                ";
+              }
+            ?>
+          </form>
+        </div>
+      </div>
+    </div>
+
 	</div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript" src="profile.js"></script>

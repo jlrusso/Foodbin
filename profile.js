@@ -59,57 +59,6 @@ if(orderCompletedBtn) {
     removeCurrentOrder();
   });
 }
-//
-// function addPreviousOrderToContainer(){
-//   var previousOrderOuter = document.createElement("div");
-//   previousOrderOuter.setAttribute("class", "previous-order-outer");
-//   var previousOrderLocation = document.createElement("div");
-//   previousOrderLocation.setAttribute("class", "store-location-container");
-//   copyCurrentStoreLocation(previousOrderLocation);
-//   var previousOrderRow = document.createElement("div");
-//   previousOrderRow.setAttribute("class", "previous-order-row");
-//   copyCurrentOrderToPrevious(previousOrderOuter, previousOrderRow);
-//   previousOrderOuter.appendChild(previousOrderLocation);
-//   previousOrderOuter.appendChild(previousOrderRow);
-//   createPreviousOrderFooter(previousOrderOuter);
-//   copyLineDividerToPreviousOrder(previousOrderOuter);
-//   previousOrdersContainer.appendChild(previousOrderOuter);
-//   previousOrdersContainer.style.display = "block";
-//   removeCurrentOrder();
-// }
-//
-// function createPreviousOrderFooter(previousOrderOuter){
-//   var previousOrderFooter = document.createElement("div");
-//   previousOrderFooter.setAttribute("class", "previous-order-footer");
-//   createFooterBtns(previousOrderFooter);
-//   previousOrderOuter.appendChild(previousOrderFooter);
-// }
-//
-// function createFooterBtns(previousOrderFooter){
-//   var orderAgainBtn = document.createElement("button");
-//   orderAgainBtn.setAttribute("class", "order-again-btn");
-//   var orderAgainTxt = document.createTextNode("Order Again");
-//   orderAgainBtn.appendChild(orderAgainTxt);
-//   var removeOrderBtn = document.createElement("button");
-//   removeOrderBtn.setAttribute("class", "remove-order-btn");
-//   var removeOrderTxt = document.createTextNode("Remove Order");
-//   removeOrderBtn.appendChild(removeOrderTxt);
-//   previousOrderFooter.appendChild(orderAgainBtn);
-//   previousOrderFooter.appendChild(removeOrderBtn);
-// }
-//
-// function copyCurrentOrderToPrevious(previousOrderOuter, previousOrderRow){
-//   $("#current-order-outer").find(".store-location-container").clone().appendTo(previousOrderOuter);
-//   $("#current-order-row").find(".order-item").clone().appendTo(previousOrderRow);
-// }
-//
-// function copyCurrentStoreLocation(previousOrderLocation){
-//   $("#current-order-outer").children(".store-location-container").find("div").clone().appendTo(previousOrderLocation);
-// }
-//
-// function copyLineDividerToPreviousOrder(previousOrderOuter){
-//   $("#current-order-outer").find(".line-divider").clone().appendTo(previousOrderOuter);
-// }
 
 function removeCurrentOrder(){
   $("#current-order-outer").add("#current-order-heading").animate({
@@ -124,6 +73,22 @@ function removeCurrentOrder(){
 
 /*--- End of 'order completed' btn click ---*/
 
+/*--- When user clicks edit btn ---*/
+var editBtn = document.getElementById("edit-btn"),
+    editModalWindow = document.getElementById("modal-window"),
+    closeBtnContainer = document.getElementById("close-btn-container");
+editBtn.addEventListener("click", function(){
+  editModalWindow.style.display = "block";
+  closeBtnContainer.style.display = "block";
+})
+/*--- end of user clicks edit btn ---*/
+
+window.onclick = function(e){
+  if(e.target.matches("#modal-window") || e.target.matches("#close-btn-container") || e.target.matches("#modal-close-btn")){
+    editModalWindow.style.display = "none";
+    closeBtnContainer.style.display = "none";
+  }
+}
 
 /*--- Set the Width of itemListInner based on number of items in the order row ---*/
 
