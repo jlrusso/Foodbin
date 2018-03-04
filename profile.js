@@ -117,6 +117,25 @@ if(editOrderBtn){
     removeCurrentOrder();
   });
 }
-
-
 /*--- End of Edit Order Function ---*/
+
+/*--- When user clicks 'Remove Order' Btn ---*/
+var removeOrderBtns = document.getElementsByClassName("remove-order-btn");
+for(let i = 0; i < removeOrderBtns.length; i++){
+  removeOrderBtns[i].addEventListener("click", function(){
+    var $rmOrderSubmitBtn = $(this).siblings(".remove-prev-form").find(".remove-order-submit-btn");
+    var $wholePrevOrder = $(this).parents(".previous-order-outer");
+    removeThisPrevOrder($wholePrevOrder, $rmOrderSubmitBtn);
+  })
+}
+
+function removeThisPrevOrder($order, $btn){
+  $order.animate({
+    height: "0px"
+  }, 1000, function(){
+    setTimeout(function(){
+      $btn.click();
+    }, 50)
+  })
+}
+/*--- End of Remove Order Function ---*/

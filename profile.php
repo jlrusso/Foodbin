@@ -218,6 +218,10 @@
                         <div class='previous-order-footer'>
                           <button class='order-again-btn'>Order Again</button>
                           <button class='remove-order-btn'>Remove Order</button>
+                          <form action='includes/removePrevOrder.php' method='POST' class='remove-prev-form'>
+                            <input type='text' name='order_num' value='" . $prevData[$orderRow]['order_num'] . "'/>
+                            <input type='submit' name='submit' class='remove-order-submit-btn'/>
+                          </form>
                         </div>
                         <div class='line-divider'></div>
                       ";

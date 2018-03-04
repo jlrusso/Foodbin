@@ -450,7 +450,8 @@ input[type="submit"]:hover {
 }
 
 #hidden-form,
-#hidden-link {
+#hidden-link,
+.remove-prev-form {
   display: none;
 }
 
@@ -503,7 +504,7 @@ input[type="submit"]:hover {
 	height: 4px;
 	background-color: rgba(0,0,0,0.7);
   border-radius: 10px;
-	margin: 15px auto;
+	margin: 30px auto;
 }
 
 .one-row {
