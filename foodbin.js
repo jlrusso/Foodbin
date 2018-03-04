@@ -377,6 +377,7 @@ $("body").click(function(event){
         let $thisFoodRow = $thisBtn.parents(".cart-row");
         let $modalImageData = $thisFoodRow.find("input:image").attr("data");
         let $modalImageSrc = $thisFoodRow.find("input:image").attr("src");
+        let $modalItemName = $thisFoodRow.find("input:image").attr("alt");
         var imgSrc = "" + $modalImageSrc;
         var imgData = "" + $modalImageData;
         var itemName = "" + $modalItemName;
@@ -474,6 +475,10 @@ if(placeOrderBtn){
       var itemSpecInputs = document.getElementsByClassName("item-spec-inputs");
       for(let i = 0; i < itemSpecInputs.length; i++){
         foodItemIds += itemSpecInputs[i].getAttribute("data") + " ";
+      }
+      var cartImgs = document.getElementsByClassName("cart-image");
+      for(let i = 0; i < cartImgs.length; i++){
+        itemNames += cartImgs[i].getAttribute("alt") + " ";
       }
     }
     idInput = document.createElement("input");

@@ -706,7 +706,7 @@
                         <div class='left-cart-col'>
                           <h4 class='left-col-heading'>" . $itemNamesArr[$x1] . "</h4>
                           <div class='col-image-container'>
-                            <input type='image' src='../foodbin/img/image" . $itemArr[$x1] . ".jpg' data='" . $itemArr[$x1] . "' class='cart-image'/>
+                            <input type='image' src='../foodbin/img/image" . $itemArr[$x1] . ".jpg' data='" . $itemArr[$x1] . "' class='cart-image' alt='" . $itemNamesArr[$x1] . "' />
                           </div>
                         </div>
                         <div class='right-cart-col'>
