@@ -89,9 +89,13 @@
 				</div>
 				<div class="col-8">
             <h2 id="current-order-heading">Orders in Progress</h2>
+            <?php
+              //echo "<button id='hidden-link'>Go to Homepage</button>";
+            ?>
             <div id="current-order-outer">
               <div id="current-order-inner">
               <?php
+
                 $sql = "SELECT * FROM current_orders WHERE user_id=$id;";
                 $result = mysqli_query($conn, $sql);
                 $resultRows = mysqli_num_rows($result); //this is the number of rows returned
@@ -106,7 +110,9 @@
                   for($orderRow = 0; $orderRow < $resultRows; $orderRow++){
                     $itemIdsString = $currData[$orderRow]['food_ids'];
                     $itemArr = explode(" ", $itemIdsString);
+                    //array_shift($itemArr);
                     array_pop($itemArr);
+                    //print_r($itemArr);
                     $itemArrLength = count($itemArr);
                     echo "
                       <div class='store-location-container'>
@@ -136,8 +142,11 @@
                     }
                     echo "</div>";
                     echo "
+                      <form action='includes/removeLastOrder.php' method='POST' id='hidden-form'>
+                        <input type='submit' name='submit' id='remove-submit'/>
+                      </form>
                       <div class='current-order-footer'>
-                        <button class='edit-order-btn'>Edit Order</button>
+                        <button id='edit-order-btn'>Edit Order</button>
                         <button id='order-completed-btn'>Completed</button>
                       </div>
                       <form action='includes/eraseOrder.php' method='POST' id='erase-order-form'>
@@ -162,7 +171,7 @@
                 if($resultRows == 0 || $resultRows2 > 0){
                   if($resultRows == 0 || $resultRows2 > 0){
                     echo "
-                      <h2 id='previous-orders-heading'>Previous Orders</h2>
+                      <h2 id='previous-orders-heading'>Previous Orders (Newest - Oldest)</h2>
                       <div class='previous-order-outer'>
                     ";
                   } else {
@@ -173,7 +182,7 @@
                   $sqlCheck = "SELECT * FROM current_orders WHERE user_id=$id;";
                   $resultRows3 = mysqli_num_rows(mysqli_query($conn, $sqlCheck));
                   if($resultRows3 < 1){
-                    for($orderRow = 0; $orderRow < $resultRows2; $orderRow++){
+                    for($orderRow = ($resultRows2 - 1); $orderRow > -1; $orderRow--){
                       $itemIdsString = $prevData[$orderRow]['food_ids'];
                       $itemArr = explode(" ", $itemIdsString);
                       array_pop($itemArr);
@@ -214,7 +223,7 @@
                       ";
                     }
                   } else {
-                    for($orderRow = 0; $orderRow < ($resultRows2 - 1); $orderRow++){
+                    for($orderRow = ($resultRows2 - 2); $orderRow > -1; $orderRow--){
                       $itemIdsString = $prevData[$orderRow]['food_ids'];
                       $itemArr = explode(" ", $itemIdsString);
                       array_pop($itemArr);

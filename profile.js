@@ -52,10 +52,13 @@ if(currentOrderRow){
 var previousOrdersContainer = document.getElementById("previous-orders-container");
 var previousOrdersHeading = document.getElementById("previous-orders-heading");
 var previousOrderFooter;
+var test;
 
 if(orderCompletedBtn) {
   orderCompletedBtn.addEventListener("click", function(){
     localStorage.setItem("order-in-progress", "no");
+    sessionStorage.setItem("edit-in-progress", "no");
+    test = 10;
     removeCurrentOrder();
   });
 }
@@ -65,7 +68,11 @@ function removeCurrentOrder(){
     height: "0px"
   }, 1000, function(){
     setTimeout(function(){
-      eraseOrderBtn.click();
+      if(test == 5){
+        removeSubmitBtn.click();
+      } else {
+        eraseOrderBtn.click();
+      }
       $(this).remove();
     }, 50)
   })
@@ -95,3 +102,21 @@ window.onclick = function(e){
 var ordersContainer = document.getElementById("all-orders-container");
 
 /*--- End of Setting width of itemListInner ---*/
+
+
+/*--- When user clicks 'Edit Order' Btn ---*/
+var editOrderBtn = document.getElementById("edit-order-btn");
+var removeSubmitBtn = document.getElementById("remove-submit");
+var hiddenLink = document.getElementById("hidden-link");
+if(editOrderBtn){
+  editOrderBtn.addEventListener("click", function(){
+    localStorage.setItem("order-in-progress", "no");
+    sessionStorage.setItem("edit-in-progress", "yes");
+    //sessionStorage.setItem("go-to-link", "yes");
+    test = 5;
+    removeCurrentOrder();
+  });
+}
+
+
+/*--- End of Edit Order Function ---*/
