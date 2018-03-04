@@ -153,8 +153,6 @@ var innerImageContainers = document.getElementsByClassName("inner-images-contain
 /*--- End of Food Sliders ---*/
 
 
-
-
 /*--- Add Item to Cart with Add Btn ---*/
 var addToCartBtns = document.getElementsByClassName("add-to-cart-btn");
 var priorityNumForm = document.getElementById("priority-num-form");
@@ -167,7 +165,7 @@ var placeOrderBtn = document.getElementById("place-order-btn");
 var noGroceriesAdded = document.getElementById("no-groceries-added");
 var loggedInElement = document.getElementById("logged-in");
 var loggedIn = loggedInElement.getAttribute("class");
-var cartImgSrcs = [];
+var cartImgSrcArr = [];
 for(let i = 0; i < addToCartBtns.length; i++){
     addToCartBtns[i].addEventListener("click", function(e){
       if(loggedIn == "no"){
@@ -179,15 +177,28 @@ for(let i = 0; i < addToCartBtns.length; i++){
       } else {
         $thisModalContainer = $(this).parents(".modal-inner-container");
         $thisModalImageSrc = $thisModalContainer.find("input:image").attr("src");
-        if(cartImgSrcs.indexOf($thisModalImageSrc) > -1){
+        if(cartImgSrcArr.indexOf($thisModalImageSrc) > -1){
           alert("Item in cart. Make changes in cart");
           e.preventDefault();
         } else {
-          cartImgSrcs.push($thisModalImageSrc);
+          cartImgSrcArr.push($thisModalImageSrc);
+          console.log($thisModalImageSrc);
           addFoodItem(i);
         }
       }
     });
+}
+
+if(sessionStorage.getItem("edit-in-progress") == "yes"){
+  addCartImgSrcsToArray();
+}
+
+function addCartImgSrcsToArray(){
+  var editCartImg = document.getElementsByClassName("cart-image");
+  for(let i = 0; i < editCartImg.length; i++){
+    cartImgSrcArr.push(editCartImg[i].getAttribute("src"));
+  }
+  console.log(cartImgSrcArr);
 }
 
 
@@ -222,30 +233,38 @@ function addFoodItem(index){
 
         itemImageSrc = modalImages[index].getAttribute("src");
         itemImageData = modalImages[index].getAttribute("data");
+        itemImageName = modalImages[index].getAttribute("alt");
 
         gotHeading = modalInnerImageHeadings[index].textContent;
         createCartItem(
-            modalWindowId, gotHeading, itemImageSrc, itemImageData, $weightSelectorValue,
+            modalWindowId, gotHeading, itemImageSrc, itemImageData, itemImageName, $weightSelectorValue,
             $weightNumVal, $costSelectorValue, $costNumVal,
             $specialtySelectorValue, $specialtyNumVal,
             $qualitySelectorValue, $qualityNumVal
         );
-        cartItems++;
-        cartBadge.textContent = cartItems;
-        cartBadge.style.display = "block";
+        if(sessionStorage.getItem("edit-in-progress") == "yes"){
+          var cartBadgeNum = cartBadge.textContent;
+          cartBadge.textContent = Number(cartBadgeNum) + 1;
+        } else {
+          cartItems++;
+          cartBadge.textContent = cartItems;
+          cartBadge.style.display = "block";
+        }
         priorityNumForm.reset();
         selectorForm.reset();
         modalWindow.style.display = "none";
+        $(".close-btn-container").css("display", "none");
 }
 
 /*--- End of Add Btn to Cart ---*/
 
 
 var foodItemIds = "";
+var itemNames = "";
 var formInner = document.getElementById("form-inner");
 var hiddenSubmit = document.getElementById("hidden-submit");
 //make food item row in cart modal with options selected from the food item modal, and food heading
-function createCartItem(windowId, heading, imageSrc, imageData, weight, weightP, cost, costP, specialty, specialtyP, quality, qualityP){
+function createCartItem(windowId, heading, imageSrc, imageData, imageName, weight, weightP, cost, costP, specialty, specialtyP, quality, qualityP){
 
     //create new cart row, cart row columns, and add to cart-modal-content div
     var cartContent = document.getElementById("cart-modal-content");
@@ -262,6 +281,7 @@ function createCartItem(windowId, heading, imageSrc, imageData, weight, weightP,
     newImage.setAttribute("type", "image");
     newImage.setAttribute("src", imageSrc);
     newImage.setAttribute("data", imageData);
+    newImage.setAttribute("alt", imageName);
     newImage.setAttribute("class", "cart-image");
     imageContainer.appendChild(newImage);
     var rightCartCol = document.createElement("div");
@@ -319,18 +339,27 @@ function createCartItem(windowId, heading, imageSrc, imageData, weight, weightP,
 
     cartContent.appendChild(newCartRow);
     cartContent.appendChild(lineDivider);
-    placeOrderBtn.style.display = "block";
-    noGroceriesAdded.style.display = "none";
-    foodItemIds += imageData + " ";
-    createHiddenForm(foodItemIds, imageData, listText1, listText2, listText3, listText4);
+    if(placeOrderBtn){
+      placeOrderBtn.style.display = "block";
+    }
+    if(noGroceriesAdded){
+      noGroceriesAdded.style.display = "none";
+    }
+    if(sessionStorage.getItem("edit-in-progress") != "yes"){
+      foodItemIds += imageData + " ";
+      itemNames += imageName + " ";
+    }
+    createHiddenForm(foodItemIds, imageData, imageName, listText1, listText2, listText3, listText4);
 }
 
 /*--- Start of Hidden Form ---*/
-function createHiddenForm(itemIds, dataNum, wp, cp, sp, qp){
+function createHiddenForm(itemIds, dataNum, itemName, wp, cp, sp, qp){
   var newInput = document.createElement("input");
   newInput.setAttribute("type", "text");
   newInput.setAttribute("name", "item_" + dataNum + "_specs");
   newInput.setAttribute("data", dataNum);
+  newInput.setAttribute("alt", itemName);
+  newInput.setAttribute("class", "item-spec-inputs");
   newInput.setAttribute("value", getString(wp) + " | " + getString(cp) + " | " + getString(sp) + " | " + getString(qp));
   formInner.insertBefore(newInput, hiddenSubmit);
 }
@@ -350,11 +379,13 @@ $("body").click(function(event){
         let $modalImageSrc = $thisFoodRow.find("input:image").attr("src");
         var imgSrc = "" + $modalImageSrc;
         var imgData = "" + $modalImageData;
+        var itemName = "" + $modalItemName;
         let $nextLineDivider = $(event.target).parents(".cart-row").next(".line-divider");
         var $hiddenInput = $("#form-inner").find("input[data='" + imgData + "']");
         removeCartRowAndInput($thisBtn, $thisFoodRow, $nextLineDivider, $hiddenInput);
         changeCartBadgeNum();
         removeImgSrcFromArray(imgSrc);
+        removeItemName(itemName);
         removeFoodItemId(imgData, foodItemIds);
         $("#cart-modal-window").css("display", "none");
         $("#" + foodAtt).css("display", "block");
@@ -365,13 +396,16 @@ $("body").click(function(event){
         let $thisFoodRow = $thisBtn.parents(".cart-row");
         let $modalImageData = $thisFoodRow.find("input:image").attr("data");
         let $modalImageSrc = $thisFoodRow.find("input:image").attr("src");
+        let $modalItemName = $thisFoodRow.find("input:image").attr("alt");
         var imgSrc = "" + $modalImageSrc;
         var imgData = "" + $modalImageData;
+        var itemName = "" + $modalItemName;
         let $nextLineDivider = $(event.target).parents(".cart-row").next(".line-divider");
         var $hiddenInput = $("#form-inner").find("input[data='" + imgData + "']");
         removeCartRowAndInput($thisBtn, $thisFoodRow, $nextLineDivider, $hiddenInput);
         changeCartBadgeNum();
         removeImgSrcFromArray(imgSrc);
+        removeItemName(itemName);
         removeFoodItemId(imgData, foodItemIds);
     }
 });
@@ -383,55 +417,83 @@ function removeCartRowAndInput($thisBtn, $thisFoodRow, $nextLineDivider, $hidden
 }
 
 function changeCartBadgeNum(){
-  cartItems--;
-  cartBadge.textContent = cartItems;
-  if(cartBadge.textContent === "0"){
-      cartBadge.style.display = "none";
+  if(sessionStorage.getItem("edit-in-progress") == "yes"){
+    var cartBadgeNum = cartBadge.textContent;
+    cartBadge.textContent = cartBadgeNum - 1;
+    if(cartBadge.textContent === "0"){
+        cartBadge.style.display = "none";
+    }
+  } else {
+    cartItems--;
+    cartBadge.textContent = cartItems;
+    if(cartBadge.textContent === "0"){
+        cartBadge.style.display = "none";
+    }
   }
 }
 
+//so that user doesn't add item already in cart
 function removeImgSrcFromArray(imgSrc){
-  var index = cartImgSrcs.indexOf(imgSrc);
-  cartImgSrcs.splice(index, 1);
+  var index = cartImgSrcArr.indexOf(imgSrc);
+  cartImgSrcArr.splice(index, 1);
 }
 
+function removeItemName(itemName){
+  tempNames = itemNames.replace(itemName + " ", "");
+  itemNames = tempNames.replace("  ", " ");
+}
+
+//when user clicks 'Make Change' or 'Remove Item' btns
 function removeFoodItemId(imgData, ids){
-  tempIds = foodItemIds.replace(imgData, "");
+  tempIds = foodItemIds.replace(imgData + " ", "");
   foodItemIds = tempIds.replace("  ", " ");
-  console.log(imgData);
-  console.log(foodItemIds);
 }
-
 
 /*--- Storing the Order in the Database ---*/
-var idInput;
-placeOrderBtn.addEventListener("click", function(){
-  cartImgSrcs = [];
-  var locationInput = document.createElement("input");
-  locationInput.setAttribute("type", "text");
-  locationInput.setAttribute("name", "store_city");
-  locationInput.setAttribute("value", locationSelected);
-  formInner.insertBefore(locationInput, formInner.childNodes[0]);
-  var addressInput = document.createElement("input");
-  addressInput.setAttribute("type", "text");
-  addressInput.setAttribute("name", "store_address");
-  addressInput.setAttribute("value", storeAddress);
-  formInner.insertBefore(addressInput, formInner.childNodes[0]);
-  var storeInput = document.createElement("input");
-  storeInput.setAttribute("type", "text");
-  storeInput.setAttribute("name", "store_name");
-  storeInput.setAttribute("value", storeCartName);
-  formInner.insertBefore(storeInput, formInner.childNodes[0]);
-  idInput = document.createElement("input");
-  idInput.setAttribute("type", "text");
-  idInput.setAttribute("name", "food_ids");
-  idInput.setAttribute("value", foodItemIds);
-  formInner.insertBefore(idInput, hiddenSubmit);
-  hiddenSubmit.click();
-  localStorage.setItem("order-in-progress", "yes");
-});
-/*--- End of Storing Order in Database ---*/
+var idInput, itemNamesInput;
+if(placeOrderBtn){
+  placeOrderBtn.addEventListener("click", function(){
+    cartImgSrcArr = [];
+    if(sessionStorage.getItem("edit-in-progress") != "yes"){
+      var locationInput = document.createElement("input");
+      locationInput.setAttribute("type", "text");
+      locationInput.setAttribute("name", "store_city");
+      locationInput.setAttribute("value", locationSelected);
+      formInner.insertBefore(locationInput, formInner.childNodes[0]);
+      var addressInput = document.createElement("input");
+      addressInput.setAttribute("type", "text");
+      addressInput.setAttribute("name", "store_address");
+      addressInput.setAttribute("value", storeAddress);
+      formInner.insertBefore(addressInput, formInner.childNodes[0]);
+      var storeInput = document.createElement("input");
+      storeInput.setAttribute("type", "text");
+      storeInput.setAttribute("name", "store_name");
+      storeInput.setAttribute("value", storeCartName);
+      formInner.insertBefore(storeInput, formInner.childNodes[0]);
+    } else if (sessionStorage.getItem("edit-in-progress") == "yes"){
+      var itemSpecInputs = document.getElementsByClassName("item-spec-inputs");
+      for(let i = 0; i < itemSpecInputs.length; i++){
+        foodItemIds += itemSpecInputs[i].getAttribute("data") + " ";
+      }
+    }
+    idInput = document.createElement("input");
+    idInput.setAttribute("type", "text");
+    idInput.setAttribute("name", "food_ids");
+    idInput.setAttribute("value", foodItemIds);
+    formInner.insertBefore(idInput, hiddenSubmit);
 
+    itemNamesInput = document.createElement("input");
+    itemNamesInput.setAttribute("type", "text");
+    itemNamesInput.setAttribute("name", "item_names");
+    itemNamesInput.setAttribute("value", itemNames);
+    formInner.insertBefore(itemNamesInput, idInput);
+
+    hiddenSubmit.click();
+    sessionStorage.setItem("edit-in-progress", "no")
+    localStorage.setItem("order-in-progress", "yes");
+  });
+}
+/*--- End of Storing Order in Database ---*/
 
 /*--- Initialize Google Maps API ---*/
 var deliveryBtnContainer = document.getElementById("deliver-btn-container"),
@@ -688,7 +750,7 @@ var locationSelected, storeSelected,
 var userInfoWindow;
 var storeMarkers = [];
 var storeCartName;
-function initMap(){
+function initializeMap(){
     userInfoWindow = new google.maps.InfoWindow;
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
@@ -707,11 +769,7 @@ function initMap(){
     // Browser doesn't support Geolocation
     handleLocationError(false, userInfoWindow, mapInstance1.getCenter());
   }
-
-
-
-
-
+  if(searchListItem){
     for (let i = 0; i < searchListItem.length; i++){
         searchListItem[i].addEventListener("click", function(){
             var thisItem = this.textContent;
@@ -732,6 +790,7 @@ function initMap(){
             }, "500");
         });
     };
+  }
 
     //default map zoom and center values
     function options1(){
@@ -996,24 +1055,27 @@ var deliveryBtn = document.getElementById("delivery-btn"),
     cartStoreName = document.getElementById("cart-store-name"),
     cartStoreAddress = document.getElementById("cart-store-address");
 
-deliveryBtn.addEventListener("click", function(e){
-    $("#cart-location").add("#cart-store-name").add("#cart-store-address").text("");
-    e.preventDefault();
-    if(locationSelected == undefined || storeAddress == undefined){
-        deliveryBtnCaption.style.display = "block";
-        return;
-    } else if (locationSelected != undefined && storeAddress != undefined){
-      $("#checkmark").css({"position":"absolute", "left": "40px"});
-      deliveryBtnCaption.style.display = "none";
-      locationStoreContainer.style.display = "grid";
-      locationText = document.createTextNode(locationSelected);
-      addressText = document.createTextNode(storeAddress);
-      storeNameText = document.createTextNode(storeCartName);
-      cartLocation.appendChild(locationText);
-      cartStoreName.appendChild(storeNameText);
-      cartStoreAddress.appendChild(addressText);
-    }
-});
+if(deliveryBtn){
+  deliveryBtn.addEventListener("click", function(e){
+      $("#cart-location").add("#cart-store-name").add("#cart-store-address").text("");
+      e.preventDefault();
+      if(locationSelected == undefined || storeAddress == undefined){
+          deliveryBtnCaption.style.display = "block";
+          return;
+      } else if (locationSelected != undefined && storeAddress != undefined){
+        $("#checkmark").css({"position":"absolute", "left": "40px"});
+        deliveryBtnCaption.style.display = "none";
+        locationStoreContainer.style.display = "grid";
+        locationText = document.createTextNode(locationSelected);
+        addressText = document.createTextNode(storeAddress);
+        storeNameText = document.createTextNode(storeCartName);
+        cartLocation.appendChild(locationText);
+        cartStoreName.appendChild(storeNameText);
+        cartStoreAddress.appendChild(addressText);
+      }
+  });
+}
+
 
 
 $(".orders").click(function(){
