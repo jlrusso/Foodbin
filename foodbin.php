@@ -2,7 +2,6 @@
   session_start();
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,37 +47,64 @@
                               <li id="signup-btn"><a href="signup.php">Sign Up</a></li>';
                       }
                       if(isset($_SESSION['edit-in-progress'])){
+                        $editVal = $_SESSION['edit-in-progress'];
+                        if($editVal == "yes"){
+                          $id = $_SESSION['user_id'];
+                          $editData = array();
+                          $sql = "SELECT * FROM edit_orders WHERE user_id=$id;";
+                          $result = mysqli_query($conn, $sql);
+                          $resultRows = mysqli_num_rows($result);
+                          if($resultRows > 0){
+                            while($row = mysqli_fetch_assoc($result)){
+                              $editData[] = $row;
+                            }
+                            $itemIdsString = $editData[0]['food_ids'];
+                            $itemArr = explode(" ", $itemIdsString);
+                            array_pop($itemArr);
+                            $itemArrLength = count($itemArr);
+                            $editVal = $_SESSION['edit-in-progress'];
+                            if($editVal == "yes"){
+                              echo "
+                                <li><a href='#' id='cart-container' vers='1'><i class='fa fa-shopping-cart' id='shopping-cart' aria-hidden='true'></i><span id='cart-badge' style='display: block'>" . $itemArrLength . "</span></a></li>
+                              ";
+                            }
+                          } else {
+                            echo "
+                              <li><a href='#' id='cart-container' vers='26'><i class='fa fa-shopping-cart' id='shopping-cart' aria-hidden='true'></i><span id='cart-badge'></span></a></li>
+                            ";
+                          }
+                        }
+                      } else if (isset($_SESSION['order-requested-again'])){
+                        #
                         $id = $_SESSION['user_id'];
-                        $editData = array();
-                        $sql = "SELECT * FROM edit_orders WHERE user_id=$id;";
+                        $orderRequested = $_SESSION['order-requested-again'];
+                        $prevData = array();
+                        $sql = "SELECT * FROM previous_orders WHERE user_id=$id AND order_num=$orderRequested;";
                         $result = mysqli_query($conn, $sql);
                         $resultRows = mysqli_num_rows($result);
                         if($resultRows > 0){
                           while($row = mysqli_fetch_assoc($result)){
-                            $editData[] = $row;
+                            $prevData[] = $row;
                           }
-                          $itemIdsString = $editData[0]['food_ids'];
+                          $itemIdsString = $prevData[0]['food_ids'];
                           $itemArr = explode(" ", $itemIdsString);
                           array_pop($itemArr);
                           $itemArrLength = count($itemArr);
-                          $editVal = $_SESSION['edit-in-progress'];
-                          if($editVal == "yes"){
-                            echo "
-                              <li><a href='#' id='cart-container' vers='1'><i class='fa fa-shopping-cart' id='shopping-cart' aria-hidden='true'></i><span id='cart-badge' style='display: block'>" . $itemArrLength . "</span></a></li>
-                            ";
-                          }
+                          echo "
+                            <li><a href='#' id='cart-container' vers='3'><i class='fa fa-shopping-cart' id='shopping-cart' aria-hidden='true'></i><span id='cart-badge' style='display: block'>" . $itemArrLength . "</span></a></li>
+                          ";
                         } else {
                           echo "
-                            <li><a href='#' id='cart-container' vers='2'><i class='fa fa-shopping-cart' id='shopping-cart' aria-hidden='true'></i><span id='cart-badge'></span></a></li>
+                            <li><a href='#' id='cart-container' vers='4'><i class='fa fa-shopping-cart' id='shopping-cart' aria-hidden='true'></i><span id='cart-badge'></span></a></li>
                           ";
                         }
+                        #
                       } else {
                         echo "
-                          <li><a href='#' id='cart-container' vers='3'><i class='fa fa-shopping-cart' id='shopping-cart' aria-hidden='true'></i><span id='cart-badge'></span></a></li>
+                          <li><a href='#' id='cart-container' vers='5'><i class='fa fa-shopping-cart' id='shopping-cart' aria-hidden='true'></i><span id='cart-badge'></span></a></li>
                         ";
                       }
                     ?>
-                    <!-- <li><a href='#' id='cart-container'><i class='fa fa-shopping-cart' id='shopping-cart' aria-hidden='true'></i><span id='cart-badge'></span></a></li> -->
                 </ul>
             </div>
         </nav>
@@ -86,7 +112,7 @@
         <div id="banner-area">
         	<div id="banner-overlay"></div>
             <div id="banner-inner">
-                <p id="banner-heading">Groceries just clicks away.</p>
+                <p id="banner-heading">Food just clicks away.</p>
                 <p>No need to drive, wait in a long line, or hope that your items are available</p>
                 <button type="button" class="banner-btn" id="request-btn">Place an Order</button>
                 <button type="button" class="banner-btn" id="deliver-btn">Make a Delivery</button>
@@ -677,7 +703,6 @@
             if(isset($_SESSION['user_id'])){
               $id = $_SESSION['user_id'];
             }
-            $id = $_SESSION['user_id'];
             if(isset($_SESSION['edit-in-progress'])){
               $editVal = $_SESSION['edit-in-progress'];
               if($editVal == "yes"){
@@ -694,7 +719,7 @@
                   array_pop($itemArr);
                   $itemArrLength = count($itemArr);
                   echo "
-                  <h3 id='cart-modal-heading'>Shopping Cart</h3>
+                  <h3 id='cart-modal-heading' verse='edit'>Shopping Cart</h3>
                   <div class='line-divider'></div>";
                   $itemNamesStr = $editData[0]['item_names'];
                   $itemNamesArr = explode(" ", $itemNamesStr);
@@ -763,7 +788,7 @@
               } else {
                 # - when the session var does not equal yes
                 echo "
-                <h3 id='cart-modal-heading'>Shopping Cart</h3>
+                <h3 id='cart-modal-heading' verse='edit val no'>Shopping Cart</h3>
                 <div class='line-divider'></div>
                 <div id='no-groceries-added'>No groceries have been added yet</div>
                 ";
@@ -788,10 +813,90 @@
                   </div>
                 ";
               }
+            } else if (isset($_SESSION['order-requested-again'])) {
+              $orderRequested = $_SESSION['order-requested-again'];
+              $prevData = array();
+              $sqlR = "SELECT * FROM previous_orders WHERE user_id=$id AND order_num=$orderRequested;";
+              $result = mysqli_query($conn, $sql);
+              $resultRows = mysqli_num_rows($result);
+              if($resultRows > 0){
+                while($row = mysqli_fetch_assoc($result)){
+                  $prevData[] = $row;
+                }
+                $itemIdsString = $prevData[0]['food_ids'];
+                $itemArr = explode(" ", $itemIdsString);
+                array_pop($itemArr);
+                $itemArrLength = count($itemArr);
+                echo "
+                <h3 id='cart-modal-heading' verse='order-again'>Shopping Cart</h3>
+                <div class='line-divider'></div>";
+                $itemNamesStr = $prevData[0]['item_names'];
+                $itemNamesArr = explode(" ", $itemNamesStr);
+                array_pop($itemNamesArr);
+                # - loop through the food ids and their item specs
+                for($x1 = 0; $x1 < $itemArrLength; $x1++){
+                  echo "
+                    <div class='cart-row'>
+                      <div class='left-cart-col'>
+                        <h4 class='left-col-heading'>" . $itemNamesArr[$x1] . "</h4>
+                        <div class='col-image-container'>
+                          <input type='image' src='../foodbin/img/image" . $itemArr[$x1] . ".jpg' data='" . $itemArr[$x1] . "' class='cart-image' alt='" . $itemNamesArr[$x1] . "' />
+                        </div>
+                      </div>
+                      <div class='right-cart-col'>
+                        <h4 class='right-col-heading'>Details</h4>
+                        <ul class='details-list'>";
+                        $specStr = $prevData[0]['item_' . $itemArr[$x1] . '_specs'];
+                        $specsArr = explode(" | ", $specStr);
+                        $specsArrLength = count($specsArr);
+                        for($x2 = 0; $x2 < $specsArrLength; $x2++){
+                          echo "<li>" . $specsArr[$x2] . "</li>";
+                        }
+                     echo "
+                       </ul>
+                       <div class='item-btns-container'>
+                          <button class='make-changes-btn' for='item-" . $itemArr[$x1] . "-window'>Make Changes</button>
+                          <button class='remove-item-btn'>Remove Item</button>
+                       </div>
+                      </div>
+                    </div>
+                    <div class='line-divider'></div>
+                  ";
+                }
+                # - end of looping through the food ids and their specs
+                echo "</div>"; # - this is cart content closing tag
+                echo "
+                  <div id='hidden-form'>
+                    <form action='includes/orderfood.php' id='form-inner' method='POST'>";
+                      echo '
+                      <input type="text" name="store_name" value="' . $prevData[0]["store_name"] . '"/>
+                      <input type="text" name="store_address" value="' . $prevData[0]["store_address"] . '"/>
+                      <input type="text" name="store_city" value="' . $prevData[0]["store_city"] . '"/>
+                      ';
+                      for($x3 = 0; $x3 < $itemArrLength; $x3++){
+                        echo "<input type='text' name='item_" . $itemArr[$x3] . "_specs' value='" . $prevData[0]['item_' . $itemArr[$x3] . '_specs'] . "' data='" . $itemArr[$x3] . "' class='item-spec-inputs'/>";
+                      }
+                      echo
+                      "<input type='submit' name='submit' value='Submit' id='hidden-submit'/>
+                    </form>
+                  </div>
+                ";
+
+                echo "
+                  <div id='modal-footer'>
+                    <div id='location-and-store-container' style='display: grid'>
+                      <div id='cart-location'>" . $prevData[0]['store_city'] . "</div>
+                      <div id='cart-store-name'>" . $prevData[0]['store_name'] . "</div>
+                      <div id='cart-store-address'>" . $prevData[0]['store_address'] . "</div>
+                    </div>
+                    <button id='place-order-btn' style='display: block'>Place Order</button>
+                  </div>
+                ";
+              }
             } else {
               # - when the session var does not exist
               echo "
-              <h3 id='cart-modal-heading'>Shopping Cart</h3>
+              <h3 id='cart-modal-heading' verse='no order again'>Shopping Cart</h3>
               <div class='line-divider'></div>
               <div id='no-groceries-added'>No groceries have been added yet</div>
               ";

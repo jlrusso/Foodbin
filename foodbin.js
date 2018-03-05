@@ -33,6 +33,7 @@ var perImageContainers = document.getElementsByClassName("per-image-container"),
     middleColumn = document.getElementsByClassName("middle-column")[0],
     lastColumn = document.getElementsByClassName("last-column")[0],
     modalInnerFooter = document.getElementsByClassName("modal-inner-footer"),
+    defaultPropertiesError = document.getElementById("default-properties-error"),
     samePriorityError = document.getElementById("same-priority-error");
 
 //append constant close container and middle & third columns to each modal window that pops up
@@ -89,8 +90,13 @@ var cartContainer = document.getElementById("cart-container"),
     cartBadge = document.getElementById("cart-badge");
 
 //display cart modal window when cart icon box is clicked
-cartContainer.addEventListener("click", openCartModal);
-cartBadge.addEventListener("click", openCartModal);
+if(cartContainer){
+  cartContainer.addEventListener("click", openCartModal);
+}
+if(cartBadge){
+  cartBadge.addEventListener("click", openCartModal);
+}
+
 
 //open cart modal when user clicks on cart icon in nav bar
 function openCartModal(e){
@@ -182,14 +188,13 @@ for(let i = 0; i < addToCartBtns.length; i++){
           e.preventDefault();
         } else {
           cartImgSrcArr.push($thisModalImageSrc);
-          console.log($thisModalImageSrc);
           addFoodItem(i);
         }
       }
     });
 }
 
-if(sessionStorage.getItem("edit-in-progress") == "yes"){
+if(sessionStorage.getItem("edit-in-progress") == "yes" || sessionStorage.getItem("order-requested-again") == "yes"){
   addCartImgSrcsToArray();
 }
 
@@ -198,7 +203,6 @@ function addCartImgSrcsToArray(){
   for(let i = 0; i < editCartImg.length; i++){
     cartImgSrcArr.push(editCartImg[i].getAttribute("src"));
   }
-  console.log(cartImgSrcArr);
 }
 
 
@@ -207,23 +211,31 @@ function addFoodItem(index){
         $modalContainer = $(".add-to-cart-btn").eq(index).parents(".modal-inner-container"),
         $modalContent = $modalContainer.find(".modal-inner-content"),
         $modalFoodHeading = $modalContent.find(".modal-inner-image-heading").text(),
-        $weightSelectorValue = $modalContent.find(".weight-selector option:checked").text(),
-        $weightNumVal = $modalContent.find(".weight-priority option:checked").text(),
-        $costSelectorValue = $modalContent.find(".cost-selector option:checked").text(),
-        $costNumVal = $modalContent.find(".cost-priority option:checked").text(),
-        $specialtySelectorValue = $modalContent.find(".specialty-selector option:checked").text(),
-        $specialtyNumVal = $modalContent.find(".specialty-priority option:checked").text(),
-        $qualitySelectorValue = $modalContent.find(".quality-selector option:checked").text(),
-        $qualityNumVal = $modalContent.find(".quality-priority option:checked").text(),
+        $weightValue = $modalContent.find(".weight-selector option:checked").text(),
+        $weightPriority = $modalContent.find(".weight-priority option:checked").text(),
+        $costValue = $modalContent.find(".cost-selector option:checked").text(),
+        $costPriority = $modalContent.find(".cost-priority option:checked").text(),
+        $specialtyValue = $modalContent.find(".specialty-selector option:checked").text(),
+        $specialtyPriority = $modalContent.find(".specialty-priority option:checked").text(),
+        $qualityValue = $modalContent.find(".quality-selector option:checked").text(),
+        $qualityPriority = $modalContent.find(".quality-priority option:checked").text(),
         modalWindowId = modalWindow.id;
 
+        if($weightValue == "Weight" || $costValue == "Cost"
+           || $specialtyValue == "Specialty" || qualityValue == "Quality"){
+             var $currModalFooter = modalInnerFooter[index];
+             $currModalFooter.prepend(defaultPropertiesError);
+             defaultPropertiesError.style.display = "block";
+             return false;
+        }
+
         //check to see if any two priority values are the same
-        if($weightNumVal == $costNumVal ||
-            $weightNumVal == $specialtyNumVal ||
-            $weightNumVal == $qualityNumVal ||
-            $costNumVal == $specialtyNumVal ||
-            $costNumVal == $qualityNumVal ||
-            $specialtyNumVal == $qualityNumVal){
+        if($weightPriority == $costPriority ||
+            $weightPriority == $specialtyPriority ||
+            $weightPriority == $qualityPriority ||
+            $costPriority == $specialtyPriority ||
+            $costPriority == $qualityPriority ||
+            $specialtyPriority == $qualityPriority){
             var $currModalFooter = modalInnerFooter[index];
             $currModalFooter.prepend(samePriorityError);
             samePriorityError.style.display = "block";
@@ -237,13 +249,16 @@ function addFoodItem(index){
 
         gotHeading = modalInnerImageHeadings[index].textContent;
         createCartItem(
-            modalWindowId, gotHeading, itemImageSrc, itemImageData, itemImageName, $weightSelectorValue,
-            $weightNumVal, $costSelectorValue, $costNumVal,
-            $specialtySelectorValue, $specialtyNumVal,
-            $qualitySelectorValue, $qualityNumVal
+            modalWindowId, gotHeading, itemImageSrc, itemImageData, itemImageName, $weightValue,
+            $weightPriority, $costValue, $costPriority,
+            $specialtyValue, $specialtyPriority,
+            $qualityValue, $qualityPriority
         );
         if(sessionStorage.getItem("edit-in-progress") == "yes"){
-          var cartBadgeNum = cartBadge.textContent;
+          let cartBadgeNum = cartBadge.textContent;
+          cartBadge.textContent = Number(cartBadgeNum) + 1;
+        } else if (sessionStorage.getItem("order-requested-again") == "yes") {
+          let cartBadgeNum = cartBadge.textContent;
           cartBadge.textContent = Number(cartBadgeNum) + 1;
         } else {
           cartItems++;
@@ -345,7 +360,7 @@ function createCartItem(windowId, heading, imageSrc, imageData, imageName, weigh
     if(noGroceriesAdded){
       noGroceriesAdded.style.display = "none";
     }
-    if(sessionStorage.getItem("edit-in-progress") != "yes"){
+    if(sessionStorage.getItem("edit-in-progress") != "yes" && sessionStorage.getItem("order-requested-again") != "yes"){
       foodItemIds += imageData + " ";
       itemNames += imageName + " ";
     }
@@ -424,6 +439,12 @@ function changeCartBadgeNum(){
     if(cartBadge.textContent === "0"){
         cartBadge.style.display = "none";
     }
+  } else if (sessionStorage.getItem("order-requested-again") == "yes") {
+    let cartBadgeNum = cartBadge.textContent;
+    cartBadge.textContent = cartBadgeNum - 1;
+    if(cartBadge.textContent === "0"){
+        cartBadge.style.display = "none";
+    }
   } else {
     cartItems--;
     cartBadge.textContent = cartItems;
@@ -455,7 +476,7 @@ var idInput, itemNamesInput;
 if(placeOrderBtn){
   placeOrderBtn.addEventListener("click", function(){
     cartImgSrcArr = [];
-    if(sessionStorage.getItem("edit-in-progress") != "yes"){
+    if(sessionStorage.getItem("edit-in-progress") != "yes" && sessionStorage.getItem("order-requested-again") != "yes"){
       var locationInput = document.createElement("input");
       locationInput.setAttribute("type", "text");
       locationInput.setAttribute("name", "store_city");
@@ -471,7 +492,7 @@ if(placeOrderBtn){
       storeInput.setAttribute("name", "store_name");
       storeInput.setAttribute("value", storeCartName);
       formInner.insertBefore(storeInput, formInner.childNodes[0]);
-    } else if (sessionStorage.getItem("edit-in-progress") == "yes"){
+    } else if (sessionStorage.getItem("edit-in-progress") == "yes" || sessionStorage.getItem("order-requested-again") == "yes"){
       var itemSpecInputs = document.getElementsByClassName("item-spec-inputs");
       for(let i = 0; i < itemSpecInputs.length; i++){
         foodItemIds += itemSpecInputs[i].getAttribute("data") + " ";
@@ -496,6 +517,7 @@ if(placeOrderBtn){
     hiddenSubmit.click();
     sessionStorage.setItem("edit-in-progress", "no")
     localStorage.setItem("order-in-progress", "yes");
+    sessionStorage.setItem("order-requested-again", "no");
   });
 }
 /*--- End of Storing Order in Database ---*/
@@ -734,6 +756,7 @@ var irvineStores = [
 ];
 
 // end of california cities and grocery stores arrays
+//depending on what city is selected, we will only display selection of stores for that city
 var locationSelected, storeSelected,
     mapElement = document.getElementById("map"),
     storeLists = document.getElementsByClassName("store-list"),
@@ -768,12 +791,12 @@ function initializeMap(){
       userInfoWindow.setContent('User location:');
       userInfoWindow.open(mapInstance1);
     }, function() {
-      handleLocationError(true, userInfoWindow, mapInstance1.getCenter());
-    });
-  } else {
-    // Browser doesn't support Geolocation
-    handleLocationError(false, userInfoWindow, mapInstance1.getCenter());
-  }
+        handleLocationError(true, userInfoWindow, mapInstance1.getCenter());
+      });
+    } else {
+      // Browser doesn't support Geolocation
+      handleLocationError(false, userInfoWindow, mapInstance1.getCenter());
+    }
   if(searchListItem){
     for (let i = 0; i < searchListItem.length; i++){
         searchListItem[i].addEventListener("click", function(){
@@ -814,6 +837,7 @@ function initializeMap(){
     }
 
     //initilize map instance after calling function that incorporates zoom level, location name, and coordinates
+    //use default map when on homepage, then load different map when user selects city
     var mapInstance1 = new google.maps.Map(mapElement, options1());
     var mapInstance2;
     function createMapObject(z, userLocation, coords){
