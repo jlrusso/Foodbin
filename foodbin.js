@@ -221,13 +221,6 @@ function addFoodItem(index){
         $qualityPriority = $modalContent.find(".quality-priority option:checked").text(),
         modalWindowId = modalWindow.id;
 
-        if($weightValue == "Weight" || $costValue == "Cost"
-           || $specialtyValue == "Specialty" || qualityValue == "Quality"){
-             var $currModalFooter = modalInnerFooter[index];
-             $currModalFooter.prepend(defaultPropertiesError);
-             defaultPropertiesError.style.display = "block";
-             return false;
-        }
 
         //check to see if any two priority values are the same
         if($weightPriority == $costPriority ||
