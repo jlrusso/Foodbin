@@ -320,7 +320,7 @@ input[type="submit"]:hover {
 
 #edit-btn {
 	width: 100%;
-	margin: 95px 0 0;
+	margin: 75px 0 0;
 	background-color: var(--main-white-color);
 	border: 2px solid var(--main-green-color);
 	border-radius: 4px;
@@ -451,7 +451,8 @@ input[type="submit"]:hover {
 
 #hidden-form,
 #hidden-link,
-.remove-prev-form {
+.remove-prev-form,
+.order-again-form {
   display: none;
 }
 

@@ -58,6 +58,7 @@ if(orderCompletedBtn) {
   orderCompletedBtn.addEventListener("click", function(){
     localStorage.setItem("order-in-progress", "no");
     sessionStorage.setItem("edit-in-progress", "no");
+    sessionStorage.setItem("order-requested-again", "no");
     test = 10;
     removeCurrentOrder();
   });
@@ -84,6 +85,7 @@ function removeCurrentOrder(){
 var editBtn = document.getElementById("edit-btn"),
     editModalWindow = document.getElementById("modal-window"),
     closeBtnContainer = document.getElementById("close-btn-container");
+
 editBtn.addEventListener("click", function(){
   editModalWindow.style.display = "block";
   closeBtnContainer.style.display = "block";
@@ -112,19 +114,34 @@ if(editOrderBtn){
   editOrderBtn.addEventListener("click", function(){
     localStorage.setItem("order-in-progress", "no");
     sessionStorage.setItem("edit-in-progress", "yes");
-    //sessionStorage.setItem("go-to-link", "yes");
     test = 5;
     removeCurrentOrder();
   });
 }
 /*--- End of Edit Order Function ---*/
 
+/*--- When user clicks 'Order Again' Btn ---*/
+var orderAgainBtns = document.getElementsByClassName("order-again-btn");
+for(let i = 0; i < orderAgainBtns.length; i++){
+  orderAgainBtns[i].addEventListener("click", function(e){
+    var $orderAgainSubmitBtn = $(this).siblings(".order-again-form").find(".order-again-submit-btn");
+    if(localStorage.getItem("order-in-progress") == "yes" || sessionStorage.getItem("edit-in-progress") == "yes"){
+      e.preventDefault();
+      alert("Complete current order before ordering again");
+    } else {
+      sessionStorage.setItem("order-requested-again", "yes");
+      $orderAgainSubmitBtn.click();
+    }
+  })
+}
+/*--- End of Order Again Function ---*/
+
 /*--- When user clicks 'Remove Order' Btn ---*/
 var removeOrderBtns = document.getElementsByClassName("remove-order-btn");
 for(let i = 0; i < removeOrderBtns.length; i++){
   removeOrderBtns[i].addEventListener("click", function(){
     var $rmOrderSubmitBtn = $(this).siblings(".remove-prev-form").find(".remove-order-submit-btn");
-    var $wholePrevOrder = $(this).parents(".previous-order-outer");
+    var $wholePrevOrder = $(this).parents(".previous-order-inner");
     removeThisPrevOrder($wholePrevOrder, $rmOrderSubmitBtn);
   })
 }
@@ -133,9 +150,8 @@ function removeThisPrevOrder($order, $btn){
   $order.animate({
     height: "0px"
   }, 1000, function(){
-    setTimeout(function(){
-      $btn.click();
-    }, 50)
+    $order.css("display", "none");
+    $btn.click();
   })
 }
 /*--- End of Remove Order Function ---*/

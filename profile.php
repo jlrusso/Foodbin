@@ -168,7 +168,7 @@
                 while($row = mysqli_fetch_assoc($result)){
                   $prevData[] = $row;
                 }
-                if($resultRows == 0 || $resultRows2 > 0){
+                if($resultRows2 > 0){
                   if($resultRows == 0 || $resultRows2 > 0){
                     echo "
                       <h2 id='previous-orders-heading'>Previous Orders (Newest - Oldest)</h2>
@@ -177,6 +177,7 @@
                   } else {
                     echo "
                       <div class='previous-order-outer one-row'>
+                      <div class='previous-order-inner'>
                     ";
                   }
                   $sqlCheck = "SELECT * FROM current_orders WHERE user_id=$id;";
@@ -187,8 +188,9 @@
                       $itemArr = explode(" ", $itemIdsString);
                       array_pop($itemArr);
                       $itemArrLength = count($itemArr);
+                      echo "<div class='previous-order-inner'>";
                       echo "
-                        <div class='store-location-container'>
+                        <div class='store-location-container' verse='1'>
                           <div class='order-store-name'>
                             " . $prevData[$orderRow]['store_name'] . "
                           </div>
@@ -217,14 +219,19 @@
                       echo "
                         <div class='previous-order-footer'>
                           <button class='order-again-btn'>Order Again</button>
+                          <form action='includes/orderAgain.php' method='POST' class='order-again-form'>
+                            <input type='number' name='num' value='" . $prevData[$orderRow]['order_num'] . "'/>
+                            <input type='submit' name='submit' class='order-again-submit-btn'/>
+                          </form>
                           <button class='remove-order-btn'>Remove Order</button>
                           <form action='includes/removePrevOrder.php' method='POST' class='remove-prev-form'>
-                            <input type='text' name='order_num' value='" . $prevData[$orderRow]['order_num'] . "'/>
+                            <input type='number' name='num' value='" . $prevData[$orderRow]['order_num'] . "'/>
                             <input type='submit' name='submit' class='remove-order-submit-btn'/>
                           </form>
                         </div>
                         <div class='line-divider'></div>
                       ";
+                      echo "</div>"; # - closing tag for previous-order-inner
                     }
                   } else {
                     for($orderRow = ($resultRows2 - 2); $orderRow > -1; $orderRow--){
@@ -232,6 +239,7 @@
                       $itemArr = explode(" ", $itemIdsString);
                       array_pop($itemArr);
                       $itemArrLength = count($itemArr);
+                      echo "<div class='previous-order-inner'>";
                       echo "
                         <div class='store-location-container'>
                           <div class='order-store-name'>
@@ -258,14 +266,23 @@
                           </div>
                         ";
                       }
-                      echo "</div>";
+                      echo "</div>"; # - closing order-row tag
                       echo "
                         <div class='previous-order-footer'>
                           <button class='order-again-btn'>Order Again</button>
+                          <form action='includes/orderAgain.php' method='POST' class='order-again-form'>
+                            <input type='number' name='num' value='" . $prevData[$orderRow]['order_num'] . "'/>
+                            <input type='submit' name='submit' class='order-again-submit-btn'/>
+                          </form>
                           <button class='remove-order-btn'>Remove Order</button>
+                          <form action='includes/removePrevOrder.php' method='POST' class='remove-prev-form'>
+                            <input type='number' name='num' value='" . $prevData[$orderRow]['order_num'] . "'/>
+                            <input type='submit' name='submit' class='remove-order-submit-btn'/>
+                          </form>
                         </div>
                         <div class='line-divider'></div>
                       ";
+                      echo "</div>"; # - closing tag for previous-order-inner
                     }
                   }
                 } else {
