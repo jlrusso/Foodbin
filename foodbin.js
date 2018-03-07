@@ -221,7 +221,6 @@ function addFoodItem(index){
         $qualityPriority = $modalContent.find(".quality-priority option:checked").text(),
         modalWindowId = modalWindow.id;
 
-
         //check to see if any two priority values are the same
         if($weightPriority == $costPriority ||
             $weightPriority == $specialtyPriority ||
@@ -514,6 +513,10 @@ if(placeOrderBtn){
   });
 }
 /*--- End of Storing Order in Database ---*/
+
+/*--- Create counter for store orders ---*/
+
+/*--- end of store order counter ---*/
 
 /*--- Initialize Google Maps API ---*/
 var deliveryBtnContainer = document.getElementById("deliver-btn-container"),
@@ -1046,7 +1049,7 @@ function initializeMap(){
             content: "<p style='font-weight: bold'>" + storeName + "</p><br/>" +
                      "<span>" + storeAddress + "</span><br/>" +
                      "<a href='https://maps.google.com/?q=" + storeName + " " + storeAddress + "' target='_blank' style='color: #427fed'>View on Google Maps</a><br/>" +
-                     "<span class='orders' onclick='consoleIt()' id='" + storeAddress + "'>0 orders</span>"
+                     "<span class='store-orders' onclick='showStoreOrders(this.id)' id='" + storeAddress + "'><span id='order-num'>0</span> orders</span>"
         })
 
         infoWindow.open(map, marker);
@@ -1065,9 +1068,59 @@ function handleLocationError(browserHasGeolocation, info, pos) {
   info.open(mapElement);
 }
 /*--- End of Google Maps API ---*/
-function consoleIt(){
-    $(".orders").css("color", "red");
+
+/*--- Open Store Orders Modal ---*/
+var storeModalWindow = document.getElementById("store-modal-window");
+function showStoreOrders(storeAddress){
+  var comma = storeAddress.indexOf(",");
+  var trimAddress = storeAddress.substring(0, comma);
+  createAddressForm(trimAddress);
 }
+
+function createAddressForm(address){
+  var addForm = document.createElement("form");
+  addForm.setAttribute("action", "includes/setAddress.php");
+  addForm.setAttribute("method", "POST");
+  addForm.setAttribute("id", "address-form");
+  var addressTextInput = document.createElement("input");
+  addressTextInput.setAttribute("type", "text");
+  addressTextInput.setAttribute("name", "store_address");
+  addressTextInput.setAttribute("value", address);
+  var addFormSubmit = document.createElement("input");
+  addFormSubmit.setAttribute("type", "submit");
+  addFormSubmit.setAttribute("name", "submit");
+  addFormSubmit.setAttribute("id", "address-submit-btn");
+  addForm.appendChild(addressTextInput);
+  addForm.appendChild(addFormSubmit);
+  $("#store-modal-container").append(addForm);
+  submitAddressForm();
+}
+
+function submitAddressForm(){
+  console.log("hello");
+  $("#address-submit-btn").click();
+}
+
+window.onclick = function(e){
+  if(e.target.matches("#store-modal-window") || e.target.matches(".close-btn-container")){
+    storeModalWindow.style.display = "none";
+    $("#store-modal-window").find(".close-btn-container").css("display", "none");
+    $("#address-form").remove();
+    $("#unset-address-btn").click();
+  }
+}
+
+//var arrowDownIcon = document.getElementsByClassName("fa-angle-down")[0];
+var ordersAccordion = document.getElementsByClassName("orders-accordion")
+for(let i = 0; i < ordersAccordion.length; i++){
+  ordersAccordion[i].onclick = function(){
+    var arrowDownIcon = document.getElementsByClassName("fa-angle-down")[0];
+    arrowDownIcon.classList.toggle("rotate-arrow");
+    var accordionInner = this.nextElementSibling;
+    accordionInner.classList.toggle("accordion-inner-height");
+  }
+}
+/*--- End of Store Orders Modal ---*/
 
 //when user clicks on "Deliver From Here" btn
 var deliveryBtn = document.getElementById("delivery-btn"),
@@ -1098,11 +1151,6 @@ if(deliveryBtn){
   });
 }
 
-
-
-$(".orders").click(function(){
-    console.log($(this).text());
-});
 
 $(window).on('beforeunload', function() {
    $(window).scrollTop(0);

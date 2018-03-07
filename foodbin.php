@@ -1568,6 +1568,141 @@
   		</div>
     </div>
 
+    <?php
+      if(isset($_SESSION['address'])){
+        $storeAddress = $_SESSION['address'];
+        echo "
+          <div id='store-modal-window' style='display: block'>
+            <div class='close-btn-container' style='display: block'>
+              <div class='modal-close-btn'></div>
+            </div>
+            <div id='store-modal-container'>";
+            $sql = "SELECT * FROM current_orders WHERE store_address='$storeAddress';";
+            $currData = array();
+            $result = mysqli_query($conn, $sql);
+            $resultRows = mysqli_num_rows($result);
+            if($resultRows > 0){
+              while($row = mysqli_fetch_assoc($result)){
+                $currData[] = $row;
+              }
+              $currDataLength = count($currData);
+              echo "
+                <div class='orders-modal-header'>
+                  <h2 style='text-align:center'>Current Orders</h2>
+                  <div class='store-address-container'>
+                    <div class='orders-store-name' style='text-align:center'>
+                      " . $currData[0]['store_name'] . "
+                    </div>
+                    <div class='orders-store-address' style='text-align:center'>
+                      " . $currData[0]['store_address'] . "
+                    </div>
+                  </div>
+                </div>
+              ";
+              for($a = 0; $a < $currDataLength; $a++){
+                $userIdNum = $currData[$a]['user_id'];
+                $usrData = array();
+                $sqlUsr = "SELECT * FROM users WHERE id=$userIdNum;";
+                $resultUsr = mysqli_query($conn, $sqlUsr);
+                $resultRowUsr = mysqli_num_rows($resultUsr);
+                if($resultRowUsr > 0){
+                  while($rowUsr = mysqli_fetch_assoc($resultUsr)){
+                    $usrData[] = $rowUsr;
+                  }
+                  $userFirstName = $usrData[0]['user_first'];
+                  $userLastName = $usrData[0]['user_last'];
+                  $lastInitial = strtoupper($userLastName[0] . ".");
+                }
+                echo "
+                  <div class='orders-accordion'>
+                    <div class='users-name' style='text-align:center'>
+                      " . $userFirstName . ' ' . $lastInitial . "
+                    </div>
+                    <div style='text-align:center'><i class='fa fa-angle-down' style='font-size:36px'></i></div>
+                    <div class='num-of-items' style='text-align:center'>";
+                    //echo $currData[0]['food_ids'];
+                $itemsStr = $currData[$a]['food_ids'];
+                $itemsArr = explode(" ", $itemsStr);
+                array_pop($itemsArr);
+                $itemsArrLength = count($itemsArr);
+                echo $itemsArrLength . " items";
+
+                # - item names
+                $itemNamesStr = $currData[$a]['item_names'];
+                $itemNamesArr = explode(" ", $itemNamesStr);
+                array_pop($itemNamesArr);
+                $itemArrLength = count($itemNamesArr);
+                # - end of item names
+                echo "
+                    </div>
+                  </div>
+                  <div class='accordion-inner'>
+                    ";
+                    for($b = 0; $b < $itemArrLength; $b++){
+                      echo "
+                        <div class='store-order-row'>
+                          <div class='store-order-left'>
+                            <div class='store-item-name'>" . $itemNamesArr[$b] . "</div>
+                            <input type='image' src='../foodbin/img/image" . $itemsArr[$b] . ".jpg' class='store-modal-img'/>
+                          </div>
+                          <div class='store-order-right'>
+                            <div class='item-details-heading'>Details</div>";
+                            echo "<ul>";
+                            for($c = 0; $c < $itemArrLength; $c++){
+                              $cplus = $c + 1;
+                              $itemSpecsStr = $currData[0]['item_' . $cplus . '_specs'];
+                              $itemSpecsArr = explode(" | ", $itemSpecsStr);
+                              echo "<li>" . $itemSpecsArr[$c] . "</li>";
+                            }
+                            echo "</ul>";
+                      echo "
+                          </div>
+                        </div>
+                        <div class='line-divider'></div>
+                      ";
+                    }
+                echo "
+                  <div class='fulfill-container'>
+                    <button class='fulfill-order-btn'>Fullfill Order</button>
+                  </div>
+                  </div>
+                ";
+              }
+            } else {
+              echo "
+                <h2 style='text-align: center'>No orders</h2>
+              ";
+            }
+        echo "
+            </div>
+            <form action='includes/unsetAddress.php' method='POST' id='unset-address-form'>
+              <input type='submit' name='submit' id='unset-address-btn'/>
+            </form>
+          </div>
+        ";
+      } else {
+        echo "
+          <div id='store-modal-window'>
+            <div class='close-btn-container'>
+              <div class='modal-close-btn'></div>
+            </div>
+            <div id='store-modal-container'>
+            </div>
+          </div>
+        ";
+      }
+    ?>
+
+
+    <!-- <div id="store-modal-window">
+      <div class="close-btn-container">
+        <div class="modal-close-btn"></div>
+      </div>
+      <div id="store-modal-container">
+
+      </div>
+    </div> -->
+
 
 	<!-- will add these columns and close-btn to modal via JS when user clicks on food image -->
 
