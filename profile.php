@@ -21,23 +21,46 @@
              <div id="horizontal-nav">
                 <ul>
                     <?php
+                      # - check if order is in progress
+                      if(isset($_SESSION['order-in-progress'])){
+                        if($_SESSION['order-in-progress'] == "yes"){
+                          echo "<span class='order-in-progress'>yes</span>";
+                        } else {
+                          echo "<span class='order-in-progress'>no</span>";
+                        }
+                      }
+                      if (isset($_SESSION['edit-in-progress'])){
+                        if($_SESSION['edit-in-progress'] == "yes"){
+                          echo "<span class='edit-in-progress'>yes</span>";
+                        } else {
+                          echo "<span class='edit-in-progress'>no</span>";
+                        }
+                      }
+                      if(isset($_SESSION['same-order-in-progress'])){
+                        if($_SESSION['same-order-in-progress'] == "yes"){
+                          echo "<span class='same-order-in-progress'>yes</span>";
+                        } else {
+                          echo "<span class='same-order-in-progress'>no</span>";
+                        }
+                      }
+                      # - end of order in progress check
+
                       if (isset($_SESSION['user_id'])){
                         echo '<li><i class="fa fa-user"></i>
                                 <ul class="user-list">
-                                  ' . '<li id="user-parent"><a href="profile.php" id="user">' . $_SESSION['user_username'] . '</a></li>
-                                        <li class="logout-item">
-                                            <form action="includes/logout-inc.php" method="POST">
-                                              <input type="submit" name="submit" value="Logout"/>
-                                            </form>
-                                        </li>' . '
+                                  <li><a href="profile.php" id="user">' . $_SESSION['user_username'] . '</a></li>
+                                  <li>
+                                      <form action="includes/logout-inc.php" method="POST">
+                                        <input type="submit" name="submit" value="logout" id="logout-btn"/>
+                                      </form>
+                                  </li>
                                 </ul>
                               </li>';
                       } else {
                         echo '<li id="login-btn"><a href="login.php">Login</a></li>
                               <li id="signup-btn"><a href="signup.php">Sign Up</a></li>';
                       }
-                    ?>
-                    <li><a href="#" id="cart-container"><i class="fa fa-shopping-cart" id="shopping-cart" aria-hidden="true"></i><span id="cart-badge"></span></a></li>
+                      ?>
                 </ul>
             </div>
         </nav>
@@ -94,6 +117,7 @@
             ?>
             <div id="current-order-outer">
               <div id="current-order-inner">
+                <div id="curr-order-tooltip">Shift + scroll to scroll sideways</div>
               <?php
 
                 $sql = "SELECT * FROM current_orders WHERE user_id=$id;";
@@ -124,7 +148,13 @@
                         </div>
                         <div class='order-store-city'>
                           " . $currData[$orderRow]['store_city'] . "
-                        </div>
+                        </div>";
+                    $fullDateTime = $currData[$orderRow]['order_date'];
+                    $fullDateTimeArr = explode(" ", $fullDateTime);
+                    $datePart = $fullDateTimeArr[0];
+                    $deliveryTime = $currData[$orderRow]['delivery_time'];
+                    echo "<div class='order-store-date'>" . $datePart . " | " . $deliveryTime . "</div>";
+                    echo "
                       </div>
                     ";
                     echo "<div id='current-order-row'>";
@@ -176,9 +206,10 @@
                     ";
                   } else {
                     echo "
-                      <div class='previous-order-outer one-row'>
+                      <div class='previous-order-outer'>
                       <div class='previous-order-inner'>
                     ";
+                    echo "<div class='prev-order-tooltip'>Shift + scroll to scroll sideways</div>";
                   }
                   $sqlCheck = "SELECT * FROM current_orders WHERE user_id=$id;";
                   $resultRows3 = mysqli_num_rows(mysqli_query($conn, $sqlCheck));
@@ -189,6 +220,7 @@
                       array_pop($itemArr);
                       $itemArrLength = count($itemArr);
                       echo "<div class='previous-order-inner'>";
+                      echo "<div class='prev-order-tooltip'>Shift + scroll to scroll sideways</div>";
                       echo "
                         <div class='store-location-container' verse='1'>
                           <div class='order-store-name'>
@@ -199,7 +231,13 @@
                           </div>
                           <div class='order-store-city'>
                             " . $prevData[$orderRow]['store_city'] . "
-                          </div>
+                          </div>";
+                          $fullDateTime = $prevData[$orderRow]['order_date'];
+                          $fullDateTimeArr = explode(" ", $fullDateTime);
+                          $datePart = $fullDateTimeArr[0];
+                          $deliveryTime = $prevData[$orderRow]['delivery_time'];
+                          echo "<div class='order-store-date'>" . $datePart . " | " . $deliveryTime . "</div>";
+                      echo "
                         </div>
                       ";
                       echo "<div class='previous-order-row'>";
@@ -220,12 +258,12 @@
                         <div class='previous-order-footer'>
                           <button class='order-again-btn'>Order Again</button>
                           <form action='includes/orderAgain.php' method='POST' class='order-again-form'>
-                            <input type='number' name='num' value='" . $prevData[$orderRow]['order_num'] . "'/>
+                            <input type='number' name='num' value='" . $prevData[$orderRow]['order_id'] . "'/>
                             <input type='submit' name='submit' class='order-again-submit-btn'/>
                           </form>
                           <button class='remove-order-btn'>Remove Order</button>
                           <form action='includes/removePrevOrder.php' method='POST' class='remove-prev-form'>
-                            <input type='number' name='num' value='" . $prevData[$orderRow]['order_num'] . "'/>
+                            <input type='number' name='num' value='" . $prevData[$orderRow]['order_id'] . "'/>
                             <input type='submit' name='submit' class='remove-order-submit-btn'/>
                           </form>
                         </div>
@@ -240,6 +278,7 @@
                       array_pop($itemArr);
                       $itemArrLength = count($itemArr);
                       echo "<div class='previous-order-inner'>";
+                      echo "<div class='prev-order-tooltip'>Shift + scroll to scroll sideways</div>";
                       echo "
                         <div class='store-location-container'>
                           <div class='order-store-name'>
@@ -250,7 +289,13 @@
                           </div>
                           <div class='order-store-city'>
                             " . $prevData[$orderRow]['store_city'] . "
-                          </div>
+                          </div>";
+                          $fullDateTime = $prevData[$orderRow]['order_date'];
+                          $fullDateTimeArr = explode(" ", $fullDateTime);
+                          $datePart = $fullDateTimeArr[0];
+                          $deliveryTime = $prevData[$orderRow]['delivery_time'];
+                          echo "<div class='order-store-date'>" . $datePart . " | " . $deliveryTime . "</div>";
+                      echo "
                         </div>
                       ";
                       echo "<div class='previous-order-row'>";
@@ -271,12 +316,12 @@
                         <div class='previous-order-footer'>
                           <button class='order-again-btn'>Order Again</button>
                           <form action='includes/orderAgain.php' method='POST' class='order-again-form'>
-                            <input type='number' name='num' value='" . $prevData[$orderRow]['order_num'] . "'/>
+                            <input type='number' name='num' value='" . $prevData[$orderRow]['order_id'] . "'/>
                             <input type='submit' name='submit' class='order-again-submit-btn'/>
                           </form>
                           <button class='remove-order-btn'>Remove Order</button>
                           <form action='includes/removePrevOrder.php' method='POST' class='remove-prev-form'>
-                            <input type='number' name='num' value='" . $prevData[$orderRow]['order_num'] . "'/>
+                            <input type='number' name='num' value='" . $prevData[$orderRow]['order_id'] . "'/>
                             <input type='submit' name='submit' class='remove-order-submit-btn'/>
                           </form>
                         </div>
@@ -339,6 +384,7 @@
         </div>
       </div>
     </div>
+
 
 	</div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
