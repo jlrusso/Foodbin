@@ -33,14 +33,35 @@ uploadPicBtn.addEventListener("click", function(){
             }
         }
     });
-
-    userParent.addEventListener("click", function(){
-      user.click();
-    })
 /*--- End of User Icon JS ---*/
+
+/*--- Check if Order is in Progress ---*/
+var orderInProgress = document.getElementById("order-in-progress"),
+    orderInProgressVal;
+if(orderInProgress){
+  orderInProgressVal = orderInProgress.textContent;
+}
+/*--- End of Order in Progress Check ---*/
+
+/*--- Check if Order is being Editted ---*/
+var editInProgress = document.getElementById("edit-in-progress"),
+    editInProgressVal;
+if(editInProgress){
+  editInProgressVal = editInProgress.textContent;
+}
+/*--- End of Edit Order Check ---*/
+
+/*--- Check if Same Order in Progress ---*/
+var sameOrderInProgress = document.getElementById("same-order-in-progress"),
+    sameOrderInProgressVal;
+if(sameOrderInProgress){
+  sameOrderInProgressVal = sameOrderInProgress.textContent;
+}
+/*--- Check if Same Order in Progress ---*/
 
 /*--- When user clicks order completed btn ---*/
 var currentOrderRow = document.getElementById("current-order-row");
+var currOrderTooltip = document.getElementById("curr-order-tooltip");
 var eraseOrderBtn = document.getElementById("erase-order-btn");
 if(currentOrderRow){
   var entireOrdersSection = document.getElementsByClassName(".col-8")[0],
@@ -51,14 +72,36 @@ if(currentOrderRow){
 }
 var previousOrdersContainer = document.getElementById("previous-orders-container");
 var previousOrdersHeading = document.getElementById("previous-orders-heading");
+var previousOrderRows = document.getElementsByClassName("previous-order-row");
+var prevOrderTooltips = document.getElementsByClassName("prev-order-tooltip");
 var previousOrderFooter;
 var test;
 
+/*--- Show Sideways Scroll Tooltip ---*/
+if(currentOrderRow){
+  currentOrderRow.addEventListener("mouseover", function(){
+    currOrderTooltip.style.opacity = "1";
+  })
+  currentOrderRow.addEventListener("mouseout", function(){
+    currOrderTooltip.style.opacity = "0";
+  })
+}
+
+if(previousOrderRows){
+  for(let i = 0; i < previousOrderRows.length; i++){
+    previousOrderRows[i].addEventListener("mouseover", function(){
+      prevOrderTooltips[i].style.opacity = "1";
+    })
+
+    previousOrderRows[i].addEventListener("mouseout", function(){
+      prevOrderTooltips[i].style.opacity = "0";
+    })
+  }
+}
+/*--- End of Sideways Scroll Tooltip ---*/
+
 if(orderCompletedBtn) {
   orderCompletedBtn.addEventListener("click", function(){
-    localStorage.setItem("order-in-progress", "no");
-    sessionStorage.setItem("edit-in-progress", "no");
-    sessionStorage.setItem("order-requested-again", "no");
     test = 10;
     removeCurrentOrder();
   });
@@ -112,8 +155,6 @@ var removeSubmitBtn = document.getElementById("remove-submit");
 var hiddenLink = document.getElementById("hidden-link");
 if(editOrderBtn){
   editOrderBtn.addEventListener("click", function(){
-    localStorage.setItem("order-in-progress", "no");
-    sessionStorage.setItem("edit-in-progress", "yes");
     test = 5;
     removeCurrentOrder();
   });
@@ -122,14 +163,14 @@ if(editOrderBtn){
 
 /*--- When user clicks 'Order Again' Btn ---*/
 var orderAgainBtns = document.getElementsByClassName("order-again-btn");
+
 for(let i = 0; i < orderAgainBtns.length; i++){
   orderAgainBtns[i].addEventListener("click", function(e){
     var $orderAgainSubmitBtn = $(this).siblings(".order-again-form").find(".order-again-submit-btn");
-    if(localStorage.getItem("order-in-progress") == "yes" || sessionStorage.getItem("edit-in-progress") == "yes"){
+    if(orderInProgressVal == "yes" || editInProgressVal == "yes"){
       e.preventDefault();
       alert("Complete current order before ordering again");
     } else {
-      sessionStorage.setItem("order-requested-again", "yes");
       $orderAgainSubmitBtn.click();
     }
   })
