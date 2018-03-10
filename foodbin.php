@@ -28,17 +28,47 @@
              <div id="horizontal-nav">
                 <ul>
                     <?php
+                      # - check if a user is logged in
+                      if(isset($_SESSION['user_id'])){
+                        echo "<span id='user-logged-in' style='display:none'>yes</span>";
+                      } else {
+                        echo "<span id='user-logged-in' style='display:none'>no</span>";
+                      }
+                      # - check if order is in progress
+                      if(isset($_SESSION['order-in-progress'])){
+                        if($_SESSION['order-in-progress'] == "yes"){
+                          echo "<span id='order-in-progress'>yes</span>";
+                        } else {
+                          echo "<span id='order-in-progress'>no</span>";
+                        }
+                      }
+                      if (isset($_SESSION['edit-in-progress'])){
+                        if($_SESSION['edit-in-progress'] == "yes"){
+                          echo "<span id='edit-in-progress'>yes</span>";
+                        } else {
+                          echo "<span id='edit-in-progress'>no</span>";
+                        }
+                      }
+                      if (isset($_SESSION['same-order-in-progress'])){
+                        if($_SESSION['same-order-in-progress'] == "yes"){
+                          echo "<span id='same-order-in-progress'>yes</span>";
+                        } else {
+                          echo "<span id='same-order-in-progress'>no</span>";
+                        }
+                      }
+                      # - end of order in progress check
                       include_once "includes/dbh-inc.php";
                       if (isset($_SESSION['user_id'])){
                         echo "<span id='logged-in' class='yes'></span>";
                         echo '<li><i class="fa fa-user"></i>
                                 <ul class="user-list">
                                   ' . '<li id="user-parent"><a href="profile.php" id="user">' . $_SESSION['user_username'] . '</a></li>
-                                        <li class="logout-item">
+                                        <li>
                                             <form action="includes/logout-inc.php" method="POST">
-                                              <input type="submit" name="submit" value="Logout"/>
+                                              <input type="submit" name="submit" value="logout" id="logout-btn"/>
                                             </form>
-                                        </li>' . '
+                                        </li>
+
                                 </ul>
                               </li>';
                       } else {
@@ -46,9 +76,10 @@
                         echo '<li id="login-btn"><a href="login.php">Login</a></li>
                               <li id="signup-btn"><a href="signup.php">Sign Up</a></li>';
                       }
-                      if(isset($_SESSION['edit-in-progress'])){
-                        $editVal = $_SESSION['edit-in-progress'];
-                        if($editVal == "yes"){
+
+                      if(isset($_SESSION['edit-in-progress']) && isset($_SESSION['same-order-in-progress'])){
+                        # start of edit
+                        if($_SESSION['edit-in-progress'] == "yes"){
                           $id = $_SESSION['user_id'];
                           $editData = array();
                           $sql = "SELECT * FROM edit_orders WHERE user_id=$id;";
@@ -63,43 +94,35 @@
                             array_pop($itemArr);
                             $itemArrLength = count($itemArr);
                             $editVal = $_SESSION['edit-in-progress'];
-                            if($editVal == "yes"){
-                              echo "
-                                <li><a href='#' id='cart-container' vers='1'><i class='fa fa-shopping-cart' id='shopping-cart' aria-hidden='true'></i><span id='cart-badge' style='display: block'>" . $itemArrLength . "</span></a></li>
-                              ";
-                            }
-                          } else {
                             echo "
-                              <li><a href='#' id='cart-container' vers='26'><i class='fa fa-shopping-cart' id='shopping-cart' aria-hidden='true'></i><span id='cart-badge'></span></a></li>
+                              <li><a href='#' id='cart-container' vers='1'><i class='fa fa-shopping-cart' id='shopping-cart' aria-hidden='true'></i><span id='cart-badge' style='display:block'>" . $itemArrLength . "</span></a></li>
                             ";
                           }
-                        }
-                      } else if (isset($_SESSION['order-requested-again'])){
-                        #
-                        $id = $_SESSION['user_id'];
-                        $orderRequested = $_SESSION['order-requested-again'];
-                        $prevData = array();
-                        $sql = "SELECT * FROM previous_orders WHERE user_id=$id AND order_num=$orderRequested;";
-                        $result = mysqli_query($conn, $sql);
-                        $resultRows = mysqli_num_rows($result);
-                        if($resultRows > 0){
-                          while($row = mysqli_fetch_assoc($result)){
-                            $prevData[] = $row;
+                        } else if ($_SESSION['same-order-in-progress'] == "yes"){
+                          $id = $_SESSION['user_id'];
+                          $orderRequested = $_SESSION['order-requested-again'];
+                          $prevData = array();
+                           $sql = "SELECT * FROM previous_orders WHERE user_id=$id AND order_id=$orderRequested;";
+                          $result = mysqli_query($conn, $sql);
+                          $resultRows = mysqli_num_rows($result);
+                          if($resultRows > 0){
+                            while($row = mysqli_fetch_assoc($result)){
+                              $prevData[] = $row;
+                            }
+                            $itemIdsString = $prevData[0]['food_ids'];
+                            $itemArr = explode(" ", $itemIdsString);
+                            array_pop($itemArr);
+                            $itemArrLength = count($itemArr);
+                            echo "
+                              <li><a href='#' id='cart-container' vers='3'><i class='fa fa-shopping-cart' id='shopping-cart' aria-hidden='true'></i><span id='cart-badge' style='display: block'>" . $itemArrLength . "</span></a></li>
+                            ";
                           }
-                          $itemIdsString = $prevData[0]['food_ids'];
-                          $itemArr = explode(" ", $itemIdsString);
-                          array_pop($itemArr);
-                          $itemArrLength = count($itemArr);
-                          echo "
-                            <li><a href='#' id='cart-container' vers='3'><i class='fa fa-shopping-cart' id='shopping-cart' aria-hidden='true'></i><span id='cart-badge' style='display: block'>" . $itemArrLength . "</span></a></li>
-                          ";
                         } else {
                           echo "
-                            <li><a href='#' id='cart-container' vers='4'><i class='fa fa-shopping-cart' id='shopping-cart' aria-hidden='true'></i><span id='cart-badge'></span></a></li>
+                            <li><a href='#' id='cart-container' vers='5'><i class='fa fa-shopping-cart' id='shopping-cart' aria-hidden='true'></i><span id='cart-badge'></span></a></li>
                           ";
                         }
-                        #
-                      } else {
+                      } else if (isset($_SESSION['user_id'])) {
                         echo "
                           <li><a href='#' id='cart-container' vers='5'><i class='fa fa-shopping-cart' id='shopping-cart' aria-hidden='true'></i><span id='cart-badge'></span></a></li>
                         ";
@@ -122,7 +145,7 @@
         <div id="how-it-works-area">
           <div class="hiw-row">
             <div class="hiw-row-inner">
-              <input type="image" src="../img/map.jpeg" alt="Maps"/>
+              <input type="image" src="../foodbin/img/chooselocation.png" alt="Maps"/>
               <div class="image-caption right-caption">
                 <div class="image-caption-inner">
                   <h1>Choose a Location</h1>
@@ -139,12 +162,12 @@
                   <p>Get as specific as you want, then add the items to your cart</p>
                 </div>
               </div>
-              <input type="image" src="../img/grocery-aisle.jpg" alt="Grocery Aisle"/>
+              <input type="image" src="../foodbin/img/chooseitems.png" alt="Item Selection"/>
             </div>
           </div>
           <div class="hiw-row">
             <div class="hiw-row-inner">
-              <input type="image" src="../img/shoppinglist.jpg" alt="Shopping List"/>
+              <input type="image" src="../foodbin/img/makechanges.png" alt="Edit Order"/>
               <div class="image-caption right-caption">
                 <div class="image-caption-inner">
                   <h1>Change Order Anytime</h1>
@@ -395,6 +418,26 @@
                     <option value="14400-Ralphs">Ralphs (14400 Culver Dr)</option>
                   </select>
 
+                  <select name="delivery-time" id="delivery-time-list">
+                    <option style="font-weight: bold" value="Stores Heading">Delivery Time:</option>
+                    <option value="eight-am">8:00 AM</option>
+                    <option value="nine-am">9:00 AM</option>
+                    <option value="ten-am">10:00 AM</option>
+                    <option value="eleven-am">11:00 AM</option>
+                    <option value="twelve-pm">12:00 PM</option>
+                    <option value="one-pm">1:00 PM</option>
+                    <option value="two-pm">2:00 PM</option>
+                    <option value="three-pm">3:00 PM</option>
+                    <option value="four-pm">4:00 PM</option>
+                    <option value="five-pm">5:00 PM</option>
+                    <option value="six-pm">6:00 PM</option>
+                    <option value="seven-pm">7:00 PM</option>
+                    <option value="eight-pm">8:00 PM</option>
+                    <option value="nine-pm">9:00 PM</option>
+                    <option value="ten-pm">10:00 PM</option>
+                    <option value="eleven-pm">11:00 PM</option>
+                  </select>
+
                   <div id="delivery-btn-container">
                     <span id="checkmark">&#10004;</span>
                     <input type="submit" id="delivery-btn" value="Deliver From Here"/>
@@ -623,39 +666,39 @@
                 </div>
             </section>
             <div class="food-line-divider"></div>
-
-
         </div>
 
-        <div id="testimonial-area">
-        	<div class="testimonial-row">
-	        	<div class="testimonial-column">
-	        		<div class="testimonial-heading">
-	        			<div class="testimonial-image-container">
-	        				<img src="../img/guy-pic.jpeg" alt="Guy User Pic">
-	        			</div>
-	        			<div class="testimonial-author">
-	        				Trevor J.
-	        			</div>
-	        		</div>
-	        		<div class="testimonial-content">
-	        			<p><span class="quotes">"</span> With four kids and a super busy schedule, im glad getting groceries is just a click away. <span class="quotes">"</span></p>
-	        		</div>
-	        	</div>
-	        	<div class="testimonial-column">
-	        		<div class="testimonial-heading">
-	        			<div class="testimonial-image-container">
-	        				<img src="../img/girl-pic.jpeg" alt="Girl User Pic">
-	        			</div>
-	        			<div class="testimonial-author">
-	        				Maria T.
-	        			</div>
-	        		</div>
-	        		<div class="testimonial-content">
-	        			<p><span class="quotes">"</span> With four kids and a super busy schedule, im glad getting groceries is just a click away. <span class="quotes">"</span></p>
-	        		</div>
-	        	</div>
-	        </div>
+        <div id="contact-container">
+          <h2>Get in Touch</h2>
+          <form action="includes/contact.php" method="POST">
+            <?php
+              if(isset($_GET['fullname'])){
+                echo "<input type='text' name='fullname' placeholder='Full name' value='" . $_GET['fullname'] . "' maxlength='30' required='required'/>";
+              } else {
+                echo "<input type='text' name='fullname' placeholder='Full name' maxlength='30' required='required'/>";
+              }
+            ?>
+            <input type="text" name="email" placeholder="Email" maxlength="30"  required="required"/>
+            <?php
+              if(isset($_GET['subject'])){
+                echo "<input type='text' name='subject' placeholder='Subject' maxlength='30' value='" . $_GET['subject'] . "'/>";
+              } else {
+                echo "<input type='text' name='subject' placeholder='Subject' maxlength='30'/>";
+              }
+            ?>
+
+            <?php
+              if(isset($_SESSION['user_username'])){
+                echo "<input type='text' name='username' value='" . $_SESSION['user_username'] . "' id='contact-username'/>";
+              }
+              if(isset($_GET['message'])){
+                echo "<textarea name='message' rows='8' cols='80' placeholder='Message' maxlength='500'>" . $_GET['message'] . "</textarea>";
+              } else {
+                echo "<textarea name='message' rows='8' cols='8' placeholder='Message' maxlength='500'></textarea>";
+              }
+            ?>
+            <input type="submit" name="submit" value="Submit" id="contact-submit-btn"/>
+          </form>
         </div>
 
         <footer>
@@ -703,9 +746,10 @@
             if(isset($_SESSION['user_id'])){
               $id = $_SESSION['user_id'];
             }
-            if(isset($_SESSION['edit-in-progress'])){
-              $editVal = $_SESSION['edit-in-progress'];
-              if($editVal == "yes"){
+
+            if(isset($_SESSION['edit-in-progress']) && isset($_SESSION['same-order-in-progress'])){
+              if($_SESSION['edit-in-progress'] == "yes"){
+                $editVal = $_SESSION['edit-in-progress'];
                 $editData = array();
                 $sql = "SELECT * FROM edit_orders WHERE user_id=$id;";
                 $result = mysqli_query($conn, $sql);
@@ -729,13 +773,13 @@
                     echo "
                       <div class='cart-row'>
                         <div class='left-cart-col'>
-                          <h4 class='left-col-heading'>" . $itemNamesArr[$x1] . "</h4>
+                          <h6 class='left-col-heading'>" . $itemNamesArr[$x1] . "</h6>
                           <div class='col-image-container'>
                             <input type='image' src='../foodbin/img/image" . $itemArr[$x1] . ".jpg' data='" . $itemArr[$x1] . "' class='cart-image' alt='" . $itemNamesArr[$x1] . "' />
                           </div>
                         </div>
                         <div class='right-cart-col'>
-                          <h4 class='right-col-heading'>Details</h4>
+                          <h6 class='right-col-heading'>Details</h6>
                           <ul class='details-list'>";
                           $specStr = $editData[0]['item_' . $itemArr[$x1] . '_specs'];
                           $specsArr = explode(" | ", $specStr);
@@ -763,6 +807,7 @@
                         <input type="text" name="store_name" value="' . $editData[0]["store_name"] . '"/>
                         <input type="text" name="store_address" value="' . $editData[0]["store_address"] . '"/>
                         <input type="text" name="store_city" value="' . $editData[0]["store_city"] . '"/>
+                        <input type="text" name="delivery_time" value="' . $editData[0]["delivery_time"] . '"/>
                         ';
                         for($x3 = 0; $x3 < $itemArrLength; $x3++){
                           echo "<input type='text' name='item_" . $itemArr[$x3] . "_specs' value='" . $editData[0]['item_' . $itemArr[$x3] . '_specs'] . "' data='" . $itemArr[$x3] . "' class='item-spec-inputs'/>";
@@ -775,130 +820,132 @@
 
                   echo "
                     <div id='modal-footer'>
-                      <div id='location-and-store-container' style='display: grid'>
+                      <div id='location-and-time-container' style='display: grid'>
                         <div id='cart-location'>" . $editData[0]['store_city'] . "</div>
                         <div id='cart-store-name'>" . $editData[0]['store_name'] . "</div>
                         <div id='cart-store-address'>" . $editData[0]['store_address'] . "</div>
+                        <div id='cart-delivery-time'>" . $editData[0]['delivery_time'] . "</div>
                       </div>
                       <button id='place-order-btn' style='display: block'>Place Order</button>
                     </div>
                   ";
                 } # - end of if resultRow > 0
                  echo "</div>"; # - this is cart content closing tag
-              } else {
-                # - when the session var does not equal yes
-                echo "
-                <h3 id='cart-modal-heading' verse='edit val no'>Shopping Cart</h3>
+               } else if ($_SESSION['same-order-in-progress'] == "yes"){
+                 $orderRequested = $_SESSION['order-requested-again'];
+                 $prevData = array();
+                 $sqlR = "SELECT * FROM previous_orders WHERE user_id=$id AND order_id=$orderRequested;";
+                 $result = mysqli_query($conn, $sqlR);
+                 $resultRows = mysqli_num_rows($result);
+                 if($resultRows > 0){
+                   while($row = mysqli_fetch_assoc($result)){
+                     $prevData[] = $row;
+                   }
+                   $itemIdsString = $prevData[0]['food_ids'];
+                   $itemArr = explode(" ", $itemIdsString);
+                   array_pop($itemArr);
+                   $itemArrLength = count($itemArr);
+                   echo "
+                   <h3 id='cart-modal-heading' verse='order-again'>Shopping Cart</h3>
+                   <div class='line-divider'></div>";
+                   $itemNamesStr = $prevData[0]['item_names'];
+                   $itemNamesArr = explode(" ", $itemNamesStr);
+                   array_pop($itemNamesArr);
+                   # - loop through the food ids and their item specs
+                   for($x1 = 0; $x1 < $itemArrLength; $x1++){
+                     echo "
+                       <div class='cart-row'>
+                         <div class='left-cart-col'>
+                           <h6 class='left-col-heading'>" . $itemNamesArr[$x1] . "</h6>
+                           <div class='col-image-container'>
+                             <input type='image' src='../foodbin/img/image" . $itemArr[$x1] . ".jpg' data='" . $itemArr[$x1] . "' class='cart-image' alt='" . $itemNamesArr[$x1] . "' />
+                           </div>
+                         </div>
+                         <div class='right-cart-col'>
+                           <h6 class='right-col-heading'>Details</h6>
+                           <ul class='details-list'>";
+                           $specStr = $prevData[0]['item_' . $itemArr[$x1] . '_specs'];
+                           $specsArr = explode(" | ", $specStr);
+                           $specsArrLength = count($specsArr);
+                           for($x2 = 0; $x2 < $specsArrLength; $x2++){
+                             echo "<li>" . $specsArr[$x2] . "</li>";
+                           }
+                        echo "
+                          </ul>
+                          <div class='item-btns-container'>
+                             <button class='make-changes-btn' for='item-" . $itemArr[$x1] . "-window'>Make Changes</button>
+                             <button class='remove-item-btn'>Remove Item</button>
+                          </div>
+                         </div>
+                       </div>
+                       <div class='line-divider'></div>
+                     ";
+                   }
+                   # - end of looping through the food ids and their specs
+                   echo "</div>"; # - this is cart content closing tag
+                   echo "
+                     <div id='hidden-form'>
+                       <form action='includes/orderfood.php' id='form-inner' method='POST'>";
+                         echo '
+                         <input type="text" name="store_name" value="' . $prevData[0]["store_name"] . '"/>
+                         <input type="text" name="store_address" value="' . $prevData[0]["store_address"] . '"/>
+                         <input type="text" name="store_city" value="' . $prevData[0]["store_city"] . '"/>
+                         <input type="text" name="delivery_time" value="' . $prevData[0]['delivery_time'] . '"/>
+                         ';
+                         for($x3 = 0; $x3 < $itemArrLength; $x3++){
+                           echo "<input type='text' name='item_" . $itemArr[$x3] . "_specs' value='" . $prevData[0]['item_' . $itemArr[$x3] . '_specs'] . "' data='" . $itemArr[$x3] . "' class='item-spec-inputs'/>";
+                         }
+                         echo
+                         "<input type='submit' name='submit' value='Submit' id='hidden-submit'/>
+                       </form>
+                     </div>
+                   ";
+
+                   echo "
+                     <div id='modal-footer'>
+                       <div id='location-and-time-container' style='display: grid'>
+                         <div id='cart-location'>" . $prevData[0]['store_city'] . "</div>
+                         <div id='cart-store-name'>" . $prevData[0]['store_name'] . "</div>
+                         <div id='cart-store-address'>" . $prevData[0]['store_address'] . "</div>
+                         <div id='cart-delivery-time'>" . $prevData[0]['delivery_time'] . "</div>
+                       </div>
+                       <button id='place-order-btn' style='display: block'>Place Order</button>
+                     </div>
+                   ";
+                 }
+               } else {
+                 echo "
+                   <h3 id='cart-modal-heading' verse='3'>Shopping Cart</h3>
+                   <div class='line-divider'></div>
+                   <div id='no-groceries-added'>No groceries have been added yet</div>
+                 ";
+                 echo "</div>"; # - this is cart content closing tag
+
+                 echo "
+                   <div id='hidden-form'>
+                     <form action='includes/orderfood.php' id='form-inner' method='POST'>
+                       <input type='submit' name='submit' value='Submit' id='hidden-submit'/>
+                     </form>
+                   </div>
+                 ";
+
+                 echo "
+                   <div id='modal-footer'>
+                     <div id='location-and-time-container'>
+                       <div id='cart-location'></div>
+                       <div id='cart-store-name'></div>
+                       <div id='cart-store-address'></div>
+                       <div id='cart-delivery-time'></div>
+                     </div>
+                     <button id='place-order-btn'>Place Order</button>
+                   </div>
+                 ";
+               }
+            } else {
+              echo "
+                <h3 id='cart-modal-heading' verse='3'>Shopping Cart</h3>
                 <div class='line-divider'></div>
                 <div id='no-groceries-added'>No groceries have been added yet</div>
-                ";
-                echo "</div>"; # - this is cart content closing tag
-
-                echo "
-                  <div id='hidden-form'>
-                    <form action='includes/orderfood.php' id='form-inner' method='POST'>
-                      <input type='submit' name='submit' value='Submit' id='hidden-submit'/>
-                    </form>
-                  </div>
-                ";
-
-                echo "
-                  <div id='modal-footer'>
-                    <div id='location-and-store-container'>
-                      <div id='cart-location'></div>
-                      <div id='cart-store-name'></div>
-                      <div id='cart-store-address'></div>
-                    </div>
-                    <button id='place-order-btn'>Place Order</button>
-                  </div>
-                ";
-              }
-            } else if (isset($_SESSION['order-requested-again'])) {
-              $orderRequested = $_SESSION['order-requested-again'];
-              $prevData = array();
-              $sqlR = "SELECT * FROM previous_orders WHERE user_id=$id AND order_num=$orderRequested;";
-              $result = mysqli_query($conn, $sql);
-              $resultRows = mysqli_num_rows($result);
-              if($resultRows > 0){
-                while($row = mysqli_fetch_assoc($result)){
-                  $prevData[] = $row;
-                }
-                $itemIdsString = $prevData[0]['food_ids'];
-                $itemArr = explode(" ", $itemIdsString);
-                array_pop($itemArr);
-                $itemArrLength = count($itemArr);
-                echo "
-                <h3 id='cart-modal-heading' verse='order-again'>Shopping Cart</h3>
-                <div class='line-divider'></div>";
-                $itemNamesStr = $prevData[0]['item_names'];
-                $itemNamesArr = explode(" ", $itemNamesStr);
-                array_pop($itemNamesArr);
-                # - loop through the food ids and their item specs
-                for($x1 = 0; $x1 < $itemArrLength; $x1++){
-                  echo "
-                    <div class='cart-row'>
-                      <div class='left-cart-col'>
-                        <h4 class='left-col-heading'>" . $itemNamesArr[$x1] . "</h4>
-                        <div class='col-image-container'>
-                          <input type='image' src='../foodbin/img/image" . $itemArr[$x1] . ".jpg' data='" . $itemArr[$x1] . "' class='cart-image' alt='" . $itemNamesArr[$x1] . "' />
-                        </div>
-                      </div>
-                      <div class='right-cart-col'>
-                        <h4 class='right-col-heading'>Details</h4>
-                        <ul class='details-list'>";
-                        $specStr = $prevData[0]['item_' . $itemArr[$x1] . '_specs'];
-                        $specsArr = explode(" | ", $specStr);
-                        $specsArrLength = count($specsArr);
-                        for($x2 = 0; $x2 < $specsArrLength; $x2++){
-                          echo "<li>" . $specsArr[$x2] . "</li>";
-                        }
-                     echo "
-                       </ul>
-                       <div class='item-btns-container'>
-                          <button class='make-changes-btn' for='item-" . $itemArr[$x1] . "-window'>Make Changes</button>
-                          <button class='remove-item-btn'>Remove Item</button>
-                       </div>
-                      </div>
-                    </div>
-                    <div class='line-divider'></div>
-                  ";
-                }
-                # - end of looping through the food ids and their specs
-                echo "</div>"; # - this is cart content closing tag
-                echo "
-                  <div id='hidden-form'>
-                    <form action='includes/orderfood.php' id='form-inner' method='POST'>";
-                      echo '
-                      <input type="text" name="store_name" value="' . $prevData[0]["store_name"] . '"/>
-                      <input type="text" name="store_address" value="' . $prevData[0]["store_address"] . '"/>
-                      <input type="text" name="store_city" value="' . $prevData[0]["store_city"] . '"/>
-                      ';
-                      for($x3 = 0; $x3 < $itemArrLength; $x3++){
-                        echo "<input type='text' name='item_" . $itemArr[$x3] . "_specs' value='" . $prevData[0]['item_' . $itemArr[$x3] . '_specs'] . "' data='" . $itemArr[$x3] . "' class='item-spec-inputs'/>";
-                      }
-                      echo
-                      "<input type='submit' name='submit' value='Submit' id='hidden-submit'/>
-                    </form>
-                  </div>
-                ";
-
-                echo "
-                  <div id='modal-footer'>
-                    <div id='location-and-store-container' style='display: grid'>
-                      <div id='cart-location'>" . $prevData[0]['store_city'] . "</div>
-                      <div id='cart-store-name'>" . $prevData[0]['store_name'] . "</div>
-                      <div id='cart-store-address'>" . $prevData[0]['store_address'] . "</div>
-                    </div>
-                    <button id='place-order-btn' style='display: block'>Place Order</button>
-                  </div>
-                ";
-              }
-            } else {
-              # - when the session var does not exist
-              echo "
-              <h3 id='cart-modal-heading' verse='no order again'>Shopping Cart</h3>
-              <div class='line-divider'></div>
-              <div id='no-groceries-added'>No groceries have been added yet</div>
               ";
               echo "</div>"; # - this is cart content closing tag
 
@@ -912,10 +959,11 @@
 
               echo "
                 <div id='modal-footer'>
-                  <div id='location-and-store-container'>
+                  <div id='location-and-time-container'>
                     <div id='cart-location'></div>
                     <div id='cart-store-name'></div>
                     <div id='cart-store-address'></div>
+                    <div id='cart-delivery-time'></div>
                   </div>
                   <button id='place-order-btn'>Place Order</button>
                 </div>
@@ -932,8 +980,8 @@
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
-            <div class="col-4">
-              <h3 class="modal-inner-image-heading">Twix</h3>
+            <div>
+              <h6 class="modal-inner-image-heading">Twix</h6>
               <input type="image" src="../foodbin/img/image1.jpg" alt="Twix" class="modal-image" data="1"/>
             </div>
           </div>
@@ -948,8 +996,8 @@
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
-            <div class="col-4">
-              <h3 class="modal-inner-image-heading">Marsbar</h3>
+            <div>
+              <h6 class="modal-inner-image-heading">Marsbar</h6>
               <input type="image" src="../foodbin/img/image2.jpg" alt="Marsbar" class="modal-image" data="2"/>
             </div>
           </div>
@@ -964,8 +1012,8 @@
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
-            <div class="col-4">
-              <h3 class="modal-inner-image-heading">Gummybears</h3>
+            <div>
+              <h6 class="modal-inner-image-heading">Gummybears</h6>
               <input type="image" src="../foodbin/img/image3.jpg" alt="Gummybears" class="modal-image" data="3"/>
             </div>
           </div>
@@ -980,8 +1028,8 @@
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
-            <div class="col-4">
-              <h3 class="modal-inner-image-heading">Jellybeans</h3>
+            <div>
+              <h6 class="modal-inner-image-heading">Jellybeans</h6>
               <input type="image" src="../foodbin/img/image4.jpg" alt="Jellybeans" class="modal-image" data="4"/>
             </div>
           </div>
@@ -996,8 +1044,8 @@
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
-            <div class="col-4">
-              <h3 class="modal-inner-image-heading">M&amp;Ms</h3>
+            <div>
+              <h6 class="modal-inner-image-heading">M&amp;Ms</h6>
               <input type="image" src="../foodbin/img/image5.jpg" alt="M&M's" class="modal-image" data="5"/>
             </div>
           </div>
@@ -1012,8 +1060,8 @@
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
-            <div class="col-4">
-              <h3 class="modal-inner-image-heading">Skittles</h3>
+            <div>
+              <h6 class="modal-inner-image-heading">Skittles</h6>
               <input type="image" src="../foodbin/img/image6.jpg" alt="Skittles" class="modal-image" data="6"/>
             </div>
           </div>
@@ -1028,8 +1076,8 @@
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
-            <div class="col-4">
-              <h3 class="modal-inner-image-heading">Hersheys</h3>
+            <div>
+              <h6 class="modal-inner-image-heading">Hersheys</h6>
               <input type="image" src="../foodbin/img/image7.jpg" alt="Hersheys" class="modal-image" data="7"/>
             </div>
           </div>
@@ -1044,8 +1092,8 @@
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
-            <div class="col-4">
-              <h3 class="modal-inner-image-heading">Snickers</h3>
+            <div>
+              <h6 class="modal-inner-image-heading">Snickers</h6>
               <input type="image" src="../foodbin/img/image8.jpg" alt="Snickers" class="modal-image" data="8"/>
             </div>
           </div>
@@ -1060,8 +1108,8 @@
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
-            <div class="col-4">
-              <h3 class="modal-inner-image-heading">Sourpatches</h3>
+            <div>
+              <h6 class="modal-inner-image-heading">Sourpatches</h6>
               <input type="image" src="../foodbin/img/image9.jpg" alt="Sourpatch" class="modal-image" data="9"/>
             </div>
           </div>
@@ -1076,8 +1124,8 @@
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
-            <div class="col-4">
-              <h3 class="modal-inner-image-heading">Candycorn</h3>
+            <div>
+              <h6 class="modal-inner-image-heading">Candycorn</h6>
               <input type="image" src="../foodbin/img/image10.jpg" alt="Candycorn" class="modal-image" data="10"/>
             </div>
           </div>
@@ -1092,8 +1140,8 @@
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
-  					<div class="col-4">
-  						<h3 class="modal-inner-image-heading">Broccoli</h3>
+  					<div>
+  						<h6 class="modal-inner-image-heading">Broccoli</h6>
   						<input type="image" src="../foodbin/img/image11.jpg" alt="Broccoli" class="modal-image" data="11"/>
   					</div>
   				</div>
@@ -1108,8 +1156,8 @@
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
-  					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Squash</h3>
+  					<div>
+						<h6 class="modal-inner-image-heading">Squash</h6>
 						<input type="image" src="../foodbin/img/image12.jpg" alt="Squash" class="modal-image" data="12"/>
   					</div>
   				</div>
@@ -1124,8 +1172,8 @@
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
-  					<div class="col-4">
-  						<h3 class="modal-inner-image-heading">Cauliflower</h3>
+  					<div>
+  						<h6 class="modal-inner-image-heading">Cauliflower</h6>
   						<input type="image" src="../foodbin/img/image13.jpg" alt="Cauliflower" class="modal-image" data="13"/>
   					</div>
   				</div>
@@ -1140,8 +1188,8 @@
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
-  					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Carrots</h3>
+  					<div>
+						<h6 class="modal-inner-image-heading">Carrots</h6>
 						<input type="image" src="../foodbin/img/image14.jpg" alt="Carrots" class="modal-image" data="14"/>
   					</div>
   				</div>
@@ -1156,8 +1204,8 @@
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
-  					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Celery</h3>
+  					<div>
+						<h6 class="modal-inner-image-heading">Celery</h6>
 						<input type="image" src="../foodbin/img/image15.jpg" alt="Celery" class="modal-image" data="15"/>
   					</div>
   				</div>
@@ -1172,8 +1220,8 @@
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
-  					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Lettuce</h3>
+  					<div>
+						<h6 class="modal-inner-image-heading">Lettuce</h6>
 						<input type="image" src="../foodbin/img/image16.jpg" alt="Lettuce" class="modal-image" data="16"/>
   					</div>
   				</div>
@@ -1188,8 +1236,8 @@
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
-  					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Potatoes</h3>
+  					<div>
+						<h6 class="modal-inner-image-heading">Potatoes</h6>
 						<input type="image" src="../foodbin/img/image17.jpg" alt="White Potatoes" class="modal-image" data="17"/>
   					</div>
   				</div>
@@ -1204,8 +1252,8 @@
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
-  					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Spinach</h3>
+  					<div>
+						<h6 class="modal-inner-image-heading">Spinach</h6>
 						<input type="image" src="../foodbin/img/image18.jpg" alt="Spinach" class="modal-image" data="18"/>
   					</div>
   				</div>
@@ -1220,8 +1268,8 @@
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
-  					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Kale</h3>
+  					<div>
+						<h6 class="modal-inner-image-heading">Kale</h6>
 						<input type="image" src="../foodbin/img/image19.jpg" alt="Kale" class="modal-image" data="19"/>
   					</div>
   				</div>
@@ -1236,8 +1284,8 @@
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
-  					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Onions</h3>
+  					<div>
+						<h6 class="modal-inner-image-heading">Onions</h6>
 						<input type="image" src="../foodbin/img/image20.jpg" alt="White Onions" class="modal-image" data="20"/>
   					</div>
   				</div>
@@ -1252,8 +1300,8 @@
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
-  					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Apples</h3>
+  					<div>
+						<h6 class="modal-inner-image-heading">Apples</h6>
 						<input type="image" src="../foodbin/img/image21.jpg" alt="Apples" class="modal-image" data="21"/>
   					</div>
   				</div>
@@ -1268,8 +1316,8 @@
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
-  					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Oranges</h3>
+  					<div>
+						<h6 class="modal-inner-image-heading">Oranges</h6>
 						<input type="image" src="../foodbin/img/image22.jpg" alt="Oranges" class="modal-image" data="22"/>
   					</div>
   				</div>
@@ -1284,8 +1332,8 @@
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
-  					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Bananas</h3>
+  					<div>
+						<h6 class="modal-inner-image-heading">Bananas</h6>
 						<input type="image" src="../foodbin/img/image23.jpg" alt="Bananas" class="modal-image" data="23"/>
   					</div>
   				</div>
@@ -1300,8 +1348,8 @@
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
-  					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Pears</h3>
+  					<div>
+						<h6 class="modal-inner-image-heading">Pears</h6>
 						<input type="image" src="../foodbin/img/image24.jpg" alt="Pears" class="modal-image" data="24"/>
   					</div>
   				</div>
@@ -1316,8 +1364,8 @@
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
-  					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Watermelons</h3>
+  					<div>
+						<h6 class="modal-inner-image-heading">Watermelons</h6>
 						<input type="image" src="../foodbin/img/image25.jpg" alt="Watermelons" class="modal-image" data="25"/>
   					</div>
   				</div>
@@ -1332,8 +1380,8 @@
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
-  					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Pineapples</h3>
+  					<div>
+						<h6 class="modal-inner-image-heading">Pineapples</h6>
 						<input type="image" src="../foodbin/img/image26.jpg" alt="Pineapples" class="modal-image" data="26"/>
   					</div>
   				</div>
@@ -1348,8 +1396,8 @@
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
-  					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Kiwis</h3>
+  					<div>
+						<h6 class="modal-inner-image-heading">Kiwis</h6>
 						<input type="image" src="../foodbin/img/image27.jpg" alt="Kiwis" class="modal-image" data="27"/>
   					</div>
   				</div>
@@ -1364,8 +1412,8 @@
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
-  					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Tangerines</h3>
+  					<div>
+						<h6 class="modal-inner-image-heading">Tangerines</h6>
 						<input type="image" src="../foodbin/img/image28.jpg" alt="Tangerines" class="modal-image" data="28"/>
   					</div>
   				</div>
@@ -1380,8 +1428,8 @@
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
-  					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Grapefruit</h3>
+  					<div>
+						<h6 class="modal-inner-image-heading">Grapefruit</h6>
 						<input type="image" src="../foodbin/img/image29.jpg" alt="Grapefruit" class="modal-image" data="29"/>
   					</div>
   				</div>
@@ -1396,8 +1444,8 @@
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
-  					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Mangoes</h3>
+  					<div>
+						<h6 class="modal-inner-image-heading">Mangoes</h6>
 						<input type="image" src="../foodbin/img/image30.jpg" alt="Mangoes" class="modal-image" data="30"/>
   					</div>
   				</div>
@@ -1412,8 +1460,8 @@
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
-  					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Almonds</h3>
+  					<div>
+						<h6 class="modal-inner-image-heading">Almonds</h6>
 						<input type="image" src="../foodbin/img/image31.jpg" alt="Almonds" class="modal-image" data="31"/>
   					</div>
   				</div>
@@ -1428,8 +1476,8 @@
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
-  					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Peanuts</h3>
+  					<div>
+						<h6 class="modal-inner-image-heading">Peanuts</h6>
 						<input type="image" src="../foodbin/img/image32.jpg" alt="Peanuts" class="modal-image" data="32"/>
   					</div>
   				</div>
@@ -1444,8 +1492,8 @@
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
-  					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Pistachios</h3>
+  					<div>
+						<h6 class="modal-inner-image-heading">Pistachios</h6>
 						<input type="image" src="../foodbin/img/image33.jpg" alt="Pistachios" class="modal-image" data="33"/>
   					</div>
   				</div>
@@ -1460,8 +1508,8 @@
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
-  					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Walnuts</h3>
+  					<div>
+						<h6 class="modal-inner-image-heading">Walnuts</h6>
 						<input type="image" src="../foodbin/img/image34.jpg" alt="Walnuts" class="modal-image" data="34"/>
   					</div>
   				</div>
@@ -1476,8 +1524,8 @@
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
-  					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Cashews</h3>
+  					<div>
+						<h6 class="modal-inner-image-heading">Cashews</h6>
 						<input type="image" src="../foodbin/img/image35.jpg" alt="Cashews" class="modal-image" data="35"/>
   					</div>
   				</div>
@@ -1492,8 +1540,8 @@
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
-  					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Macadamias</h3>
+  					<div>
+						<h6 class="modal-inner-image-heading">Macadamias</h6>
 						<input type="image" src="../foodbin/img/image36.jpg" alt="Macadamias" class="modal-image" data="36"/>
   					</div>
   				</div>
@@ -1508,8 +1556,8 @@
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
-  					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Hazelnuts</h3>
+  					<div>
+						<h6 class="modal-inner-image-heading">Hazelnuts</h6>
 						<input type="image" src="../foodbin/img/image37.jpg" alt="Hazelnuts" class="modal-image" data="37"/>
   					</div>
   				</div>
@@ -1524,8 +1572,8 @@
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
-  					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Pecans</h3>
+  					<div>
+						<h6 class="modal-inner-image-heading">Pecans</h6>
 						<input type="image" src="../foodbin/img/image38.jpg" alt="Pecans" class="modal-image" data="38"/>
   					</div>
   				</div>
@@ -1540,8 +1588,8 @@
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
-  					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Pine Nuts</h3>
+  					<div>
+						<h6 class="modal-inner-image-heading">Pine Nuts</h6>
 						<input type="image" src="../foodbin/img/image39.jpg" alt="Pine Nuts" class="modal-image" data="39"/>
   					</div>
   				</div>
@@ -1556,8 +1604,8 @@
   		<div class="modal-inner-container">
   			<div class="modal-inner-content">
   				<div class="row">
-  					<div class="col-4">
-						<h3 class="modal-inner-image-heading">Chestnuts</h3>
+  					<div>
+						<h6 class="modal-inner-image-heading">Chestnuts</h6>
 						<input type="image" src="../foodbin/img/image40.jpg" alt="Chestnuts" class="modal-image" data="40"/>
   					</div>
   				</div>
@@ -1621,36 +1669,35 @@
                     <div style='text-align:center'><i class='fa fa-angle-down' style='font-size:36px'></i></div>
                     <div class='num-of-items' style='text-align:center'>";
                     //echo $currData[0]['food_ids'];
-                $itemsStr = $currData[$a]['food_ids'];
-                $itemsArr = explode(" ", $itemsStr);
-                array_pop($itemsArr);
-                $itemsArrLength = count($itemsArr);
-                echo $itemsArrLength . " items";
+                $foodIdsStr = $currData[$a]['food_ids'];
+                $foodIdsArr = explode(" ", $foodIdsStr);
+                array_pop($foodIdsArr);
+                $foodIdsArrLength = count($foodIdsArr);
+                echo $foodIdsArrLength . " items";
 
                 # - item names
                 $itemNamesStr = $currData[$a]['item_names'];
                 $itemNamesArr = explode(" ", $itemNamesStr);
                 array_pop($itemNamesArr);
-                $itemArrLength = count($itemNamesArr);
+                $itemNamesArrLength = count($itemNamesArr);
                 # - end of item names
                 echo "
                     </div>
                   </div>
                   <div class='accordion-inner'>
                     ";
-                    for($b = 0; $b < $itemArrLength; $b++){
+                    for($b = 0; $b < $itemNamesArrLength; $b++){
                       echo "
                         <div class='store-order-row'>
                           <div class='store-order-left'>
                             <div class='store-item-name'>" . $itemNamesArr[$b] . "</div>
-                            <input type='image' src='../foodbin/img/image" . $itemsArr[$b] . ".jpg' class='store-modal-img'/>
+                            <input type='image' src='../foodbin/img/image" . $foodIdsArr[$b] . ".jpg' class='store-modal-img'/>
                           </div>
                           <div class='store-order-right'>
                             <div class='item-details-heading'>Details</div>";
                             echo "<ul>";
-                            for($c = 0; $c < $itemArrLength; $c++){
-                              $cplus = $c + 1;
-                              $itemSpecsStr = $currData[0]['item_' . $cplus . '_specs'];
+                            for($c = 0; $c < 4; $c++){
+                              $itemSpecsStr = $currData[$a]['item_' . $foodIdsArr[$b] . '_specs'];
                               $itemSpecsArr = explode(" | ", $itemSpecsStr);
                               echo "<li>" . $itemSpecsArr[$c] . "</li>";
                             }
@@ -1662,8 +1709,8 @@
                       ";
                     }
                 echo "
-                  <div class='fulfill-container'>
-                    <button class='fulfill-order-btn'>Fullfill Order</button>
+                  <div class='orders-deliver-container'>
+                    <button class='deliver-order-btn'>Deliver</button>
                   </div>
                   </div>
                 ";
@@ -1692,96 +1739,83 @@
         ";
       }
     ?>
-
-
-    <!-- <div id="store-modal-window">
-      <div class="close-btn-container">
-        <div class="modal-close-btn"></div>
-      </div>
-      <div id="store-modal-container">
-
-      </div>
-    </div> -->
-
-
-	<!-- will add these columns and close-btn to modal via JS when user clicks on food image -->
+	<!-- Close container and columns are added to food modals when user clicks on food item -->
 
 	<div class="close-btn-container">
 		<span class="modal-close-btn"></span>
 	</div>
 
+<div class="hide">
+  <div id="properties-priority-row">
+    <div class="properties-container">
+  		<h6 class="modal-select-heading">Properties</h6>
+      <form action="" id="selector-form">
+    		<select name="weight" class="weight-selector" class="product-options-selector">
+    			<option>Weight</option>
+    			<option value="1 lb">1 lb</option>
+    			<option value="2 lb">2 lb</option>
+    			<option value="3 lb">3 lb</option>
+    			<option value="4 lb">4 lb</option>
+    			<option value="5 lb">5 lb</option>
+          <option value="Any">Any</option>
+    		</select>
+    		<select name="cost" class="cost-selector" class="product-options-selector">
+    			<option>Cost</option>
+    			<option value="less-than-1$">&lt; 1$</option>
+    			<option value="less-than-2$">&lt; 2$</option>
+    			<option value="less-than-3$">&lt; 3$</option>
+    			<option value="less-than-4$">&lt; 4$</option>
+    			<option value="less-than-5$">&lt; 5$</option>
+          <option value="Any">Any</option>
+    		</select>
+    		<select name="specialty" class="specialty-selector" class="product-options-selector">
+    			<option>Specialty</option>
+    			<option value="Organic">Organic</option>
+    			<option value="Natural">Natural</option>
+    			<option value="Packaged">Packaged</option>
+    			<option value="Any">Any</option>
+    		</select>
+    		<select name="quality" class="quality-selector" class="product-options-selector">
+    			<option>Quality</option>
+    			<option value="Ripe">Ripe</option>
+    			<option value="Unripe">Unripe</option>
+          <option value="Any">Any</option>
+    		</select>
+      </form>
+  	</div>
 
-
-	<div class="col-4 middle-column">
-		<h3 class="modal-select-heading">Properties</h3>
-    <form action="" id="selector-form">
-  		<select name="weight" class="weight-selector" class="product-options-selector">
-  			<option>Weight</option>
-  			<option value="1 lb">1 lb</option>
-  			<option value="2 lb">2 lb</option>
-  			<option value="3 lb">3 lb</option>
-  			<option value="4 lb">4 lb</option>
-  			<option value="5 lb">5 lb</option>
-        <option value="Any">Any</option>
-  		</select>
-  		<select name="cost" class="cost-selector" class="product-options-selector">
-  			<option>Cost</option>
-  			<option value="less-than-1$">&lt; 1$</option>
-  			<option value="less-than-2$">&lt; 2$</option>
-  			<option value="less-than-3$">&lt; 3$</option>
-  			<option value="less-than-4$">&lt; 4$</option>
-  			<option value="less-than-5$">&lt; 5$</option>
-        <option value="Any">Any</option>
-  		</select>
-  		<select name="specialty" class="specialty-selector" class="product-options-selector">
-  			<option>Specialty</option>
-  			<option value="Organic">Organic</option>
-  			<option value="Natural">Natural</option>
-  			<option value="Packaged">Packaged</option>
-  			<option value="Any">Any</option>
-  		</select>
-  		<select name="quality" class="quality-selector" class="product-options-selector">
-  			<option>Quality</option>
-  			<option value="Ripe">Ripe</option>
-  			<option value="Unripe">Unripe</option>
-        <option value="Any">Any</option>
-  		</select>
-    </form>
-	</div>
-
-  <div class="col-4 last-column resetter">
-    <h3 class="modal-select-heading">Priority</h3>
-    <form action="" id="priority-num-form">
-      <select name="weight-priority" class="weight-priority priority-value">
-        <option value="one" selected="selected">One (high)</option>
-        <option value="two">Two</option>
-        <option value="three">Three</option>
-        <option value="four">Four (low)</option>
-      </select>
-      <select name="cost-priority" class="cost-priority priority-value">
-        <option value="one">One (high)</option>
-        <option value="two" selected="selected">Two</option>
-        <option value="three">Three</option>
-        <option value="four">Four (low)</option>
-      </select>
-      <select name="specialty-priority" class="specialty-priority priority-value">
-        <option value="one">One (high)</option>
-        <option value="two">Two</option>
-        <option value="three" selected="selected">Three</option>
-        <option value="four">Four (low)</option>
-      </select>
-      <select name="quality-priority" class="quality-priority priority-value">
-        <option value="one">One (high)</option>
-        <option value="two">Two</option>
-        <option value="three">Three</option>
-        <option value="four" selected="selected">Four (low)</option>
-      </select>
-    </form>
+    <div class="priority-container">
+      <h6 class="modal-select-heading">Priority</h6>
+      <form action="" id="priority-num-form">
+        <select name="weight-priority" class="weight-priority priority-value">
+          <option value="one" selected="selected">One (high)</option>
+          <option value="two">Two</option>
+          <option value="three">Three</option>
+          <option value="four">Four (low)</option>
+        </select>
+        <select name="cost-priority" class="cost-priority priority-value">
+          <option value="one">One (high)</option>
+          <option value="two" selected="selected">Two</option>
+          <option value="three">Three</option>
+          <option value="four">Four (low)</option>
+        </select>
+        <select name="specialty-priority" class="specialty-priority priority-value">
+          <option value="one">One (high)</option>
+          <option value="two">Two</option>
+          <option value="three" selected="selected">Three</option>
+          <option value="four">Four (low)</option>
+        </select>
+        <select name="quality-priority" class="quality-priority priority-value">
+          <option value="one">One (high)</option>
+          <option value="two">Two</option>
+          <option value="three">Three</option>
+          <option value="four" selected="selected">Four (low)</option>
+        </select>
+      </form>
+    </div>
+    <p id="same-priority-error">*Priority values cannot be the same</p>
   </div>
-
-  <p id="same-priority-error">*Priority values cannot be the same</p>
-
-
+</div>
 
 
 
