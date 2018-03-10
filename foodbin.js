@@ -30,8 +30,8 @@ var perImageContainers = document.getElementsByClassName("per-image-container"),
     modalWindows = document.getElementsByClassName("modal-window"),
     closeContainer = document.getElementsByClassName("close-btn-container")[0],
     row = document.getElementsByClassName("row"),
-    middleColumn = document.getElementsByClassName("middle-column")[0],
-    lastColumn = document.getElementsByClassName("last-column")[0],
+    propertiesPriorityRow = document.getElementById("properties-priority-row");
+    deliveryTimeContainer = document.getElementById("delivery-time-container");
     modalInnerFooter = document.getElementsByClassName("modal-inner-footer"),
     defaultPropertiesError = document.getElementById("default-properties-error"),
     samePriorityError = document.getElementById("same-priority-error");
@@ -49,8 +49,7 @@ function openFoodModal(index){
     modalWindows[index].appendChild(closeContainer);
     modalWindows[index].style.display = "block";
     $(".middle-column").add(".last-column").css("display", "block");
-    row[index].appendChild(middleColumn);
-    row[index].appendChild(lastColumn);
+    row[index].appendChild(propertiesPriorityRow);
 }
 
 //open food item modal when user clicks "Make Changes" btn in cart modal
@@ -58,8 +57,7 @@ function openFoodModal2(attribute){
     var $row = $("#" + attribute).find(".row");
     $(".close-btn-container").css("display", "block");
     $(".middle-column").add(".last-column").css("display", "block");
-    $row.append(middleColumn);
-    $row.append(lastColumn);
+    $row.append(propertiesPriorityRow);
 }
 
 //close modal window when user clicks on X btn in modal window
@@ -158,6 +156,30 @@ var innerImageContainers = document.getElementsByClassName("inner-images-contain
 
 /*--- End of Food Sliders ---*/
 
+/*--- Check if Order is in Progress ---*/
+var orderInProgress = document.getElementById("order-in-progress"),
+    orderInProgressVal;
+if(orderInProgress){
+  orderInProgressVal = orderInProgress.textContent;
+}
+/*--- End of Order in Progress Check ---*/
+
+/*--- Check if Order is being Editted ---*/
+var editInProgress = document.getElementById("edit-in-progress"),
+    editInProgressVal;
+if(editInProgress){
+  editInProgressVal = editInProgress.textContent;
+}
+/*--- End of Edit Order Check ---*/
+
+/*--- Check if Same Order in Progress ---*/
+var sameOrderInProgress = document.getElementById("same-order-in-progress"),
+    sameOrderInProgressVal;
+if(sameOrderInProgress){
+  sameOrderInProgressVal = sameOrderInProgress.textContent;
+}
+/*--- Check if Same Order in Progress ---*/
+
 
 /*--- Add Item to Cart with Add Btn ---*/
 var addToCartBtns = document.getElementsByClassName("add-to-cart-btn");
@@ -177,7 +199,7 @@ for(let i = 0; i < addToCartBtns.length; i++){
       if(loggedIn == "no"){
         e.preventDefault();
         alert("You must log in to place an order");
-      } else if(localStorage.getItem("order-in-progress") == "yes") {
+      } else if(orderInProgressVal == "yes") {
         e.preventDefault();
         alert("You have an order in progress");
       } else {
@@ -194,7 +216,7 @@ for(let i = 0; i < addToCartBtns.length; i++){
     });
 }
 
-if(sessionStorage.getItem("edit-in-progress") == "yes" || sessionStorage.getItem("order-requested-again") == "yes"){
+if(editInProgressVal == "yes" || sameOrderInProgressVal == "yes"){
   addCartImgSrcsToArray();
 }
 
@@ -246,11 +268,13 @@ function addFoodItem(index){
             $specialtyValue, $specialtyPriority,
             $qualityValue, $qualityPriority
         );
-        if(sessionStorage.getItem("edit-in-progress") == "yes"){
+        if(editInProgressVal == "yes"){
           let cartBadgeNum = cartBadge.textContent;
+          cartBadge.style.display = "block";
           cartBadge.textContent = Number(cartBadgeNum) + 1;
-        } else if (sessionStorage.getItem("order-requested-again") == "yes") {
+        } else if (sameOrderInProgressVal == "yes") {
           let cartBadgeNum = cartBadge.textContent;
+          cartBadge.style.display = "block";
           cartBadge.textContent = Number(cartBadgeNum) + 1;
         } else {
           cartItems++;
@@ -352,7 +376,7 @@ function createCartItem(windowId, heading, imageSrc, imageData, imageName, weigh
     if(noGroceriesAdded){
       noGroceriesAdded.style.display = "none";
     }
-    if(sessionStorage.getItem("edit-in-progress") != "yes" && sessionStorage.getItem("order-requested-again") != "yes"){
+    if(editInProgressVal != "yes" && sameOrderInProgressVal != "yes"){
       foodItemIds += imageData + " ";
       itemNames += imageName + " ";
     }
@@ -425,23 +449,29 @@ function removeCartRowAndInput($thisBtn, $thisFoodRow, $nextLineDivider, $hidden
 }
 
 function changeCartBadgeNum(){
-  if(sessionStorage.getItem("edit-in-progress") == "yes"){
+  if(editInProgressVal == "yes"){
     var cartBadgeNum = cartBadge.textContent;
     cartBadge.textContent = cartBadgeNum - 1;
     if(cartBadge.textContent === "0"){
         cartBadge.style.display = "none";
+        placeOrderBtn.style.display = "none";
+        noGroceriesAdded.style.display = "block";
     }
-  } else if (sessionStorage.getItem("order-requested-again") == "yes") {
+  } else if (sameOrderInProgressVal == "yes") {
     let cartBadgeNum = cartBadge.textContent;
     cartBadge.textContent = cartBadgeNum - 1;
     if(cartBadge.textContent === "0"){
         cartBadge.style.display = "none";
+        placeOrderBtn.style.display = "none";
+        noGroceriesAdded.style.display = "block";
     }
   } else {
     cartItems--;
     cartBadge.textContent = cartItems;
     if(cartBadge.textContent === "0"){
         cartBadge.style.display = "none";
+        placeOrderBtn.style.display = "none";
+        noGroceriesAdded.style.display = "block";
     }
   }
 }
@@ -464,11 +494,12 @@ function removeFoodItemId(imgData, ids){
 }
 
 /*--- Storing the Order in the Database ---*/
+
 var idInput, itemNamesInput;
 if(placeOrderBtn){
   placeOrderBtn.addEventListener("click", function(){
     cartImgSrcArr = [];
-    if(sessionStorage.getItem("edit-in-progress") != "yes" && sessionStorage.getItem("order-requested-again") != "yes"){
+    if(editInProgressVal != "yes" && sameOrderInProgressVal != "yes"){
       var locationInput = document.createElement("input");
       locationInput.setAttribute("type", "text");
       locationInput.setAttribute("name", "store_city");
@@ -484,7 +515,13 @@ if(placeOrderBtn){
       storeInput.setAttribute("name", "store_name");
       storeInput.setAttribute("value", storeCartName);
       formInner.insertBefore(storeInput, formInner.childNodes[0]);
-    } else if (sessionStorage.getItem("edit-in-progress") == "yes" || sessionStorage.getItem("order-requested-again") == "yes"){
+      var timeInput = document.createElement("input");
+      timeInput.setAttribute("type", "text");
+      timeInput.setAttribute("name", "delivery_time");
+      timeInput.setAttribute("value", cartDeliveryTime.textContent);
+      formInner.insertBefore(timeInput, formInner.childNodes[0]);
+
+    } else if (editInProgressVal == "yes" || sameOrderInProgressVal == "yes"){
       var itemSpecInputs = document.getElementsByClassName("item-spec-inputs");
       for(let i = 0; i < itemSpecInputs.length; i++){
         foodItemIds += itemSpecInputs[i].getAttribute("data") + " ";
@@ -505,18 +542,10 @@ if(placeOrderBtn){
     itemNamesInput.setAttribute("name", "item_names");
     itemNamesInput.setAttribute("value", itemNames);
     formInner.insertBefore(itemNamesInput, idInput);
-
     hiddenSubmit.click();
-    sessionStorage.setItem("edit-in-progress", "no")
-    localStorage.setItem("order-in-progress", "yes");
-    sessionStorage.setItem("order-requested-again", "no");
   });
 }
 /*--- End of Storing Order in Database ---*/
-
-/*--- Create counter for store orders ---*/
-
-/*--- end of store order counter ---*/
 
 /*--- Initialize Google Maps API ---*/
 var deliveryBtnContainer = document.getElementById("deliver-btn-container"),
@@ -529,6 +558,7 @@ var deliveryBtnContainer = document.getElementById("deliver-btn-container"),
 locationInputField.addEventListener("click", function(){
     if(searchListGroup.style.height !== "150px"){
         searchListGroup.style.height = "150px";
+        searchListGroup.style.overflowY = "auto";
     }
 });
 
@@ -809,6 +839,7 @@ function initializeMap(){
                     createMapObject(11, userLocation, userCoords);
                 }
             });
+            searchListGroup.style.overflowY = "hidden";
             $("#search-list-group").animate({
                 scrollTop: $("li:contains(" + thisItem + ")").offset().top - $("#search-list-group").offset().top + $("#search-list-group").scrollTop()
             }, "500");
@@ -862,6 +893,7 @@ function initializeMap(){
     var checkmark = document.getElementById("checkmark");
 
     $("#search-list-group li a").click(function(){
+        document.getElementById("delivery-time-list").style.display = "block";
         if(deliveryBtnCaption.style.display == "block"){
           deliveryBtnCaption.style.display = "none";
         }
@@ -1049,7 +1081,7 @@ function initializeMap(){
             content: "<p style='font-weight: bold'>" + storeName + "</p><br/>" +
                      "<span>" + storeAddress + "</span><br/>" +
                      "<a href='https://maps.google.com/?q=" + storeName + " " + storeAddress + "' target='_blank' style='color: #427fed'>View on Google Maps</a><br/>" +
-                     "<span class='store-orders' onclick='showStoreOrders(this.id)' id='" + storeAddress + "'><span id='order-num'>0</span> orders</span>"
+                     "<span class='store-orders' onclick='showStoreOrders(this.id)' id='" + storeAddress + "'>View orders</span>"
         })
 
         infoWindow.open(map, marker);
@@ -1069,12 +1101,20 @@ function handleLocationError(browserHasGeolocation, info, pos) {
 }
 /*--- End of Google Maps API ---*/
 
+/*--- Check if a user is logged in ---*/
+var userLoggedIn = document.getElementById("user-logged-in");
+/*--- End of user logged in check ---*/
+
 /*--- Open Store Orders Modal ---*/
 var storeModalWindow = document.getElementById("store-modal-window");
 function showStoreOrders(storeAddress){
-  var comma = storeAddress.indexOf(",");
-  var trimAddress = storeAddress.substring(0, comma);
-  createAddressForm(trimAddress);
+  if(userLoggedIn.textContent != "yes"){
+    alert("Log in to view store orders");
+  } else {
+    var comma = storeAddress.indexOf(",");
+    var trimAddress = storeAddress.substring(0, comma);
+    createAddressForm(trimAddress);
+  }
 }
 
 function createAddressForm(address){
@@ -1102,9 +1142,9 @@ function submitAddressForm(){
 }
 
 window.onclick = function(e){
-  if(e.target.matches("#store-modal-window") || e.target.matches(".close-btn-container")){
+  if(e.target.matches(".modal-window") || e.target.matches("#store-modal-window") || e.target.matches(".close-btn-container")){
     storeModalWindow.style.display = "none";
-    $("#store-modal-window").find(".close-btn-container").css("display", "none");
+    $(".close-btn-container").css("display", "none");
     $("#address-form").remove();
     $("#unset-address-btn").click();
   }
@@ -1112,10 +1152,10 @@ window.onclick = function(e){
 
 //var arrowDownIcon = document.getElementsByClassName("fa-angle-down")[0];
 var ordersAccordion = document.getElementsByClassName("orders-accordion")
+var arrowDownIcon = document.getElementsByClassName("fa-angle-down");
 for(let i = 0; i < ordersAccordion.length; i++){
   ordersAccordion[i].onclick = function(){
-    var arrowDownIcon = document.getElementsByClassName("fa-angle-down")[0];
-    arrowDownIcon.classList.toggle("rotate-arrow");
+    arrowDownIcon[i].classList.toggle("rotate-arrow");
     var accordionInner = this.nextElementSibling;
     accordionInner.classList.toggle("accordion-inner-height");
   }
@@ -1125,10 +1165,11 @@ for(let i = 0; i < ordersAccordion.length; i++){
 //when user clicks on "Deliver From Here" btn
 var deliveryBtn = document.getElementById("delivery-btn"),
     deliveryBtnCaption = document.getElementById("delivery-btn-caption"),
-    locationStoreContainer = document.getElementById("location-and-store-container"),
+    locationTimeContainer = document.getElementById("location-and-time-container"),
     cartLocation = document.getElementById("cart-location"),
     cartStoreName = document.getElementById("cart-store-name"),
     cartStoreAddress = document.getElementById("cart-store-address");
+    cartDeliveryTime = document.getElementById("cart-delivery-time");
 
 if(deliveryBtn){
   deliveryBtn.addEventListener("click", function(e){
@@ -1140,17 +1181,34 @@ if(deliveryBtn){
       } else if (locationSelected != undefined && storeAddress != undefined){
         $("#checkmark").css({"position":"absolute", "left": "40px"});
         deliveryBtnCaption.style.display = "none";
-        locationStoreContainer.style.display = "grid";
+        locationTimeContainer.style.display = "grid";
         locationText = document.createTextNode(locationSelected);
         addressText = document.createTextNode(storeAddress);
         storeNameText = document.createTextNode(storeCartName);
         cartLocation.appendChild(locationText);
         cartStoreName.appendChild(storeNameText);
         cartStoreAddress.appendChild(addressText);
+        cartDeliveryTime.textContent = $("#delivery-time-list option:selected").text()
+        var $storeAddressInput = $("input[name='store_name']");
+        if($storeAddressInput){
+          $("input[name='store_address']").val(storeAddress);
+          $("input[name='store_name']").val(storeCartName);
+          $("input[name='store_city']").val(locationSelected);
+          $("input[name='delivery_time']").val(cartDeliveryTime.textContent);
+        }
       }
   });
 }
 
+/*--- Contact Form ---*/
+var contactSubmitBtn = document.getElementById("contact-submit-btn");
+contactSubmitBtn.addEventListener("click", function(e){
+  if(userLoggedIn.textContent != "yes"){
+    e.preventDefault();
+    alert("Sign in to send us a message");
+  }
+})
+/*--- End of Contact ---*/
 
 $(window).on('beforeunload', function() {
    $(window).scrollTop(0);
