@@ -807,6 +807,8 @@
                         <input type="text" name="store_address" value="' . $editData[0]["store_address"] . '"/>
                         <input type="text" name="store_city" value="' . $editData[0]["store_city"] . '"/>
                         <input type="text" name="delivery_time" value="' . $editData[0]["delivery_time"] . '"/>
+                        <input type="text" name="food_ids" />
+                        <input type="text" name="item_names" />
                         ';
                         for($x3 = 0; $x3 < $itemArrLength; $x3++){
                           echo "<input type='text' name='item_" . $itemArr[$x3] . "_specs' value='" . $editData[0]['item_' . $itemArr[$x3] . '_specs'] . "' data='" . $itemArr[$x3] . "' class='item-spec-inputs'/>";
@@ -890,6 +892,8 @@
                          <input type="text" name="store_address" value="' . $prevData[0]["store_address"] . '"/>
                          <input type="text" name="store_city" value="' . $prevData[0]["store_city"] . '"/>
                          <input type="text" name="delivery_time" value="' . $prevData[0]['delivery_time'] . '"/>
+                         <input type="text" name="food_ids" />
+                         <input type="text" name="item_names" />
                          ';
                          for($x3 = 0; $x3 < $itemArrLength; $x3++){
                            echo "<input type='text' name='item_" . $itemArr[$x3] . "_specs' value='" . $prevData[0]['item_' . $itemArr[$x3] . '_specs'] . "' data='" . $itemArr[$x3] . "' class='item-spec-inputs'/>";
@@ -923,6 +927,12 @@
                  echo "
                    <div id='hidden-form'>
                      <form action='includes/orderfood.php' id='form-inner' method='POST'>
+                       <input type='text' name='store_city' />
+                       <input type='text' name='store_address' />
+                       <input type='text' name='store_name' />
+                       <input type='text' name='delivery_time' />
+                       <input type='text' name='food_ids' />
+                       <input type='text' name='item_names' />
                        <input type='submit' name='submit' value='Submit' id='hidden-submit'/>
                      </form>
                    </div>
@@ -951,6 +961,12 @@
               echo "
                 <div id='hidden-form'>
                   <form action='includes/orderfood.php' id='form-inner' method='POST'>
+                    <input type='text' name='store_city' />
+                    <input type='text' name='store_address' />
+                    <input type='text' name='store_name' />
+                    <input type='text' name='delivery_time' />
+                    <input type='text' name='food_ids' />
+                    <input type='text' name='item_names' />
                     <input type='submit' name='submit' value='Submit' id='hidden-submit'/>
                   </form>
                 </div>
@@ -998,6 +1014,10 @@
       </div>
     </div>
     <!-- Cart Row Template -->
+
+    <!-- Hidden Cart Form Template -->
+
+    <!-- End of Hidden Cart Form -->
 
     <!-- Start of Food item Modal  -->
     <div class="modal-window">
