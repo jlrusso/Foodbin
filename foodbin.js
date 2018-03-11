@@ -1,13 +1,13 @@
 /*--- Start of User Icon JS --*/
-    var userIcon = document.getElementsByClassName("fa-user")[0],
-        userList = document.getElementsByClassName("user-list")[0],
-        username = document.getElementById("user"),
-        userParent = document.getElementById("user-parent");
-        if(userIcon){
-            userIcon.addEventListener("click", function(){
-                userList.classList.toggle("show-user-list");
-            });
-        }
+var userIcon = document.getElementsByClassName("fa-user")[0],
+    userList = document.getElementsByClassName("user-list")[0],
+    username = document.getElementById("user"),
+    userParent = document.getElementById("user-parent");
+    if(userIcon){
+        userIcon.addEventListener("click", function(){
+            userList.classList.toggle("show-user-list");
+        });
+    }
 
     window.addEventListener("click", function(e){
         if(userIcon){
@@ -27,7 +27,6 @@
 
 /*--- Food Item Modals ---*/
 var perImageContainers = document.getElementsByClassName("per-image-container"),
-    modalWindows = document.getElementsByClassName("modal-window"),
     closeContainer = document.getElementsByClassName("close-btn-container")[0],
     row = document.getElementsByClassName("row"),
     propertiesPriorityRow = document.getElementById("properties-priority-row");
@@ -37,27 +36,31 @@ var perImageContainers = document.getElementsByClassName("per-image-container"),
     samePriorityError = document.getElementById("same-priority-error");
 
 //append constant close container and middle & third columns to each modal window that pops up
+var itemNamesArr = [
+  "Twix", "Marsbar", "Gummybears", "Jellybeans", "M&M's", "Skittles", "Hersheys", "Snickers", "Sourpatches", "Candycorn", "Broccoli", "Squash", "Cauliflower", "Carrots", "Celery", "Lettuce", "Potatoes", "Spinach", "Kale", "Onions", "Apples", "Oranges", "Bananas", "Pears", "Watermelons", "Pineapples", "Kiwis", "Tangerines", "Grapefruit", "Mangoes", "Almonds", "Peanuts", "Pistachios", "Walnuts", "Cashews", "Macadamias", "Hazelnuts", "Pecans", "Pine Nuts", "Chestnuts"
+]
 for(let i = 0; i < perImageContainers.length; i++){
     perImageContainers[i].addEventListener("click", function(){
-        openFoodModal(i);
+        displayFoodModal(i);
     })
 }
 
-//open food item modal when user clicks on food item
-function openFoodModal(index){
-    $(".close-btn-container").css("display", "block");
-    modalWindows[index].appendChild(closeContainer);
-    modalWindows[index].style.display = "block";
-    $(".middle-column").add(".last-column").css("display", "block");
-    row[index].appendChild(propertiesPriorityRow);
+function displayFoodModal(index){
+  var itemNum = index + 1;
+  var modalWindow = document.getElementsByClassName("modal-window")[0];
+  modalWindow.setAttribute("id", "item-" + itemNum + "-window");
+  document.getElementsByClassName("modal-inner-image-heading")[0].textContent = itemNamesArr[index];
+  var imageInput = document.getElementsByClassName("modal-image")[0];
+  imageInput.setAttribute("src", "../foodbin/img/image" + itemNum + ".jpg");
+  imageInput.setAttribute("alt", itemNamesArr[index]);
+  imageInput.setAttribute("data", itemNum);
+  $(".close-btn-container").css("display", "block");
+  modalWindow.appendChild(closeContainer);
+  modalWindow.style.display = "block";
 }
 
-//open food item modal when user clicks "Make Changes" btn in cart modal
-function openFoodModal2(attribute){
-    var $row = $("#" + attribute).find(".row");
-    $(".close-btn-container").css("display", "block");
-    $(".middle-column").add(".last-column").css("display", "block");
-    $row.append(propertiesPriorityRow);
+function displayFromCart(dataNum){
+  displayFoodModal(dataNum - 1);
 }
 
 //close modal window when user clicks on X btn in modal window
@@ -68,16 +71,6 @@ for(let i = 0; i < closeBtnContainers.length; i++){
         thisModalWindow.style.display = "none";
     })
 }
-
-//close modal window when user clicks on dark area, but not modal content area
-for(let i = 0; i < modalWindows.length; i++){
-    modalWindows[i].addEventListener("click", function(e){
-        if(e.target.matches(".modal-window")){
-            this.style.display = "none";
-        }
-    })
-}
-/*--- End of Food Item Modals ---*/
 
 
 /*--- Start of Cart Modal ---*/
@@ -420,8 +413,7 @@ $("body").click(function(event){
         removeItemName(itemName);
         removeFoodItemId(imgData, foodItemIds);
         $("#cart-modal-window").css("display", "none");
-        $("#" + foodAtt).css("display", "block");
-        openFoodModal2(foodAtt);
+        displayFromCart($modalImageData);
     }
     if(event.target.matches(".remove-item-btn")){
         var $thisBtn = $(event.target);
@@ -1142,8 +1134,9 @@ function submitAddressForm(){
 }
 
 window.onclick = function(e){
-  if(e.target.matches(".modal-window") || e.target.matches("#store-modal-window") || e.target.matches(".close-btn-container")){
+  if(e.target.matches(".modal-window") || e.target.matches("#store-modal-window") || e.target.matches(".close-btn-container") || e.target.matches(".modal-close-btn")){
     storeModalWindow.style.display = "none";
+    $(".modal-window").css("display", "none");
     $(".close-btn-container").css("display", "none");
     $("#address-form").remove();
     $("#unset-address-btn").click();
