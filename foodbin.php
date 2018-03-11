@@ -735,7 +735,7 @@
 
     <!-- Start of Cart Modal -->
     <div id="cart-modal-window">
-      <div id="cart-close-container">
+      <div class="close-btn-container">
         <span class="modal-close-btn"></span>
       </div>
     	<div id="cart-modal-container">
@@ -969,9 +969,35 @@
               ";
             }
           ?>
-    	</div>
-    </div>
+      	</div>
+      </div>
     <!-- End of Cart Modal -->
+
+    <!-- Cart Row Template -->
+    <div id="cart-row-template">
+      <div class="cart-row">
+        <div class="left-cart-col">
+          <h4 class="left-col-heading"></h4>
+          <div class="col-image-container">
+            <input type="image" class="cart-image"/>
+          </div>
+        </div>
+        <div class="right-cart-col">
+          <h4 class="right-col-heading">Details</h4>
+          <ul class="details-list">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+          </ul>
+          <div class="item-btns-container">
+            <button class="make-changes-btn">Make Changes</button>
+            <button class="remove-item-btn">Remove Item</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Cart Row Template -->
 
     <!-- Start of Food item Modal  -->
     <div class="modal-window">
