@@ -28,23 +28,25 @@ var userIcon = document.getElementsByClassName("fa-user")[0],
 /*--- Food Item Modals ---*/
 var perImageContainers = document.getElementsByClassName("per-image-container"),
     closeContainer = document.getElementsByClassName("close-btn-container")[0],
-    row = document.getElementsByClassName("row"),
     propertiesPriorityRow = document.getElementById("properties-priority-row");
     deliveryTimeContainer = document.getElementById("delivery-time-container");
     modalInnerFooter = document.getElementsByClassName("modal-inner-footer"),
     defaultPropertiesError = document.getElementById("default-properties-error"),
     samePriorityError = document.getElementById("same-priority-error");
 
-//append constant close container and middle & third columns to each modal window that pops up
+/*--- Vars used for modal-window template image headings --*/
 var itemNamesArr = [
   "Twix", "Marsbar", "Gummybears", "Jellybeans", "M&M's", "Skittles", "Hersheys", "Snickers", "Sourpatches", "Candycorn", "Broccoli", "Squash", "Cauliflower", "Carrots", "Celery", "Lettuce", "Potatoes", "Spinach", "Kale", "Onions", "Apples", "Oranges", "Bananas", "Pears", "Watermelons", "Pineapples", "Kiwis", "Tangerines", "Grapefruit", "Mangoes", "Almonds", "Peanuts", "Pistachios", "Walnuts", "Cashews", "Macadamias", "Hazelnuts", "Pecans", "Pine Nuts", "Chestnuts"
 ]
+
+/* --- Create and Display Item Modal on Image click ---*/
 for(let i = 0; i < perImageContainers.length; i++){
     perImageContainers[i].addEventListener("click", function(){
         displayFoodModal(i);
     })
 }
 
+/*--- Fill in modal window template with item names ---*/
 function displayFoodModal(index){
   var itemNum = index + 1;
   var modalWindow = document.getElementsByClassName("modal-window")[0];
@@ -59,19 +61,10 @@ function displayFoodModal(index){
   modalWindow.style.display = "block";
 }
 
+/*--- Dislpay item Modal when user clicks "Make Changes" btn ---*/
 function displayFromCart(dataNum){
   displayFoodModal(dataNum - 1);
 }
-
-//close modal window when user clicks on X btn in modal window
-var closeBtnContainers = document.getElementsByClassName("close-btn-container");
-for(let i = 0; i < closeBtnContainers.length; i++){
-    closeBtnContainers[i].addEventListener("click", function(){
-        var thisModalWindow = this.parentElement;
-        thisModalWindow.style.display = "none";
-    })
-}
-
 
 /*--- Start of Cart Modal ---*/
 var cartContainer = document.getElementById("cart-container"),
@@ -94,22 +87,11 @@ function openCartModal(e){
     e.preventDefault();
     if(e.target.matches("#cart")){
         cartModalWindow.style.display = "block";
+        $(".close-btn-container").css("display", "block");
     }
     cartModalWindow.style.display = "block";
+    $(".close-btn-container").css("display", "block");
 }
-
-//close cart modal if user clicks on dark area of modal window and not modal content area
-cartModalWindow.addEventListener("click", function(e){
-    if(e.target.matches("#cart-modal-window")){
-        this.style.display = "none";
-    }
-})
-
-//close cart modal when user clicks on X btn in the modal window
-cartCloseContainer.addEventListener("click", function(){
-    this.parentElement.style.display = "none";
-})
-/*--- End of Cart Modal ---*/
 
 
 /*--- Food Section Sliders ---*/
@@ -120,33 +102,30 @@ var innerImageContainers = document.getElementsByClassName("inner-images-contain
     slideLeftBtns = document.getElementsByClassName("slide-left-btn"),
     slideRightBtns = document.getElementsByClassName("slide-right-btn");
 
-    for(let i = 0; i < slideLeftBtns.length; i++){
-        slideLeftBtns[i].addEventListener("click", function(){
-            foodContainerRowIndex = i;
-            currentSectionIndex--;
-            if(currentSectionIndex < 0){
-                currentSectionIndex = 1;
-            }
-            moveFoodSection();
-        })
-    }
+for(let i = 0; i < slideLeftBtns.length; i++){
+    slideLeftBtns[i].addEventListener("click", function(){
+        foodContainerRowIndex = i;
+        currentSectionIndex--;
+        if(currentSectionIndex < 0){
+            currentSectionIndex = 1;
+        }
+        moveFoodSection();
+    })
+}
 
-    for(let i = 0; i < slideRightBtns.length; i++){
-        slideRightBtns[i].addEventListener("click", function(){
-            foodContainerRowIndex = i;
-            currentSectionIndex++;
-            if(currentSectionIndex >= 2){
-                currentSectionIndex = 0;
-            }
-            moveFoodSection();
-        })
-    }
-
-    function moveFoodSection(){
-        innerImageContainers[foodContainerRowIndex].style.left = -width * currentSectionIndex + "%";
-    }
-
-
+for(let i = 0; i < slideRightBtns.length; i++){
+    slideRightBtns[i].addEventListener("click", function(){
+        foodContainerRowIndex = i;
+        currentSectionIndex++;
+        if(currentSectionIndex >= 2){
+            currentSectionIndex = 0;
+        }
+        moveFoodSection();
+    })
+}
+function moveFoodSection(){
+    innerImageContainers[foodContainerRowIndex].style.left = -width * currentSectionIndex + "%";
+}
 /*--- End of Food Sliders ---*/
 
 /*--- Check if Order is in Progress ---*/
@@ -180,7 +159,7 @@ var priorityNumForm = document.getElementById("priority-num-form");
 var selectorForm = document.getElementById("selector-form");
 var modalInnerImageHeadings = document.getElementsByClassName("modal-inner-image-heading");
 var modalImages = document.getElementsByClassName("modal-image");
-var gotHeading;
+var imageHeading;
 var cartItems = 0;
 var placeOrderBtn = document.getElementById("place-order-btn");
 var noGroceriesAdded = document.getElementById("no-groceries-added");
@@ -203,7 +182,7 @@ for(let i = 0; i < addToCartBtns.length; i++){
           e.preventDefault();
         } else {
           cartImgSrcArr.push($thisModalImageSrc);
-          addFoodItem(i);
+          addItemToCart(i);
         }
       }
     });
@@ -221,7 +200,7 @@ function addCartImgSrcsToArray(){
 }
 
 
-function addFoodItem(index){
+function addItemToCart(index){
     var modalWindow = addToCartBtns[index].parentElement.parentElement.parentElement,
         $modalContainer = $(".add-to-cart-btn").eq(index).parents(".modal-inner-container"),
         $modalContent = $modalContainer.find(".modal-inner-content"),
@@ -249,33 +228,43 @@ function addFoodItem(index){
             return false;
         }
 
-
+        /*--- Grab Modal Image properties ---*/
         itemImageSrc = modalImages[index].getAttribute("src");
         itemImageData = modalImages[index].getAttribute("data");
         itemImageName = modalImages[index].getAttribute("alt");
+        imageHeading = modalInnerImageHeadings[index].textContent;
 
-        gotHeading = modalInnerImageHeadings[index].textContent;
-        createCartItem(
-            modalWindowId, gotHeading, itemImageSrc, itemImageData, itemImageName, $weightValue,
+        (function incrementBadgeNum(){
+          if(editInProgressVal == "yes"){
+            let cartBadgeNum = cartBadge.textContent;
+            cartBadge.style.display = "block";
+            cartBadge.textContent = Number(cartBadgeNum) + 1;
+          } else if (sameOrderInProgressVal == "yes") {
+            let cartBadgeNum = cartBadge.textContent;
+            cartBadge.style.display = "block";
+            cartBadge.textContent = Number(cartBadgeNum) + 1;
+          } else {
+            cartItems++;
+            cartBadge.textContent = cartItems;
+            cartBadge.style.display = "block";
+          }
+        }());
+
+        (function resetSelectForms(){
+          priorityNumForm.reset();
+          selectorForm.reset();
+        }());
+
+        displayCartItem(
+            modalWindowId, imageHeading, itemImageSrc,
+            itemImageData, itemImageName, $weightValue,
             $weightPriority, $costValue, $costPriority,
             $specialtyValue, $specialtyPriority,
             $qualityValue, $qualityPriority
         );
-        if(editInProgressVal == "yes"){
-          let cartBadgeNum = cartBadge.textContent;
-          cartBadge.style.display = "block";
-          cartBadge.textContent = Number(cartBadgeNum) + 1;
-        } else if (sameOrderInProgressVal == "yes") {
-          let cartBadgeNum = cartBadge.textContent;
-          cartBadge.style.display = "block";
-          cartBadge.textContent = Number(cartBadgeNum) + 1;
-        } else {
-          cartItems++;
-          cartBadge.textContent = cartItems;
-          cartBadge.style.display = "block";
-        }
-        priorityNumForm.reset();
-        selectorForm.reset();
+
+
+
         modalWindow.style.display = "none";
         $(".close-btn-container").css("display", "none");
 }
@@ -288,91 +277,64 @@ var itemNames = "";
 var formInner = document.getElementById("form-inner");
 var hiddenSubmit = document.getElementById("hidden-submit");
 //make food item row in cart modal with options selected from the food item modal, and food heading
-function createCartItem(windowId, heading, imageSrc, imageData, imageName, weight, weightP, cost, costP, specialty, specialtyP, quality, qualityP){
+function displayCartItem(windowId, heading, imageSrc, imageData, imageName, weight, weightP, cost, costP, specialty, specialtyP, quality, qualityP){
 
-    //create new cart row, cart row columns, and add to cart-modal-content div
-    var cartContent = document.getElementById("cart-modal-content");
-    var newCartRow = document.createElement("div");
-    newCartRow.classList.add("cart-row");
-    var leftCartCol = document.createElement("div");
-    leftCartCol.classList.add("left-cart-col");
-    var leftColHeading = document.createElement("h4");
-    leftColHeading.classList.add("left-col-heading");
-    leftColHeading.textContent = heading;
-    var imageContainer = document.createElement("div");
-    imageContainer.classList.add("col-image-container")
-    var newImage = document.createElement("input");
-    newImage.setAttribute("type", "image");
-    newImage.setAttribute("src", imageSrc);
-    newImage.setAttribute("data", imageData);
-    newImage.setAttribute("alt", imageName);
-    newImage.setAttribute("class", "cart-image");
-    imageContainer.appendChild(newImage);
-    var rightCartCol = document.createElement("div");
-    rightCartCol.classList.add("right-cart-col");
-    var rightColHeading = document.createElement("h4");
-    rightColHeading.classList.add("right-col-heading");
-    rightColHeading.textContent = "Details";
+    var cartContent = document.getElementById("cart-modal-content"),
+        cartRowTemplate = document.getElementById("cart-row-template"),
+        $cartRow = $("#cart-row-template").find(".cart-row");
 
-    //create list and list items with text from select options checked
-    var detailsList = document.createElement("ul");
-    detailsList.classList.add("details-list");
-    var listItem1 = document.createElement("li");
-    var listText1 = document.createTextNode("Weight: " + weight + ", Priority: " + weightP);
-    listItem1.appendChild(listText1);
-    detailsList.appendChild(listItem1);
-    var listItem2 = document.createElement("li");
-    var listText2 = document.createTextNode("Cost: " + cost + ", Priority: " + costP);
-    listItem2.appendChild(listText2);
-    detailsList.appendChild(listItem2);
-    var listItem3 = document.createElement("li");
-    var listText3 = document.createTextNode("Specialty: " + specialty + ", Priority: " + specialtyP);
-    listItem3.appendChild(listText3);
-    detailsList.appendChild(listItem3);
-    var listItem4 = document.createElement("li");
-    var listText4 = document.createTextNode("Quality: " + quality + ", Priority: " + qualityP);
-    listItem4.appendChild(listText4);
-    detailsList.appendChild(listItem4);
+    (function setImageHeading(){
+      $("#cart-row-template").find(".left-col-heading").text(heading);
+    }());
 
-    //append created columns to the create cart row
-    leftCartCol.appendChild(leftColHeading);
-    leftCartCol.appendChild(imageContainer);
-    rightCartCol.appendChild(rightColHeading);
-    rightCartCol.appendChild(detailsList);
-    newCartRow.appendChild(leftCartCol);
-    newCartRow.appendChild(rightCartCol);
+    (function setImageAttributes(){
+      var $cartImage = $("#cart-row-template").find(".cart-image");
+      $cartImage.attr("src", imageSrc);
+      $cartImage.attr("data", imageData);
+      $cartImage.attr("alt", imageName);
+    }());
 
-    // create btn container and btn elements 'Make Changes' and 'Remove Item'
-    var btnContainer = document.createElement("div");
-    btnContainer.classList.add("item-btns-container");
-    var btn1 = document.createElement("button");
-    btn1.classList.add("make-changes-btn");
-    btn1.setAttribute("for", "");
-    btn1.setAttribute("for", windowId);
-    btn1.textContent = "Make Changes";
-    var btn2 = document.createElement("button");
-    btn2.classList.add("remove-item-btn");
-    btn2.textContent = "Remove Item";
-    btnContainer.appendChild(btn1);
-    btnContainer.appendChild(btn2);
-    rightCartCol.appendChild(btnContainer);
+    (function setItemDetails(){
+      var $detailsList = $("#cart-row-template").find(".details-list");
+      listText1 = "Weight: " + weight + ", Priority: " + weightP;
+      $detailsList.find("li").eq(0).text(listText1);
+      listText2 = "Cost: " + cost + ", Priority: " + costP;
+      $detailsList.find("li").eq(1).text(listText2);
+      listText3 = "Specialty: " + specialty + ", Priority: " + specialtyP;
+      $detailsList.find("li").eq(2).text(listText3);
+      listText4 = "Quality: " + quality + ", Priority: " + qualityP;
+      $detailsList.find("li").eq(3).text(listText4);
+    }());
 
-    //create line divider between food items in cart
-    var lineDivider = document.createElement("div");
-    lineDivider.classList.add("line-divider")
+    (function setCartRowBtns(){
+      var $makeChangeBtn = $("#cart-modal-content").find(".make-changes-btn");
+      $makeChangeBtn.attr("for", "");
+      $makeChangeBtn.attr("for", windowId);
+    }());
 
-    cartContent.appendChild(newCartRow);
-    cartContent.appendChild(lineDivider);
+    (function appendAndDisplayCartRow(){
+      var $clonedRow = $cartRow.clone();
+      $("#cart-modal-content").append($clonedRow);
+      var lineDivider = document.createElement("div");
+      lineDivider.setAttribute("class", "line-divider");
+      $("#cart-modal-content").append(lineDivider);
+    }());
+
+
     if(placeOrderBtn){
       placeOrderBtn.style.display = "block";
     }
     if(noGroceriesAdded){
       noGroceriesAdded.style.display = "none";
     }
-    if(editInProgressVal != "yes" && sameOrderInProgressVal != "yes"){
-      foodItemIds += imageData + " ";
-      itemNames += imageName + " ";
-    }
+
+    (function addIdAndNameToArr(){
+      if(editInProgressVal != "yes" && sameOrderInProgressVal != "yes"){
+        foodItemIds += imageData + " ";
+        itemNames += imageName + " ";
+      }
+    }());
+
     createHiddenForm(foodItemIds, imageData, imageName, listText1, listText2, listText3, listText4);
 }
 
@@ -384,12 +346,8 @@ function createHiddenForm(itemIds, dataNum, itemName, wp, cp, sp, qp){
   newInput.setAttribute("data", dataNum);
   newInput.setAttribute("alt", itemName);
   newInput.setAttribute("class", "item-spec-inputs");
-  newInput.setAttribute("value", getString(wp) + " | " + getString(cp) + " | " + getString(sp) + " | " + getString(qp));
+  newInput.setAttribute("value", wp + " | " + cp + " | " + sp + " | " + qp);
   formInner.insertBefore(newInput, hiddenSubmit);
-}
-
-function getString(obj){
-  return obj.textContent ? obj.textContent : obj.innerText;
 }
 /*--- End of Hidden Form ---*/
 
@@ -1108,7 +1066,7 @@ function showStoreOrders(storeAddress){
     createAddressForm(trimAddress);
   }
 }
-
+/*--- Submit Address Form so its displayed in store orders Modal ---*/
 function createAddressForm(address){
   var addForm = document.createElement("form");
   addForm.setAttribute("action", "includes/setAddress.php");
@@ -1134,9 +1092,10 @@ function submitAddressForm(){
 }
 
 window.onclick = function(e){
-  if(e.target.matches(".modal-window") || e.target.matches("#store-modal-window") || e.target.matches(".close-btn-container") || e.target.matches(".modal-close-btn")){
-    storeModalWindow.style.display = "none";
+  if(e.target.matches(".modal-window") || e.target.matches("#store-modal-window") || e.target.matches("#cart-modal-window") || e.target.matches(".close-btn-container") || e.target.matches(".modal-close-btn")){
     $(".modal-window").css("display", "none");
+    $("#store-modal-window").css("display", "none");
+    $("#cart-modal-window").css("display", "none");
     $(".close-btn-container").css("display", "none");
     $("#address-form").remove();
     $("#unset-address-btn").click();
