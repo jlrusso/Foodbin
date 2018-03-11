@@ -335,11 +335,11 @@ function displayCartItem(windowId, heading, imageSrc, imageData, imageName, weig
       }
     }());
 
-    createHiddenForm(foodItemIds, imageData, imageName, listText1, listText2, listText3, listText4);
+    createUniqueItemInput(foodItemIds, imageData, imageName, listText1, listText2, listText3, listText4);
 }
 
 /*--- Start of Hidden Form ---*/
-function createHiddenForm(itemIds, dataNum, itemName, wp, cp, sp, qp){
+function createUniqueItemInput(itemIds, dataNum, itemName, wp, cp, sp, qp){
   var newInput = document.createElement("input");
   newInput.setAttribute("type", "text");
   newInput.setAttribute("name", "item_" + dataNum + "_specs");
@@ -354,17 +354,17 @@ function createHiddenForm(itemIds, dataNum, itemName, wp, cp, sp, qp){
 //add click event and run code if either the remove-item-btn or make-changes-btn is clicked
 $("body").click(function(event){
     if(event.target.matches(".make-changes-btn")){
-        var $thisBtn = $(event.target);
+        let $thisBtn = $(event.target);
         let foodAtt = $(event.target).attr("for");
-        let $thisFoodRow = $thisBtn.parents(".cart-row");
+        let $thisFoodRow = $(event.target).parents(".cart-row");
         let $modalImageData = $thisFoodRow.find("input:image").attr("data");
         let $modalImageSrc = $thisFoodRow.find("input:image").attr("src");
         let $modalItemName = $thisFoodRow.find("input:image").attr("alt");
-        var imgSrc = "" + $modalImageSrc;
-        var imgData = "" + $modalImageData;
-        var itemName = "" + $modalItemName;
+        let imgSrc = "" + $modalImageSrc;
+        let imgData = "" + $modalImageData;
+        let itemName = "" + $modalItemName;
         let $nextLineDivider = $(event.target).parents(".cart-row").next(".line-divider");
-        var $hiddenInput = $("#form-inner").find("input[data='" + imgData + "']");
+        let $hiddenInput = $("#form-inner").find("input[data='" + imgData + "']");
         removeCartRowAndInput($thisBtn, $thisFoodRow, $nextLineDivider, $hiddenInput);
         changeCartBadgeNum();
         removeImgSrcFromArray(imgSrc);
@@ -374,16 +374,16 @@ $("body").click(function(event){
         displayFromCart($modalImageData);
     }
     if(event.target.matches(".remove-item-btn")){
-        var $thisBtn = $(event.target);
+        let $thisBtn = $(event.target);
         let $thisFoodRow = $thisBtn.parents(".cart-row");
         let $modalImageData = $thisFoodRow.find("input:image").attr("data");
         let $modalImageSrc = $thisFoodRow.find("input:image").attr("src");
         let $modalItemName = $thisFoodRow.find("input:image").attr("alt");
-        var imgSrc = "" + $modalImageSrc;
-        var imgData = "" + $modalImageData;
-        var itemName = "" + $modalItemName;
+        let imgSrc = "" + $modalImageSrc;
+        let imgData = "" + $modalImageData;
+        let itemName = "" + $modalItemName;
         let $nextLineDivider = $(event.target).parents(".cart-row").next(".line-divider");
-        var $hiddenInput = $("#form-inner").find("input[data='" + imgData + "']");
+        let $hiddenInput = $("#form-inner").find("input[data='" + imgData + "']");
         removeCartRowAndInput($thisBtn, $thisFoodRow, $nextLineDivider, $hiddenInput);
         changeCartBadgeNum();
         removeImgSrcFromArray(imgSrc);
@@ -399,8 +399,9 @@ function removeCartRowAndInput($thisBtn, $thisFoodRow, $nextLineDivider, $hidden
 }
 
 function changeCartBadgeNum(){
+  var cartBadgeNum;
   if(editInProgressVal == "yes"){
-    var cartBadgeNum = cartBadge.textContent;
+    cartBadgeNum = cartBadge.textContent;
     cartBadge.textContent = cartBadgeNum - 1;
     if(cartBadge.textContent === "0"){
         cartBadge.style.display = "none";
@@ -408,7 +409,7 @@ function changeCartBadgeNum(){
         noGroceriesAdded.style.display = "block";
     }
   } else if (sameOrderInProgressVal == "yes") {
-    let cartBadgeNum = cartBadge.textContent;
+    cartBadgeNum = cartBadge.textContent;
     cartBadge.textContent = cartBadgeNum - 1;
     if(cartBadge.textContent === "0"){
         cartBadge.style.display = "none";
@@ -450,48 +451,22 @@ if(placeOrderBtn){
   placeOrderBtn.addEventListener("click", function(){
     cartImgSrcArr = [];
     if(editInProgressVal != "yes" && sameOrderInProgressVal != "yes"){
-      var locationInput = document.createElement("input");
-      locationInput.setAttribute("type", "text");
-      locationInput.setAttribute("name", "store_city");
-      locationInput.setAttribute("value", locationSelected);
-      formInner.insertBefore(locationInput, formInner.childNodes[0]);
-      var addressInput = document.createElement("input");
-      addressInput.setAttribute("type", "text");
-      addressInput.setAttribute("name", "store_address");
-      addressInput.setAttribute("value", storeAddress);
-      formInner.insertBefore(addressInput, formInner.childNodes[0]);
-      var storeInput = document.createElement("input");
-      storeInput.setAttribute("type", "text");
-      storeInput.setAttribute("name", "store_name");
-      storeInput.setAttribute("value", storeCartName);
-      formInner.insertBefore(storeInput, formInner.childNodes[0]);
-      var timeInput = document.createElement("input");
-      timeInput.setAttribute("type", "text");
-      timeInput.setAttribute("name", "delivery_time");
-      timeInput.setAttribute("value", cartDeliveryTime.textContent);
-      formInner.insertBefore(timeInput, formInner.childNodes[0]);
-
+      $("input[name='store_city']").attr("value", locationSelected);
+      $("input[name='store_address']").attr("value", storeAddress);
+      $("input[name='store_name']").attr("value", storeCartName);
+      $("input[name='delivery_time']").attr("value", cartDeliveryTime.textContent);
     } else if (editInProgressVal == "yes" || sameOrderInProgressVal == "yes"){
-      var itemSpecInputs = document.getElementsByClassName("item-spec-inputs");
-      for(let i = 0; i < itemSpecInputs.length; i++){
-        foodItemIds += itemSpecInputs[i].getAttribute("data") + " ";
-      }
-      var cartImgs = document.getElementsByClassName("cart-image");
-      for(let i = 0; i < cartImgs.length; i++){
-        itemNames += cartImgs[i].getAttribute("alt") + " ";
-      }
+        var itemSpecInputs = document.getElementsByClassName("item-spec-inputs");
+        for(let i = 0; i < itemSpecInputs.length; i++){
+          foodItemIds += itemSpecInputs[i].getAttribute("data") + " ";
+        }
+        var cartImgs = document.getElementsByClassName("cart-image");
+        for(let i = 0; i < cartImgs.length; i++){
+          itemNames += cartImgs[i].getAttribute("alt") + " ";
+        }
     }
-    idInput = document.createElement("input");
-    idInput.setAttribute("type", "text");
-    idInput.setAttribute("name", "food_ids");
-    idInput.setAttribute("value", foodItemIds);
-    formInner.insertBefore(idInput, hiddenSubmit);
-
-    itemNamesInput = document.createElement("input");
-    itemNamesInput.setAttribute("type", "text");
-    itemNamesInput.setAttribute("name", "item_names");
-    itemNamesInput.setAttribute("value", itemNames);
-    formInner.insertBefore(itemNamesInput, idInput);
+    $("input[name='food_ids']").attr("value", foodItemIds);
+    $("input[name='item_names']").attr("value", itemNames);
     hiddenSubmit.click();
   });
 }
@@ -1134,12 +1109,9 @@ if(deliveryBtn){
         $("#checkmark").css({"position":"absolute", "left": "40px"});
         deliveryBtnCaption.style.display = "none";
         locationTimeContainer.style.display = "grid";
-        locationText = document.createTextNode(locationSelected);
-        addressText = document.createTextNode(storeAddress);
-        storeNameText = document.createTextNode(storeCartName);
-        cartLocation.appendChild(locationText);
-        cartStoreName.appendChild(storeNameText);
-        cartStoreAddress.appendChild(addressText);
+        cartLocation.textContent = locationSelected;
+        cartStoreName.textContent = storeCartName;
+        cartStoreAddress.textContent = storeAddress;
         cartDeliveryTime.textContent = $("#delivery-time-list option:selected").text()
         var $storeAddressInput = $("input[name='store_name']");
         if($storeAddressInput){
