@@ -62,13 +62,12 @@
                         echo "<span id='logged-in' class='yes'></span>";
                         echo '<li><i class="fa fa-user"></i>
                                 <ul class="user-list">
-                                  ' . '<li id="user-parent"><a href="profile.php" id="user">' . $_SESSION['user_username'] . '</a></li>
-                                        <li>
-                                            <form action="includes/logout-inc.php" method="POST">
-                                              <input type="submit" name="submit" value="logout" id="logout-btn"/>
-                                            </form>
-                                        </li>
-
+                                <li id="user-parent"><a href="profile.php" id="user">' . $_SESSION['user_username'] . '</a></li>
+                                <li>
+                                    <form action="includes/logout-inc.php" method="POST">
+                                      <input type="submit" name="submit" value="logout" id="logout-btn"/>
+                                    </form>
+                                </li>
                                 </ul>
                               </li>';
                       } else {
@@ -181,7 +180,7 @@
         <div id="user-map-area">
         	<div id="user-location-section">
         		<h3>Choose a Location</h3>
-        		<form action="">
+        		<form>
 		            <div id="input-container">
                     <div id="marker-input-container">
                       <span><i class="fa fa-map-marker"></i></span>
@@ -974,15 +973,81 @@
     </div>
     <!-- End of Cart Modal -->
 
-
-    <!-- Candy Food Section -->
-    <div class="modal-window" id="item-1-window">
+    <!-- Start of Food item Modal  -->
+    <div class="modal-window">
       <div class="modal-inner-container">
         <div class="modal-inner-content">
           <div class="row">
-            <div>
-              <h6 class="modal-inner-image-heading">Twix</h6>
-              <input type="image" src="../foodbin/img/image1.jpg" alt="Twix" class="modal-image" data="1"/>
+            <h6 class="modal-inner-image-heading"></h6>
+            <input type="image" class="modal-image">
+            <div id="properties-priority-row">
+              <div class="properties-container">
+            		<h6 class="modal-select-heading">Properties</h6>
+                <form action="" id="selector-form">
+              		<select name="weight" class="weight-selector" class="product-options-selector">
+              			<option>Weight</option>
+              			<option value="1 lb">1 lb</option>
+              			<option value="2 lb">2 lb</option>
+              			<option value="3 lb">3 lb</option>
+              			<option value="4 lb">4 lb</option>
+              			<option value="5 lb">5 lb</option>
+                    <option value="Any">Any</option>
+              		</select>
+              		<select name="cost" class="cost-selector" class="product-options-selector">
+              			<option>Cost</option>
+              			<option value="less-than-1$">&lt; 1$</option>
+              			<option value="less-than-2$">&lt; 2$</option>
+              			<option value="less-than-3$">&lt; 3$</option>
+              			<option value="less-than-4$">&lt; 4$</option>
+              			<option value="less-than-5$">&lt; 5$</option>
+                    <option value="Any">Any</option>
+              		</select>
+              		<select name="specialty" class="specialty-selector" class="product-options-selector">
+              			<option>Specialty</option>
+              			<option value="Organic">Organic</option>
+              			<option value="Natural">Natural</option>
+              			<option value="Packaged">Packaged</option>
+              			<option value="Any">Any</option>
+              		</select>
+              		<select name="quality" class="quality-selector" class="product-options-selector">
+              			<option>Quality</option>
+              			<option value="Ripe">Ripe</option>
+              			<option value="Unripe">Unripe</option>
+                    <option value="Any">Any</option>
+              		</select>
+                </form>
+            	</div>
+
+              <div class="priority-container">
+                <h6 class="modal-select-heading">Priority</h6>
+                <form action="" id="priority-num-form">
+                  <select name="weight-priority" class="weight-priority priority-value">
+                    <option value="one" selected="selected">One (high)</option>
+                    <option value="two">Two</option>
+                    <option value="three">Three</option>
+                    <option value="four">Four (low)</option>
+                  </select>
+                  <select name="cost-priority" class="cost-priority priority-value">
+                    <option value="one">One (high)</option>
+                    <option value="two" selected="selected">Two</option>
+                    <option value="three">Three</option>
+                    <option value="four">Four (low)</option>
+                  </select>
+                  <select name="specialty-priority" class="specialty-priority priority-value">
+                    <option value="one">One (high)</option>
+                    <option value="two">Two</option>
+                    <option value="three" selected="selected">Three</option>
+                    <option value="four">Four (low)</option>
+                  </select>
+                  <select name="quality-priority" class="quality-priority priority-value">
+                    <option value="one">One (high)</option>
+                    <option value="two">Two</option>
+                    <option value="three">Three</option>
+                    <option value="four" selected="selected">Four (low)</option>
+                  </select>
+                </form>
+              </div>
+              <p id="same-priority-error">*Priority values cannot be the same</p>
             </div>
           </div>
         </div>
@@ -991,630 +1056,7 @@
         </div>
       </div>
     </div>
-
-    <div class="modal-window" id="item-2-window">
-      <div class="modal-inner-container">
-        <div class="modal-inner-content">
-          <div class="row">
-            <div>
-              <h6 class="modal-inner-image-heading">Marsbar</h6>
-              <input type="image" src="../foodbin/img/image2.jpg" alt="Marsbar" class="modal-image" data="2"/>
-            </div>
-          </div>
-        </div>
-        <div class="modal-inner-footer">
-          <button class="add-to-cart-btn" id="add-marsbar-btn">Add to Cart</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal-window" id="item-3-window">
-      <div class="modal-inner-container">
-        <div class="modal-inner-content">
-          <div class="row">
-            <div>
-              <h6 class="modal-inner-image-heading">Gummybears</h6>
-              <input type="image" src="../foodbin/img/image3.jpg" alt="Gummybears" class="modal-image" data="3"/>
-            </div>
-          </div>
-        </div>
-        <div class="modal-inner-footer">
-          <button class="add-to-cart-btn" id="add-gummybears-btn">Add to Cart</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal-window" id="item-4-window">
-      <div class="modal-inner-container">
-        <div class="modal-inner-content">
-          <div class="row">
-            <div>
-              <h6 class="modal-inner-image-heading">Jellybeans</h6>
-              <input type="image" src="../foodbin/img/image4.jpg" alt="Jellybeans" class="modal-image" data="4"/>
-            </div>
-          </div>
-        </div>
-        <div class="modal-inner-footer">
-          <button class="add-to-cart-btn" id="add-jellybeans-btn">Add to Cart</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal-window" id="item-5-window">
-      <div class="modal-inner-container">
-        <div class="modal-inner-content">
-          <div class="row">
-            <div>
-              <h6 class="modal-inner-image-heading">M&amp;Ms</h6>
-              <input type="image" src="../foodbin/img/image5.jpg" alt="M&M's" class="modal-image" data="5"/>
-            </div>
-          </div>
-        </div>
-        <div class="modal-inner-footer">
-          <button class="add-to-cart-btn" id="add-m&ms-btn">Add to Cart</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal-window" id="item-6-window">
-      <div class="modal-inner-container">
-        <div class="modal-inner-content">
-          <div class="row">
-            <div>
-              <h6 class="modal-inner-image-heading">Skittles</h6>
-              <input type="image" src="../foodbin/img/image6.jpg" alt="Skittles" class="modal-image" data="6"/>
-            </div>
-          </div>
-        </div>
-        <div class="modal-inner-footer">
-          <button class="add-to-cart-btn" id="add-skittles-btn">Add to Cart</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal-window" id="item-7-window">
-      <div class="modal-inner-container">
-        <div class="modal-inner-content">
-          <div class="row">
-            <div>
-              <h6 class="modal-inner-image-heading">Hersheys</h6>
-              <input type="image" src="../foodbin/img/image7.jpg" alt="Hersheys" class="modal-image" data="7"/>
-            </div>
-          </div>
-        </div>
-        <div class="modal-inner-footer">
-          <button class="add-to-cart-btn" id="add-hersheys-btn">Add to Cart</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal-window" id="item-8-window">
-      <div class="modal-inner-container">
-        <div class="modal-inner-content">
-          <div class="row">
-            <div>
-              <h6 class="modal-inner-image-heading">Snickers</h6>
-              <input type="image" src="../foodbin/img/image8.jpg" alt="Snickers" class="modal-image" data="8"/>
-            </div>
-          </div>
-        </div>
-        <div class="modal-inner-footer">
-          <button class="add-to-cart-btn" id="add-snickers-btn">Add to Cart</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal-window" id="item-9-window">
-      <div class="modal-inner-container">
-        <div class="modal-inner-content">
-          <div class="row">
-            <div>
-              <h6 class="modal-inner-image-heading">Sourpatches</h6>
-              <input type="image" src="../foodbin/img/image9.jpg" alt="Sourpatch" class="modal-image" data="9"/>
-            </div>
-          </div>
-        </div>
-        <div class="modal-inner-footer">
-          <button class="add-to-cart-btn" id="add-sourpatches-btn">Add to Cart</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal-window" id="item-10-window">
-      <div class="modal-inner-container">
-        <div class="modal-inner-content">
-          <div class="row">
-            <div>
-              <h6 class="modal-inner-image-heading">Candycorn</h6>
-              <input type="image" src="../foodbin/img/image10.jpg" alt="Candycorn" class="modal-image" data="10"/>
-            </div>
-          </div>
-        </div>
-        <div class="modal-inner-footer">
-          <button class="add-to-cart-btn" id="add-candycorn-btn">Add to Cart</button>
-        </div>
-      </div>
-    </div>
-    <!-- End of Candy Section -->
-    <div class="modal-window" id="item-11-window">
-  		<div class="modal-inner-container">
-  			<div class="modal-inner-content">
-  				<div class="row">
-  					<div>
-  						<h6 class="modal-inner-image-heading">Broccoli</h6>
-  						<input type="image" src="../foodbin/img/image11.jpg" alt="Broccoli" class="modal-image" data="11"/>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="modal-inner-footer">
-  				<button class="add-to-cart-btn" id="add-broccoli-btn">Add to Cart</button>
-  			</div>
-  		</div>
-    </div>
-
-    <div class="modal-window" id="item-12-window">
-  		<div class="modal-inner-container">
-  			<div class="modal-inner-content">
-  				<div class="row">
-  					<div>
-						<h6 class="modal-inner-image-heading">Squash</h6>
-						<input type="image" src="../foodbin/img/image12.jpg" alt="Squash" class="modal-image" data="12"/>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="modal-inner-footer">
-  				<button class="add-to-cart-btn">Add to Cart</button>
-  			</div>
-  		</div>
-    </div>
-
-    <div class="modal-window" id="item-13-window">
-  		<div class="modal-inner-container">
-  			<div class="modal-inner-content">
-  				<div class="row">
-  					<div>
-  						<h6 class="modal-inner-image-heading">Cauliflower</h6>
-  						<input type="image" src="../foodbin/img/image13.jpg" alt="Cauliflower" class="modal-image" data="13"/>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="modal-inner-footer">
-  				<button class="add-to-cart-btn">Add to Cart</button>
-  			</div>
-  		</div>
-    </div>
-
-    <div class="modal-window" id="item-14-window">
-  		<div class="modal-inner-container">
-  			<div class="modal-inner-content">
-  				<div class="row">
-  					<div>
-						<h6 class="modal-inner-image-heading">Carrots</h6>
-						<input type="image" src="../foodbin/img/image14.jpg" alt="Carrots" class="modal-image" data="14"/>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="modal-inner-footer">
-  				<button class="add-to-cart-btn">Add to Cart</button>
-  			</div>
-  		</div>
-    </div>
-
-    <div class="modal-window" id="item-15-window">
-  		<div class="modal-inner-container">
-  			<div class="modal-inner-content">
-  				<div class="row">
-  					<div>
-						<h6 class="modal-inner-image-heading">Celery</h6>
-						<input type="image" src="../foodbin/img/image15.jpg" alt="Celery" class="modal-image" data="15"/>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="modal-inner-footer">
-  				<button class="add-to-cart-btn">Add to Cart</button>
-  			</div>
-  		</div>
-    </div>
-
-    <div class="modal-window" id="item-16-window">
-  		<div class="modal-inner-container">
-  			<div class="modal-inner-content">
-  				<div class="row">
-  					<div>
-						<h6 class="modal-inner-image-heading">Lettuce</h6>
-						<input type="image" src="../foodbin/img/image16.jpg" alt="Lettuce" class="modal-image" data="16"/>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="modal-inner-footer">
-  				<button class="add-to-cart-btn">Add to Cart</button>
-  			</div>
-  		</div>
-    </div>
-
-    <div class="modal-window" id="item-17-window">
-  		<div class="modal-inner-container">
-  			<div class="modal-inner-content">
-  				<div class="row">
-  					<div>
-						<h6 class="modal-inner-image-heading">Potatoes</h6>
-						<input type="image" src="../foodbin/img/image17.jpg" alt="White Potatoes" class="modal-image" data="17"/>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="modal-inner-footer">
-  				<button class="add-to-cart-btn">Add to Cart</button>
-  			</div>
-  		</div>
-    </div>
-
-    <div class="modal-window" id="item-18-window">
-  		<div class="modal-inner-container">
-  			<div class="modal-inner-content">
-  				<div class="row">
-  					<div>
-						<h6 class="modal-inner-image-heading">Spinach</h6>
-						<input type="image" src="../foodbin/img/image18.jpg" alt="Spinach" class="modal-image" data="18"/>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="modal-inner-footer">
-  				<button class="add-to-cart-btn">Add to Cart</button>
-  			</div>
-  		</div>
-    </div>
-
-    <div class="modal-window" id="item-19-window">
-  		<div class="modal-inner-container">
-  			<div class="modal-inner-content">
-  				<div class="row">
-  					<div>
-						<h6 class="modal-inner-image-heading">Kale</h6>
-						<input type="image" src="../foodbin/img/image19.jpg" alt="Kale" class="modal-image" data="19"/>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="modal-inner-footer">
-  				<button class="add-to-cart-btn">Add to Cart</button>
-  			</div>
-  		</div>
-    </div>
-
-    <div class="modal-window" id="item-20-window">
-  		<div class="modal-inner-container">
-  			<div class="modal-inner-content">
-  				<div class="row">
-  					<div>
-						<h6 class="modal-inner-image-heading">Onions</h6>
-						<input type="image" src="../foodbin/img/image20.jpg" alt="White Onions" class="modal-image" data="20"/>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="modal-inner-footer">
-  				<button class="add-to-cart-btn">Add to Cart</button>
-  			</div>
-  		</div>
-    </div>
-
-    <div class="modal-window" id="item-21-window">
-  		<div class="modal-inner-container">
-  			<div class="modal-inner-content">
-  				<div class="row">
-  					<div>
-						<h6 class="modal-inner-image-heading">Apples</h6>
-						<input type="image" src="../foodbin/img/image21.jpg" alt="Apples" class="modal-image" data="21"/>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="modal-inner-footer">
-  				<button class="add-to-cart-btn">Add to Cart</button>
-  			</div>
-  		</div>
-    </div>
-
-    <div class="modal-window" id="item-22-window">
-  		<div class="modal-inner-container">
-  			<div class="modal-inner-content">
-  				<div class="row">
-  					<div>
-						<h6 class="modal-inner-image-heading">Oranges</h6>
-						<input type="image" src="../foodbin/img/image22.jpg" alt="Oranges" class="modal-image" data="22"/>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="modal-inner-footer">
-  				<button class="add-to-cart-btn">Add to Cart</button>
-  			</div>
-  		</div>
-    </div>
-
-    <div class="modal-window" id="item-23-window">
-  		<div class="modal-inner-container">
-  			<div class="modal-inner-content">
-  				<div class="row">
-  					<div>
-						<h6 class="modal-inner-image-heading">Bananas</h6>
-						<input type="image" src="../foodbin/img/image23.jpg" alt="Bananas" class="modal-image" data="23"/>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="modal-inner-footer">
-  				<button class="add-to-cart-btn">Add to Cart</button>
-  			</div>
-  		</div>
-    </div>
-
-    <div class="modal-window" id="item-24-window">
-  		<div class="modal-inner-container">
-  			<div class="modal-inner-content">
-  				<div class="row">
-  					<div>
-						<h6 class="modal-inner-image-heading">Pears</h6>
-						<input type="image" src="../foodbin/img/image24.jpg" alt="Pears" class="modal-image" data="24"/>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="modal-inner-footer">
-  				<button class="add-to-cart-btn">Add to Cart</button>
-  			</div>
-  		</div>
-    </div>
-
-    <div class="modal-window" id="item-25-window">
-  		<div class="modal-inner-container">
-  			<div class="modal-inner-content">
-  				<div class="row">
-  					<div>
-						<h6 class="modal-inner-image-heading">Watermelons</h6>
-						<input type="image" src="../foodbin/img/image25.jpg" alt="Watermelons" class="modal-image" data="25"/>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="modal-inner-footer">
-  				<button class="add-to-cart-btn">Add to Cart</button>
-  			</div>
-  		</div>
-    </div>
-
-    <div class="modal-window" id="item-26-window">
-  		<div class="modal-inner-container">
-  			<div class="modal-inner-content">
-  				<div class="row">
-  					<div>
-						<h6 class="modal-inner-image-heading">Pineapples</h6>
-						<input type="image" src="../foodbin/img/image26.jpg" alt="Pineapples" class="modal-image" data="26"/>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="modal-inner-footer">
-  				<button class="add-to-cart-btn">Add to Cart</button>
-  			</div>
-  		</div>
-    </div>
-
-    <div class="modal-window" id="item-27-window">
-  		<div class="modal-inner-container">
-  			<div class="modal-inner-content">
-  				<div class="row">
-  					<div>
-						<h6 class="modal-inner-image-heading">Kiwis</h6>
-						<input type="image" src="../foodbin/img/image27.jpg" alt="Kiwis" class="modal-image" data="27"/>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="modal-inner-footer">
-  				<button class="add-to-cart-btn">Add to Cart</button>
-  			</div>
-  		</div>
-    </div>
-
-    <div class="modal-window" id="item-28-window">
-  		<div class="modal-inner-container">
-  			<div class="modal-inner-content">
-  				<div class="row">
-  					<div>
-						<h6 class="modal-inner-image-heading">Tangerines</h6>
-						<input type="image" src="../foodbin/img/image28.jpg" alt="Tangerines" class="modal-image" data="28"/>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="modal-inner-footer">
-  				<button class="add-to-cart-btn">Add to Cart</button>
-  			</div>
-  		</div>
-    </div>
-
-    <div class="modal-window" id="item-29-window">
-  		<div class="modal-inner-container">
-  			<div class="modal-inner-content">
-  				<div class="row">
-  					<div>
-						<h6 class="modal-inner-image-heading">Grapefruit</h6>
-						<input type="image" src="../foodbin/img/image29.jpg" alt="Grapefruit" class="modal-image" data="29"/>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="modal-inner-footer">
-  				<button class="add-to-cart-btn">Add to Cart</button>
-  			</div>
-  		</div>
-    </div>
-
-    <div class="modal-window" id="item-30-window">
-  		<div class="modal-inner-container">
-  			<div class="modal-inner-content">
-  				<div class="row">
-  					<div>
-						<h6 class="modal-inner-image-heading">Mangoes</h6>
-						<input type="image" src="../foodbin/img/image30.jpg" alt="Mangoes" class="modal-image" data="30"/>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="modal-inner-footer">
-  				<button class="add-to-cart-btn">Add to Cart</button>
-  			</div>
-  		</div>
-    </div>
-
-    <div class="modal-window" id="item-31-window">
-  		<div class="modal-inner-container">
-  			<div class="modal-inner-content">
-  				<div class="row">
-  					<div>
-						<h6 class="modal-inner-image-heading">Almonds</h6>
-						<input type="image" src="../foodbin/img/image31.jpg" alt="Almonds" class="modal-image" data="31"/>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="modal-inner-footer">
-  				<button class="add-to-cart-btn">Add to Cart</button>
-  			</div>
-  		</div>
-    </div>
-
-    <div class="modal-window" id="item-32-window">
-  		<div class="modal-inner-container">
-  			<div class="modal-inner-content">
-  				<div class="row">
-  					<div>
-						<h6 class="modal-inner-image-heading">Peanuts</h6>
-						<input type="image" src="../foodbin/img/image32.jpg" alt="Peanuts" class="modal-image" data="32"/>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="modal-inner-footer">
-  				<button class="add-to-cart-btn">Add to Cart</button>
-  			</div>
-  		</div>
-    </div>
-
-    <div class="modal-window" id="item-33-window">
-  		<div class="modal-inner-container">
-  			<div class="modal-inner-content">
-  				<div class="row">
-  					<div>
-						<h6 class="modal-inner-image-heading">Pistachios</h6>
-						<input type="image" src="../foodbin/img/image33.jpg" alt="Pistachios" class="modal-image" data="33"/>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="modal-inner-footer">
-  				<button class="add-to-cart-btn">Add to Cart</button>
-  			</div>
-  		</div>
-    </div>
-
-    <div class="modal-window" id="item-34-window">
-  		<div class="modal-inner-container">
-  			<div class="modal-inner-content">
-  				<div class="row">
-  					<div>
-						<h6 class="modal-inner-image-heading">Walnuts</h6>
-						<input type="image" src="../foodbin/img/image34.jpg" alt="Walnuts" class="modal-image" data="34"/>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="modal-inner-footer">
-  				<button class="add-to-cart-btn">Add to Cart</button>
-  			</div>
-  		</div>
-    </div>
-
-    <div class="modal-window" id="item-35-window">
-  		<div class="modal-inner-container">
-  			<div class="modal-inner-content">
-  				<div class="row">
-  					<div>
-						<h6 class="modal-inner-image-heading">Cashews</h6>
-						<input type="image" src="../foodbin/img/image35.jpg" alt="Cashews" class="modal-image" data="35"/>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="modal-inner-footer">
-  				<button class="add-to-cart-btn">Add to Cart</button>
-  			</div>
-  		</div>
-    </div>
-
-    <div class="modal-window" id="item-36-window">
-  		<div class="modal-inner-container">
-  			<div class="modal-inner-content">
-  				<div class="row">
-  					<div>
-						<h6 class="modal-inner-image-heading">Macadamias</h6>
-						<input type="image" src="../foodbin/img/image36.jpg" alt="Macadamias" class="modal-image" data="36"/>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="modal-inner-footer">
-  				<button class="add-to-cart-btn">Add to Cart</button>
-  			</div>
-  		</div>
-    </div>
-
-    <div class="modal-window" id="item-37-window">
-  		<div class="modal-inner-container">
-  			<div class="modal-inner-content">
-  				<div class="row">
-  					<div>
-						<h6 class="modal-inner-image-heading">Hazelnuts</h6>
-						<input type="image" src="../foodbin/img/image37.jpg" alt="Hazelnuts" class="modal-image" data="37"/>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="modal-inner-footer">
-  				<button class="add-to-cart-btn">Add to Cart</button>
-  			</div>
-  		</div>
-    </div>
-
-    <div class="modal-window" id="item-38-window">
-  		<div class="modal-inner-container">
-  			<div class="modal-inner-content">
-  				<div class="row">
-  					<div>
-						<h6 class="modal-inner-image-heading">Pecans</h6>
-						<input type="image" src="../foodbin/img/image38.jpg" alt="Pecans" class="modal-image" data="38"/>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="modal-inner-footer">
-  				<button class="add-to-cart-btn">Add to Cart</button>
-  			</div>
-  		</div>
-    </div>
-
-    <div class="modal-window" id="item-39-window">
-  		<div class="modal-inner-container">
-  			<div class="modal-inner-content">
-  				<div class="row">
-  					<div>
-						<h6 class="modal-inner-image-heading">Pine Nuts</h6>
-						<input type="image" src="../foodbin/img/image39.jpg" alt="Pine Nuts" class="modal-image" data="39"/>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="modal-inner-footer">
-  				<button class="add-to-cart-btn">Add to Cart</button>
-  			</div>
-  		</div>
-    </div>
-
-    <div class="modal-window" id="item-40-window">
-  		<div class="modal-inner-container">
-  			<div class="modal-inner-content">
-  				<div class="row">
-  					<div>
-						<h6 class="modal-inner-image-heading">Chestnuts</h6>
-						<input type="image" src="../foodbin/img/image40.jpg" alt="Chestnuts" class="modal-image" data="40"/>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="modal-inner-footer">
-  				<button class="add-to-cart-btn">Add to Cart</button>
-  			</div>
-  		</div>
-    </div>
+    <!-- End of Food item Modal  -->
 
     <?php
       if(isset($_SESSION['address'])){
@@ -1744,79 +1186,6 @@
 	<div class="close-btn-container">
 		<span class="modal-close-btn"></span>
 	</div>
-
-<div class="hide">
-  <div id="properties-priority-row">
-    <div class="properties-container">
-  		<h6 class="modal-select-heading">Properties</h6>
-      <form action="" id="selector-form">
-    		<select name="weight" class="weight-selector" class="product-options-selector">
-    			<option>Weight</option>
-    			<option value="1 lb">1 lb</option>
-    			<option value="2 lb">2 lb</option>
-    			<option value="3 lb">3 lb</option>
-    			<option value="4 lb">4 lb</option>
-    			<option value="5 lb">5 lb</option>
-          <option value="Any">Any</option>
-    		</select>
-    		<select name="cost" class="cost-selector" class="product-options-selector">
-    			<option>Cost</option>
-    			<option value="less-than-1$">&lt; 1$</option>
-    			<option value="less-than-2$">&lt; 2$</option>
-    			<option value="less-than-3$">&lt; 3$</option>
-    			<option value="less-than-4$">&lt; 4$</option>
-    			<option value="less-than-5$">&lt; 5$</option>
-          <option value="Any">Any</option>
-    		</select>
-    		<select name="specialty" class="specialty-selector" class="product-options-selector">
-    			<option>Specialty</option>
-    			<option value="Organic">Organic</option>
-    			<option value="Natural">Natural</option>
-    			<option value="Packaged">Packaged</option>
-    			<option value="Any">Any</option>
-    		</select>
-    		<select name="quality" class="quality-selector" class="product-options-selector">
-    			<option>Quality</option>
-    			<option value="Ripe">Ripe</option>
-    			<option value="Unripe">Unripe</option>
-          <option value="Any">Any</option>
-    		</select>
-      </form>
-  	</div>
-
-    <div class="priority-container">
-      <h6 class="modal-select-heading">Priority</h6>
-      <form action="" id="priority-num-form">
-        <select name="weight-priority" class="weight-priority priority-value">
-          <option value="one" selected="selected">One (high)</option>
-          <option value="two">Two</option>
-          <option value="three">Three</option>
-          <option value="four">Four (low)</option>
-        </select>
-        <select name="cost-priority" class="cost-priority priority-value">
-          <option value="one">One (high)</option>
-          <option value="two" selected="selected">Two</option>
-          <option value="three">Three</option>
-          <option value="four">Four (low)</option>
-        </select>
-        <select name="specialty-priority" class="specialty-priority priority-value">
-          <option value="one">One (high)</option>
-          <option value="two">Two</option>
-          <option value="three" selected="selected">Three</option>
-          <option value="four">Four (low)</option>
-        </select>
-        <select name="quality-priority" class="quality-priority priority-value">
-          <option value="one">One (high)</option>
-          <option value="two">Two</option>
-          <option value="three">Three</option>
-          <option value="four" selected="selected">Four (low)</option>
-        </select>
-      </form>
-    </div>
-    <p id="same-priority-error">*Priority values cannot be the same</p>
-  </div>
-</div>
-
 
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
