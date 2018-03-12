@@ -17,53 +17,53 @@
 <body>
 	<div id="body-wrapper">
 		<nav>
-            <div id="nav-logo"><a href="foodbin.php"><b>Foodbin</b></a></div>
-             <div id="horizontal-nav">
-                <ul>
-                    <?php
-                      # - check if order is in progress
-                      if(isset($_SESSION['order-in-progress'])){
-                        if($_SESSION['order-in-progress'] == "yes"){
-                          echo "<span class='order-in-progress'>yes</span>";
-                        } else {
-                          echo "<span class='order-in-progress'>no</span>";
-                        }
-                      }
-                      if (isset($_SESSION['edit-in-progress'])){
-                        if($_SESSION['edit-in-progress'] == "yes"){
-                          echo "<span class='edit-in-progress'>yes</span>";
-                        } else {
-                          echo "<span class='edit-in-progress'>no</span>";
-                        }
-                      }
-                      if(isset($_SESSION['same-order-in-progress'])){
-                        if($_SESSION['same-order-in-progress'] == "yes"){
-                          echo "<span class='same-order-in-progress'>yes</span>";
-                        } else {
-                          echo "<span class='same-order-in-progress'>no</span>";
-                        }
-                      }
-                      # - end of order in progress check
+      <div id="nav-logo"><a href="foodbin.php"><b>Foodbin</b></a></div>
+       <div id="horizontal-nav">
+          <ul>
+              <?php
+                # - check if order is in progress
+                if(isset($_SESSION['order-in-progress'])){
+                  if($_SESSION['order-in-progress'] == "yes"){
+                    echo "<span class='order-in-progress'>yes</span>";
+                  } else {
+                    echo "<span class='order-in-progress'>no</span>";
+                  }
+                }
+                if (isset($_SESSION['edit-in-progress'])){
+                  if($_SESSION['edit-in-progress'] == "yes"){
+                    echo "<span class='edit-in-progress'>yes</span>";
+                  } else {
+                    echo "<span class='edit-in-progress'>no</span>";
+                  }
+                }
+                if(isset($_SESSION['same-order-in-progress'])){
+                  if($_SESSION['same-order-in-progress'] == "yes"){
+                    echo "<span class='same-order-in-progress'>yes</span>";
+                  } else {
+                    echo "<span class='same-order-in-progress'>no</span>";
+                  }
+                }
+                # - end of order in progress check
 
-                      if (isset($_SESSION['user_id'])){
-                        echo '<li><i class="fa fa-user"></i>
-                                <ul class="user-list">
-                                  <li><a href="profile.php" id="user">' . $_SESSION['user_username'] . '</a></li>
-                                  <li>
-                                      <form action="includes/logout-inc.php" method="POST">
-                                        <input type="submit" name="submit" value="logout" id="logout-btn"/>
-                                      </form>
-                                  </li>
-                                </ul>
-                              </li>';
-                      } else {
-                        echo '<li id="login-btn"><a href="login.php">Login</a></li>
-                              <li id="signup-btn"><a href="signup.php">Sign Up</a></li>';
-                      }
-                      ?>
-                </ul>
-            </div>
-        </nav>
+                if (isset($_SESSION['user_id'])){
+                  echo '<li><i class="fa fa-user"></i>
+                          <ul class="user-list">
+                            <li><a href="profile.php" id="user">' . $_SESSION['user_username'] . '</a></li>
+                            <li>
+                                <form action="includes/logout-inc.php" method="POST">
+                                  <input type="submit" name="submit" value="logout" id="logout-btn"/>
+                                </form>
+                            </li>
+                          </ul>
+                        </li>';
+                } else {
+                  echo '<li id="login-btn"><a href="login.php">Login</a></li>
+                        <li id="signup-btn"><a href="signup.php">Sign Up</a></li>';
+                }
+                ?>
+          </ul>
+      </div>
+    </nav>
 		<div id="profile-area">
 			<div id="profile-inner">
 				<div class="col-4">
@@ -112,14 +112,10 @@
 				</div>
 				<div class="col-8">
             <h2 id="current-order-heading">Orders in Progress</h2>
-            <?php
-              //echo "<button id='hidden-link'>Go to Homepage</button>";
-            ?>
             <div id="current-order-outer">
               <div id="current-order-inner">
                 <div id="curr-order-tooltip">Shift + scroll to scroll sideways</div>
               <?php
-
                 $sql = "SELECT * FROM current_orders WHERE user_id=$id;";
                 $result = mysqli_query($conn, $sql);
                 $resultRows = mysqli_num_rows($result); //this is the number of rows returned
@@ -172,15 +168,19 @@
                     }
                     echo "</div>";
                     echo "
-                      <form action='includes/removeLastOrder.php' method='POST' id='hidden-form'>
-                        <input type='submit' name='submit' id='remove-submit'/>
-                      </form>
                       <div class='current-order-footer'>
                         <button id='edit-order-btn'>Edit Order</button>
                         <button id='order-completed-btn'>Completed</button>
+                        <button id='cancel-order-btn'>Cancel</button>
                       </div>
-                      <form action='includes/eraseOrder.php' method='POST' id='erase-order-form'>
-                        <input type='submit' name='submit' value='Submit' id='erase-order-btn'/>
+                      <form action='includes/removeOrderForEdit.php' method='POST' id='edit-order-form'>
+                        <input type='submit' name='submit' id='edit-order-submit'/>
+                      </form>
+                      <form action='includes/completeOrder.php' method='POST' id='complete-order-form'>
+                        <input type='submit' name='submit' value='Submit' id='complete-order-submit'/>
+                      </form>
+                      <form action='includes/cancelOrder.php' method='POST' id='cancel-order-form'>
+                        <input type='submit' name='submit' id='cancel-order-submit' />
                       </form>
                       <div class='line-divider'></div>
                     ";
@@ -342,12 +342,9 @@
 			</div>
 		</div>
 
-    <div id="modal-window">
-      <div id="close-btn-container">
-        <span id="modal-close-btn"></span>
-      </div>
-      <div id="modal-inner-container">
-        <div id="modal-inner-content">
+    <div class="modal-window">
+      <div class="modal-inner-container">
+        <div class="modal-inner-content">
           <h3>Edit My Info</h3>
           <form action="includes/editprofile.php" method="POST" id="edit-profile-form">
             <?php
@@ -384,6 +381,24 @@
         </div>
       </div>
     </div>
+
+    <div class="modal-window">
+      <div id="cancel-modal-container">
+        <div class="modal-inner-content">
+          <h3>Cancelling current order. Are you sure?</h3>
+          <div id="cancel-btn-container">
+            <button id="yes-cancel-btn">Yes</button>
+            <button id="no-cancel-btn">No</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Global Modal Close Container -->
+    <div id="close-btn-container">
+      <span id="modal-close-btn"></span>
+    </div>
+    <!-- End of Global Close Container -->
 
 
 	</div>
