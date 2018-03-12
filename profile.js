@@ -146,7 +146,7 @@ var cancelOrderBtn = document.getElementById("cancel-order-btn"),
 if(cancelOrderBtn){
   cancelOrderBtn.addEventListener("click", function(){
     modalWindows[1].style.display = "block";
-    var $closeContainer = $("#close-btn-container").clone();
+    $("#close-btn-container").css("display", "block");
     $(".modal-window").eq(1).append($closeContainer);
   })
 }
