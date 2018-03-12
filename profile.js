@@ -62,7 +62,7 @@ if(sameOrderInProgress){
 /*--- When user clicks order completed btn ---*/
 var currentOrderRow = document.getElementById("current-order-row");
 var currOrderTooltip = document.getElementById("curr-order-tooltip");
-var eraseOrderBtn = document.getElementById("erase-order-btn");
+var completeOrderSubmit = document.getElementById("complete-order-submit");
 if(currentOrderRow){
   var entireOrdersSection = document.getElementsByClassName(".col-8")[0],
       currentOrderHeading = document.getElementById("current-order-heading"),
@@ -75,7 +75,7 @@ var previousOrdersHeading = document.getElementById("previous-orders-heading");
 var previousOrderRows = document.getElementsByClassName("previous-order-row");
 var prevOrderTooltips = document.getElementsByClassName("prev-order-tooltip");
 var previousOrderFooter;
-var test;
+var orderType;
 
 /*--- Show Sideways Scroll Tooltip ---*/
 if(currentOrderRow){
@@ -100,70 +100,91 @@ if(previousOrderRows){
 }
 /*--- End of Sideways Scroll Tooltip ---*/
 
-if(orderCompletedBtn) {
-  orderCompletedBtn.addEventListener("click", function(){
-    test = 10;
-    removeCurrentOrder();
-  });
-}
-
 function removeCurrentOrder(){
   $("#current-order-outer").add("#current-order-heading").animate({
     height: "0px"
   }, 1000, function(){
     setTimeout(function(){
-      if(test == 5){
-        removeSubmitBtn.click();
-      } else {
-        eraseOrderBtn.click();
+      if(orderType == "edit"){
+        editOrderSubmit.click();
+      } else if (orderType == "complete") {
+        completeOrderSubmit.click();
+      } else if (orderType == "cancel"){
+        cancelOrderSubmit.click();
       }
       $(this).remove();
     }, 50)
   })
 }
 
-/*--- End of 'order completed' btn click ---*/
+var modalWindows = document.getElementsByClassName("modal-window");
+var closeBtnContainer = document.getElementById("close-btn-container");
 
-/*--- When user clicks edit btn ---*/
-var editBtn = document.getElementById("edit-btn"),
-    editModalWindow = document.getElementById("modal-window"),
-    closeBtnContainer = document.getElementById("close-btn-container");
-
-editBtn.addEventListener("click", function(){
-  editModalWindow.style.display = "block";
-  closeBtnContainer.style.display = "block";
-})
-/*--- end of user clicks edit btn ---*/
-
-window.onclick = function(e){
-  if(e.target.matches("#modal-window") || e.target.matches("#close-btn-container") || e.target.matches("#modal-close-btn")){
-    editModalWindow.style.display = "none";
-    closeBtnContainer.style.display = "none";
-  }
+/*--- When user clicks Completed Btn ---*/
+if(orderCompletedBtn) {
+  orderCompletedBtn.addEventListener("click", function(){
+    orderType = "complete";
+    removeCurrentOrder();
+  });
 }
-
-/*--- Set the Width of itemListInner based on number of items in the order row ---*/
-
-var ordersContainer = document.getElementById("all-orders-container");
-
-/*--- End of Setting width of itemListInner ---*/
-
+/*--- End of 'Completed' btn click ---*/
 
 /*--- When user clicks 'Edit Order' Btn ---*/
 var editOrderBtn = document.getElementById("edit-order-btn");
-var removeSubmitBtn = document.getElementById("remove-submit");
-var hiddenLink = document.getElementById("hidden-link");
+var editOrderSubmit = document.getElementById("edit-order-submit");
 if(editOrderBtn){
   editOrderBtn.addEventListener("click", function(){
-    test = 5;
+    orderType = "edit";
     removeCurrentOrder();
   });
 }
 /*--- End of Edit Order Function ---*/
 
+/*--- User clicks "Cancel" Btn ---*/
+var cancelOrderBtn = document.getElementById("cancel-order-btn"),
+    cancelOrderSubmit = document.getElementById("cancel-order-submit");
+if(cancelOrderBtn){
+  cancelOrderBtn.addEventListener("click", function(){
+    modalWindows[1].style.display = "block";
+    var $closeContainer = $("#close-btn-container").clone();
+    $(".modal-window").eq(1).append($closeContainer);
+  })
+}
+/*--- End of "Cancel" Btn click ---*/
+
+/*--- User clicks "Yes" or "No" on Cancel ---*/
+var yesCancelBtn = document.getElementById("yes-cancel-btn"),
+    noCancelBtn = document.getElementById("no-cancel-btn");
+yesCancelBtn.addEventListener("click", function(){
+  modalWindows[1].style.display = "none";
+  orderType = "cancel";
+  removeCurrentOrder();
+})
+noCancelBtn.addEventListener("click", function(){
+  modalWindows[1].style.display = "none";
+})
+/*--- End of "Yes" or "No" click ---*/
+
+/*--- When user clicks profile "Edit" btn  ---*/
+var editBtn = document.getElementById("edit-btn");
+editBtn.addEventListener("click", function(){
+  modalWindows[0].style.display = "block";
+  $(".modal-window").eq(0).append(closeBtnContainer);
+  closeBtnContainer.style.display = "block";
+})
+
+window.onclick = function(e){
+  if(e.target.matches(".modal-window") || e.target.matches("#close-btn-container") || e.target.matches("#modal-close-btn")){
+    modalWindows[0].style.display = "none";
+    modalWindows[1].style.display = "none";
+    closeBtnContainer.style.display = "none";
+  }
+}
+/*--- End of profile "Edit" btn click ---*/
+
+
 /*--- When user clicks 'Order Again' Btn ---*/
 var orderAgainBtns = document.getElementsByClassName("order-again-btn");
-
 for(let i = 0; i < orderAgainBtns.length; i++){
   orderAgainBtns[i].addEventListener("click", function(e){
     var $orderAgainSubmitBtn = $(this).siblings(".order-again-form").find(".order-again-submit-btn");
